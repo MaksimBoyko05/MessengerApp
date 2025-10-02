@@ -1,0 +1,12 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+* {
+  margin: 0;
+}
+.wrapper{
+   background: linear-gradient(116deg, rgba(231, 233, 248, 0.438) 30%, rgba(249, 234, 253, 0.527) 70%);
+   height: 100vh;
+}
