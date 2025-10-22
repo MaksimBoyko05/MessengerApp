@@ -1,12 +1,23 @@
 import pool from "../db.js";
 import bcrypt from "bcryptjs";
+import redis from "../redisClient.js";
 
 // ==== Get all users ====
 export const getUsers = async (req, res) => {
   try {
+    const cached = await redis.get("users");
+    if (cached) {
+      console.log("🧠 Cache hit");
+      return res.json(JSON.parse(cached));
+    }
+
     const result = await pool.query(
       "SELECT id, username, email, avatar_url, created_at FROM users ORDER BY created_at DESC"
     );
+
+    // кеш на 60 секунд
+    await redis.set("users", JSON.stringify(result.rows), "EX", 60);
+    console.log("💾 Cache saved");
     res.json(result.rows);
   } catch (err) {
     console.error(err);
