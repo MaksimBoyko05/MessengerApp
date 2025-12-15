@@ -1,4 +1,4 @@
-import pool from "../db.js";
+import pool from "../db.ts";
 import { emailQueue } from "../queues/emailQueue.js";
 
 export const checkUnreadMessages = async () => {

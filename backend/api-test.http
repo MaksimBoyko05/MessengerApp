@@ -1,0 +1,8 @@
+### Тест головної сторінки
+GET http://localhost:5000/
+
+### Тест відправки email
+GET http://localhost:5000/test-email
+
+### Отримати всіх юзерів
+GET http://localhost:5000/users

@@ -3,7 +3,7 @@ import IORedis from "ioredis";
 import nodemailer from "nodemailer";
 import dotenv from "dotenv";
 
-dotenv.config();
+dotenv.config({ path: ".env" });
 const connection = new IORedis();
 
 const transporter = nodemailer.createTransport({

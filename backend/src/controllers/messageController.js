@@ -1,4 +1,4 @@
-import pool from "../db.js";
+import pool from "../db.ts";
 
 // ==== Get all messages ====
 export const getMessages = async (req, res) => {

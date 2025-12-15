@@ -1,7 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
-import pool from "./db.js";
+import pool from "./db.ts";
 import authRoutes from "./routes/auth.js";
 import { emailQueue } from "./queues/emailQueue.js";
 import userRoutes from "./routes/userRoutes.js";
@@ -20,8 +20,8 @@ const app = express();
 app.use(express.json());
 
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, 
-  max: 10, 
+  windowMs: 15 * 60 * 1000,
+  max: 10,
   message: "Занадто багато запитів з вашої IP-адреси. Спробуйте пізніше.",
   standardHeaders: true,
   legacyHeaders: false,
@@ -49,7 +49,7 @@ app.get("/test-email", async (req, res) => {
   res.send("📬 Задача надіслана у чергу");
 });
 
-app.use("/auth", authRoutes);
+app.use("/api/auth", authRoutes);
 
 app.get("/users", async (req, res) => {
   try {
