@@ -1,9 +1,9 @@
 import { Queue } from "bullmq";
-import IORedis from "ioredis";
+import * as IORedis from "ioredis";
 
-const connection = new IORedis({
+const redisConfig: IORedis.RedisOptions = {
   host: "127.0.0.1",
   port: 6379,
-});
-
+};
+const connection = new IORedis.Redis(redisConfig);
 export const emailQueue = new Queue("emailQueue", { connection });

@@ -6,6 +6,12 @@ export interface User {
     avatar_url:string | null,
     created_at:Date,
 }
+export interface Chat {
+    id: number;
+    name: string | null;
+    is_group: boolean;
+    created_at: Date;
+}
 export interface Message {
     id:number,
     chat_id:number,
