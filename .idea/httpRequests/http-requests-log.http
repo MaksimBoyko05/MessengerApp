@@ -1,0 +1,27 @@
+GET http://localhost:5000/users
+User-Agent: IntelliJ HTTP Client/WebStorm 2025.2.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+<> 2025-12-09T180255.200.json
+
+###
+
+GET http://localhost:5000/test-email
+User-Agent: IntelliJ HTTP Client/WebStorm 2025.2.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+<> 2025-12-09T180255-1.200.html
+
+###
+
+GET http://localhost:5000
+User-Agent: IntelliJ HTTP Client/WebStorm 2025.2.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+<> 2025-12-09T180255.200.html
+
+###
+

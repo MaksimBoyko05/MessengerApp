@@ -1,0 +1,50 @@
+[
+  {
+    "id": 4,
+    "username": "maks4",
+    "email": "maks3@example.com",
+    "password_hash": "$2b$10$7iPPJ1CbhMr93OLofiVJouGIbw2bBqcmbd42rsaPA.YJ03jd8.cJu",
+    "avatar_url": null,
+    "created_at": "2025-09-30T14:47:16.201Z"
+  },
+  {
+    "id": 5,
+    "username": "user7310",
+    "email": "kuvyhi@mailinator.com",
+    "password_hash": "$2b$10$YJT44yjGo/BIZlWeh8/O3e8CNN6lg9QXh8uAkqjuaqZD7q5.s1f7e",
+    "avatar_url": null,
+    "created_at": "2025-09-30T14:47:50.439Z"
+  },
+  {
+    "id": 6,
+    "username": "user7233",
+    "email": "test@gmail.com",
+    "password_hash": "$2b$10$lfenPUZPGpR9rK.3DhWwXOAjIt.piUdnWZw6QjYV5X4uK6KMwnKzW",
+    "avatar_url": "https://i.pravatar.cc/100?img=1",
+    "created_at": "2025-10-02T08:08:36.158Z"
+  },
+  {
+    "id": 7,
+    "username": "Max Boiko",
+    "email": "filipinchik20@gmail.com",
+    "password_hash": "$2b$10$F/UslPDkIAv/XoLRxTCq/uNbNjFX9qIteWXa/AB3UlfVoAxVNIdeS",
+    "avatar_url": "https://shorturl.at/hF512",
+    "created_at": "2025-10-02T14:59:47.039Z"
+  },
+  {
+    "id": 8,
+    "username": "user7",
+    "email": "user7@example.com",
+    "password_hash": "$2b$10$DV5OhNdpzcPnM7ps0nELbOjYOsDkz5eBKcgRTlYvBb4NoBPm/nYt2",
+    "avatar_url": null,
+    "created_at": "2025-11-07T09:32:23.318Z"
+  },
+  {
+    "id": 9,
+    "username": "user9",
+    "email": "user6@example.com",
+    "password_hash": "$2b$10$Y9SuPOVHoq8odJ0lcEq/l.SQ/HdWo/UuahWXh9AcqT93pg6acea9q",
+    "avatar_url": null,
+    "created_at": "2025-11-07T09:46:44.220Z"
+  }
+]
