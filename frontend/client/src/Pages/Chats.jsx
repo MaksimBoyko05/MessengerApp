@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import "../styles/Chats.css";
-import Profile from "../components/Chats/Profile";
+import Profile from "../components/Chats/Profile.jsx";
 function Chats() {
   
 

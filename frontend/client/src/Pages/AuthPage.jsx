@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import axios from "axios";
 import "../styles/AuthPage.css";
-import logo from "../../src/loginlogo.png";
+import logo from "../loginlogo.png";
 function AuthPage({ setIsAuthenticated }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
