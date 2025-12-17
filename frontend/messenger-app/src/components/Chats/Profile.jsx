@@ -6,25 +6,23 @@ function Profile() {
   const [username, setUsername] = useState("");
   const [userimg, setUserimg] = useState("");
   useEffect(() => {
-    const fetchUser = async () => {
+    const fetchProfile = async () => {
       const token = localStorage.getItem("token");
-      if (token) {
-        try {
-          const res = await axios.get("http://localhost:5000/auth/me", {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-          console.log("Користувач:", res.data.user);
-          setUserId(res.data.user.id);
-          console.log(res.data.user.id);
-        } catch (err) {
-          console.error("Помилка отримання даних користувача", err);
-          localStorage.removeItem("token");
-        }
+      if (!token) return;
+
+      try {
+        const res = await axios.get("http://localhost:5000/api/auth/me", {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        // Припустимо, тепер сервер віддає все одразу
+        setUsername(res.data.username);
+        setUserimg(res.data.avatar_url);
+        setUserId(res.data.id);
+      } catch (err) {
+        console.error(err);
       }
     };
-    fetchUser();
+    fetchProfile();
   }, []);
 
   useEffect(() => {

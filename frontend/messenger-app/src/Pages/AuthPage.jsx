@@ -3,7 +3,7 @@ import { useNavigate } from "react-router";
 import axios from "axios";
 import "../styles/AuthPage.css";
 import logo from "../../src/loginlogo.png";
-function AuthPage({setIsAuthenticated}) {
+function AuthPage({ setIsAuthenticated }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
@@ -43,14 +43,14 @@ function AuthPage({setIsAuthenticated}) {
     if (email && password) {
       try {
         if (activeButton === "signup") {
-          const res = await axios.post("http://localhost:5000/auth/register", {
+          const res = await axios.post("http://localhost:5000/api/auth/register", {
             username: generateUsername(),
             email,
             password,
           });
           setMessage(res.data.message || "Реєстрація успішна!");
         } else {
-          const res = await axios.post("http://localhost:5000/auth/login", {
+          const res = await axios.post("http://localhost:5000/api/auth/login", {
             email,
             password,
           });
@@ -237,8 +237,8 @@ function AuthPage({setIsAuthenticated}) {
                   }
                   onBlur={() => {
                     setIsFocused({ ...isFocused, confirmPassword: false });
-                    if (confirmPassword && password.length !== password) {
-                      setConfirmPasswordError("Пароль не співпадають");
+                    if (confirmPassword && confirmPassword !== password) {
+                      setConfirmPasswordError("Паролі не співпадають");
                     } else {
                       setConfirmPasswordError("");
                     }
