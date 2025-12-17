@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Socket Test</title>
+  <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+</head>
+<body>
+<h2>Socket Test: Chat 3</h2>
+<div id="messages" style="border: 1px solid #ccc; height: 300px; overflow-y: scroll; padding: 10px;"></div>
+
+<script>
+  const socket = io("http://localhost:5000");
+
+  socket.on("connect", () => {
+    console.log("Connected with ID:", socket.id);
+    console.log("Joining chat 3...");
+    socket.emit("join_chat", 3);
+  });
+
+  socket.on("new_message", (msg) => {
+    console.log("New message received:", msg);
+    const div = document.createElement("div");
+    div.innerText = `User ${msg.user_id}: ${msg.text}`;
+    document.getElementById("messages").appendChild(div);
+  });
+</script>
+</body>
+</html>

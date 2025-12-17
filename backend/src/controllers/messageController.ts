@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { MessageRepository } from "../repositories/messageRepository.js";
 import { ChatRepository } from "../repositories/ChatRepository.js";
+import { getIO } from "../socket.js";
 
 const messageRepo = new MessageRepository();
 const chatRepo = new ChatRepository();
@@ -19,6 +20,8 @@ export const sendMessage = async (req: Request, res: Response) => {
       chat = await chatRepo.createPrivateChat(senderId, receiverId);
     }
     const newMessage = await messageRepo.create(chat.id, senderId, text);
+    const io = getIO();
+    io.to(`chat_${chat.id}`).emit("new_message", newMessage);
 
     res.status(201).json(newMessage);
   } catch (err) {

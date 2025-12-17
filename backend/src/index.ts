@@ -1,6 +1,8 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
+import { createServer } from "http";
+import { initSocket } from "./socket.js";
 import pool from "./db.js";
 import authRoutes from "./routes/auth.js";
 import { emailQueue } from "./queues/emailQueue.js";
@@ -17,11 +19,20 @@ console.log("EMAIL_PASS:", process.env.EMAIL_PASS ? "✅ Loaded" : "❌ Missing"
 
 
 const app = express();
+app.use(
+    cors({
+      origin: "http://localhost:3000",
+      credentials: true,
+    })
+);
 app.use(express.json());
+
+const httpServer = createServer(app);
+initSocket(httpServer);
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 10,
+  max: 100,
   message: "Занадто багато запитів з вашої IP-адреси. Спробуйте пізніше.",
   standardHeaders: true,
   legacyHeaders: false,
@@ -29,12 +40,6 @@ const limiter = rateLimit({
 
 app.use(limiter);
 
-app.use(
-  cors({
-    origin: "http://localhost:3000",
-    credentials: true,
-  })
-);
 
 app.get("/", (req, res) => {
   res.send("Backend is working 🚀");
@@ -65,6 +70,6 @@ app.use("/api/users", userRoutes);
 app.use("/api/messages", messageRoutes);
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
+httpServer.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
