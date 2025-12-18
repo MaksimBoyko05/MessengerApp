@@ -8,8 +8,9 @@ import {
 import { useEffect, useState } from "react";
 import axios from "axios";
 import "./App.css";
-import AuthPage from "./Pages/AuthPage.jsx";
-import Chats from "./Pages/Chats.jsx";
+import styles from "./Pages/AuthPage/AuthPage.module.scss";
+import AuthPage from "./Pages/AuthPage/AuthPage.jsx";
+import ChatsPage from "./Pages/ChatsPage/ChatsPage.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 
 function App() {
@@ -19,7 +20,7 @@ function App() {
       const token = localStorage.getItem("token");
       if (token) {
         try {
-          const res = await axios.get("http://localhost:5000/auth/me", {
+          const res = await axios.get("http://localhost:5000/api/auth/me", {
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -38,7 +39,7 @@ function App() {
 
   return (
     <Router>
-      <div className="App">
+      <div className={styles.App}>
         <nav>
           <Link to="/authorization">Authorization</Link>
           <Link to="/chats">Chats</Link>
@@ -49,7 +50,7 @@ function App() {
             path="/chats"
             element={
               <ProtectedRoute isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated}>
-                <Chats />
+                <ChatsPage />
               </ProtectedRoute>
             }
           />

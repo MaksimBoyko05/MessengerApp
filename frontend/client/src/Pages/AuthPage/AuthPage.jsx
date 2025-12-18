@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import axios from "axios";
-import "../styles/AuthPage.css";
-import logo from "../loginlogo.png";
+import "./Authpage.module.scss";
+import logo from "../../loginlogo.png";
+import styles from "./AuthPage.module.scss";
 function AuthPage({ setIsAuthenticated }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -68,13 +69,13 @@ function AuthPage({ setIsAuthenticated }) {
   };
 
   return (
-    <div className="parent-container">
-      <div className="formBlock">
-        <div className="logoDiv">
-          <img className="logo" src={logo} alt="logo" />
+    <div className={styles.parentcontainer}>
+      <div className={styles.formBlock}>
+        <div className={styles.logoDiv}>
+          <img className={styles.logo} src={logo} alt="logo" />
         </div>
-        <h1 className="LogoText">Lysto</h1>
-        <div className="formContainer">
+        <h1 className={styles.LogoText}>Lysto</h1>
+        <div className={styles.formContainer}>
           <div
             className={`chooseblock ${
               activeButton === "signup" ? "signup-active" : ""
@@ -103,7 +104,7 @@ function AuthPage({ setIsAuthenticated }) {
                 email || isFocused.email ? "active" : ""
               }`}
             >
-              <label className="labelEmail">Email</label>
+              <label className={styles.labelEmail}>Email</label>
               <input
                 className={`formInput ${
                   !isFocused.email && emailError ? "input-error" : ""
@@ -126,7 +127,7 @@ function AuthPage({ setIsAuthenticated }) {
                 }}
               />
               {!isFocused.email && emailError && email && (
-                <p className="error">{emailError}</p>
+                <p className={styles.error}>{emailError}</p>
               )}
             </div>
             <div
@@ -134,7 +135,7 @@ function AuthPage({ setIsAuthenticated }) {
                 password || isFocused.password ? "active" : ""
               }`}
             >
-              <label className="labelPass">Password</label>
+              <label className={styles.labelPass}>Password</label>
               <input
                 className={`formInput ${
                   !isFocused.password && passwordError ? "input-error" : ""
@@ -155,7 +156,7 @@ function AuthPage({ setIsAuthenticated }) {
                 }}
               ></input>
               <button
-                className="showPassBtn"
+                className={styles.showPassBtn}
                 type="button"
                 onClick={() =>
                   setShowPassword((prev) => (prev === false ? true : false))
@@ -217,7 +218,7 @@ function AuthPage({ setIsAuthenticated }) {
               </button>
             </div>
             {!isFocused.password && passwordError && password && (
-              <p className="error">{passwordError}</p>
+              <p className={styles.error}>{passwordError}</p>
             )}
 
             {activeButton === "signup" && (
@@ -226,9 +227,11 @@ function AuthPage({ setIsAuthenticated }) {
                   confirmPassword || isFocused.confirmPassword ? "active" : ""
                 }`}
               >
-                <label className="labelConfirmPass">Confirm Password</label>
+                <label className={styles.labelConfirmPass}>Confirm Password</label>
                 <input
-                  className="formInput"
+                  className={`formInput ${
+                    !isFocused.confirmPassword && confirmPasswordError ? "input-error" : ""
+                  }`}
                   type={showConfirmPassword ? "text" : "password"}
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
@@ -245,7 +248,7 @@ function AuthPage({ setIsAuthenticated }) {
                   }}
                 />
                 <button
-                  className="showPassBtn"
+                  className={styles.showPassBtn}
                   type="button"
                   onClick={() => setShowConfirmPassword((prev) => !prev)}
                 >
@@ -303,12 +306,12 @@ function AuthPage({ setIsAuthenticated }) {
                     </svg>
                   )}
                 </button>
-                <p className="error">{confirmPasswordError}</p>
+                <p className={styles.error}>{confirmPasswordError}</p>
               </div>
             )}
-            <div className="buttoncontainer">
+            <div className={styles.buttoncontainer}>
               <button
-                className="sbmbutton"
+                className={styles.sbmbutton}
                 type="submit"
                 disabled={
                   !email ||

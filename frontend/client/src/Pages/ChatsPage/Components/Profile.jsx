@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import "./Profile.css";
+import styles from "../Chats.module.scss"
 function Profile() {
   const [userId, setUserId] = useState("");
   const [username, setUsername] = useState("");
@@ -50,9 +50,9 @@ function Profile() {
   }, [userId]);
 
   return (
-    <div className="profileblock">
-      <img className="avatarImg" src={userimg} alt="avatar" />
-      <p className="usertitle">{username}</p>
+    <div className={styles.profileblock}>
+      <img className={styles.avatarImg} src={userimg} alt="avatar" />
+      <p className={styles.usertitle}>{username}</p>
     </div>
   );
 }

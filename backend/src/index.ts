@@ -21,7 +21,7 @@ console.log("EMAIL_PASS:", process.env.EMAIL_PASS ? "✅ Loaded" : "❌ Missing"
 const app = express();
 app.use(
     cors({
-      origin: "http://localhost:3000",
+      origin: "http://localhost:5173",
       credentials: true,
     })
 );
