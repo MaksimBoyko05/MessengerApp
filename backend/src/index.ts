@@ -7,6 +7,7 @@ import pool from "./db.js";
 import authRoutes from "./routes/auth.js";
 import { emailQueue } from "./queues/emailQueue.js";
 import userRoutes from "./routes/userRoutes.js";
+import chatRoutes from './routes/chatsRoutes.js';
 import messageRoutes from "./routes/messageRoutes.js";
 import rateLimit from "express-rate-limit";
 import "./queues/emailQueue.js";
@@ -68,6 +69,7 @@ app.get("/users", async (req, res) => {
 
 app.use("/api/users", userRoutes);
 app.use("/api/messages", messageRoutes);
+app.use('/api/chats', chatRoutes);
 
 const PORT = process.env.PORT || 5000;
 httpServer.listen(PORT, () => {

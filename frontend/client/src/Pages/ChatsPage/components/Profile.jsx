@@ -40,6 +40,7 @@ function Profile() {
           );
           setUsername(res.data.username);
           setUserimg(res.data.avatar_url);
+          console.log(userimg)
         } catch (err) {
           console.error("Помилка отримання даних користувача", err);
           localStorage.removeItem("token");

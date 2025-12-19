@@ -3,6 +3,33 @@ import {Chat} from "../types/db.js"
 
 
 export class ChatRepository {
+    async getUserChats(userId: number): Promise<any[]> {
+        const query = `
+            SELECT 
+                c.id, 
+                c.is_group, 
+                c.created_at,
+                CASE 
+                    WHEN c.is_group = false THEN (
+                        SELECT u.username 
+                        FROM chat_members cm2 
+                        JOIN users u ON cm2.user_id = u.id 
+                        WHERE cm2.chat_id = c.id AND cm2.user_id != $1 
+                        LIMIT 1
+                    )
+                    ELSE c.name 
+                END as name,
+                (SELECT text FROM messages WHERE chat_id = c.id ORDER BY created_at DESC LIMIT 1) as last_message,
+                (SELECT created_at FROM messages WHERE chat_id = c.id ORDER BY created_at DESC LIMIT 1) as last_message_time
+            FROM chats c
+            JOIN chat_members cm ON c.id = cm.chat_id
+            WHERE cm.user_id = $1
+            ORDER BY last_message_time DESC NULLS LAST;
+        `;
+
+        const result = await pool.query(query, [userId]);
+        return result.rows;
+    }
     async findPrivateChat(user1Id: number, user2Id: number): Promise<Chat | null> {
         const query = `
       SELECT c.*

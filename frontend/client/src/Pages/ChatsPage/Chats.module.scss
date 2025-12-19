@@ -9,23 +9,28 @@
 .wrapper{
    background: linear-gradient(116deg, rgba(231, 233, 248, 0.438) 30%, rgba(249, 234, 253, 0.527) 70%);
    height: 100vh;
-  .profileblock {
-    display: flex;
-    flex-direction: row;
-    border-radius: 14px;
-    width: 357px;
-    height: 101px;
-    background: rgba(255, 255, 255, 0.84);
-    align-items: center;
-    .avatarImg {
-      width: 52px;
-      height: 52px;
-      border-radius: 50%;
-      margin-left: 9px;
-      object-fit: cover;
-      .usertitle{
-        display: block;
-        margin-left: 20px;
+  .sidebarwrapper{
+    background: #FAFAFA;
+    height: 100%;
+    width: 20%;
+    .profileblock {
+      display: flex;
+      flex-direction: row;
+      border-radius: 14px;
+      width: 357px;
+      height: 101px;
+      background: rgba(255, 255, 255, 0.84);
+      align-items: center;
+      .avatarImg {
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        margin-left: 9px;
+        object-fit: cover;
+        .usertitle{
+          display: block;
+          margin-left: 20px;
+        }
       }
     }
   }
