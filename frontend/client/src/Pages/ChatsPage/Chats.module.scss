@@ -10,15 +10,16 @@
    background: linear-gradient(116deg, rgba(231, 233, 248, 0.438) 30%, rgba(249, 234, 253, 0.527) 70%);
    height: 100vh;
   .sidebarwrapper{
-    background: #FAFAFA;
+    //background: #FAFAFA;
     height: 100%;
-    width: 20%;
+    width:  fit-content;
     .profileblock {
       display: flex;
       flex-direction: row;
-      border-radius: 14px;
+      border-radius: 16px;
+      gap: 13px;
       width: 357px;
-      height: 101px;
+      height: 80px;
       background: rgba(255, 255, 255, 0.84);
       align-items: center;
       .avatarImg {
@@ -30,6 +31,67 @@
         .usertitle{
           display: block;
           margin-left: 20px;
+        }
+      }
+    }
+    .chatsList{
+      display: flex;
+      flex-direction: column;
+      gap: 13px;
+      margin-top: 20px;
+      .chatblock{
+        display: flex;
+        border-radius: 16px;
+        position: relative;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 15px;
+        background: rgba(250, 250, 250, 0.33);
+        transition: background 0.2s;
+        &:hover{
+          background: rgba(255, 255, 255, 0.9);
+        }
+        img{
+          width: 50px;
+          height: 50px;
+          border-radius: 50%;
+          object-fit: cover;
+        }
+        .chatText{
+          display:flex;
+          flex-direction: column;
+          overflow: hidden;
+          h4 {
+            margin: 0;
+            font-size: 16px;
+          }
+          p{
+            margin: 0;
+            font-size: 14px;
+            color: #666;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+        }
+        .unreadcount {
+          position: absolute;
+          right: 15px;
+          top: 50%;
+          transform: translateY(-50%);
+          display: grid;
+          place-items: center;
+          width: 22px;
+          height: 22px;
+          min-width: 20px;
+          background: #5B81E2;
+          color: white;
+          font-size: 12px;
+          font-weight: bold;
+          border-radius: 50%;
+          line-height: 0;
+          padding: 0;
+          margin: 0;
         }
       }
     }

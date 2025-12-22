@@ -5,22 +5,43 @@ import {Chat} from "../types/db.js"
 export class ChatRepository {
     async getUserChats(userId: number): Promise<any[]> {
         const query = `
-            SELECT 
-                c.id, 
-                c.is_group, 
+            SELECT
+                c.id,
+                c.is_group,
                 c.created_at,
-                CASE 
+                CASE
                     WHEN c.is_group = false THEN (
-                        SELECT u.username 
-                        FROM chat_members cm2 
-                        JOIN users u ON cm2.user_id = u.id 
-                        WHERE cm2.chat_id = c.id AND cm2.user_id != $1 
+                        SELECT u.username
+                        FROM chat_members cm2
+                                 JOIN users u ON cm2.user_id = u.id
+                        WHERE cm2.chat_id = c.id AND cm2.user_id != $1
                         LIMIT 1
-                    )
-                    ELSE c.name 
-                END as name,
-                (SELECT text FROM messages WHERE chat_id = c.id ORDER BY created_at DESC LIMIT 1) as last_message,
-                (SELECT created_at FROM messages WHERE chat_id = c.id ORDER BY created_at DESC LIMIT 1) as last_message_time
+                )
+                ELSE c.name
+            END as name,
+            CASE 
+                WHEN c.is_group = false THEN (
+                    SELECT u.avatar_url 
+                    FROM chat_members cm2 
+                    JOIN users u ON cm2.user_id = u.id 
+                    WHERE cm2.chat_id = c.id AND cm2.user_id != $1
+            LIMIT 1
+            )
+            ELSE NULL
+            END as avatar_url,
+            -- Останнє повідомлення
+            (SELECT text FROM messages WHERE chat_id = c.id ORDER BY created_at DESC LIMIT 1) as last_message,
+            (SELECT created_at FROM messages WHERE chat_id = c.id ORDER BY created_at DESC LIMIT 1) as last_message_time,
+            
+            (
+                SELECT COUNT(*)::int 
+                FROM messages m
+                LEFT JOIN read_receipts rr ON m.id = rr.message_id AND rr.user_id = $1
+            WHERE m.chat_id = c.id
+            AND m.user_id != $1
+            AND rr.id IS NULL
+            ) as unread_count
+
             FROM chats c
             JOIN chat_members cm ON c.id = cm.chat_id
             WHERE cm.user_id = $1
@@ -29,21 +50,6 @@ export class ChatRepository {
 
         const result = await pool.query(query, [userId]);
         return result.rows;
-    }
-    async findPrivateChat(user1Id: number, user2Id: number): Promise<Chat | null> {
-        const query = `
-      SELECT c.*
-      FROM chats c
-      JOIN chat_members m1 ON c.id = m1.chat_id
-      JOIN chat_members m2 ON c.id = m2.chat_id
-      WHERE m1.user_id = $1 
-        AND m2.user_id = $2
-        AND c.is_group = FALSE
-      LIMIT 1;
-    `;
-
-        const result = await pool.query(query, [user1Id, user2Id]);
-        return result.rows[0] || null;
     }
     async createPrivateChat(user1Id: number, user2Id: number): Promise<Chat> {
         const client = await pool.connect();

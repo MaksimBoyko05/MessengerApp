@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import { chatsService } from '../../../api/chatsService.js';
+import styles from "../Chats.module.scss"
+import ChatBlock from "./ChatBlock.jsx"
 function ChatsList(){
   const [chats, setChats] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -26,12 +28,12 @@ function ChatsList(){
   }
   return (
 
-    <div>
+    <div className={styles.chatsList}>
       {chats.map(chat => (
-        <div key={chat.id} >
-          {chat.name}
-          {chat.last_message}
-        </div>
+        <ChatBlock
+          key={chat.id}
+          chat={chat}
+        />
       ))}
     </div>
   )
