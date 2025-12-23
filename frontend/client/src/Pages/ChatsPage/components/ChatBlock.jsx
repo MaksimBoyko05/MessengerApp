@@ -1,8 +1,9 @@
 import styles from "../Chats.module.scss";
 
-function ChatBlock({ chat, onClick }) {
-  return (
-    <div className={styles.chatblock} onClick={() => onClick(chat.id)}>
+function ChatBlock({chat, onClick}) {
+  return (<div
+      className={styles.chatblock}
+      onClick={() => onClick(chat.id)}>
       <img
         className={styles.chatimg}
         src={chat.avatar_url || '/default-avatar.png'}
@@ -13,13 +14,10 @@ function ChatBlock({ chat, onClick }) {
         <p>{chat.last_message || "Немає повідомлень"}</p>
       </div>
 
-      {chat.unread_count > 0 && (
-        <div className={styles.unreadcount}>
+      {chat.unread_count > 0 && (<div className={styles.unreadcount}>
           {chat.unread_count}
-        </div>
-      )}
-    </div>
-  );
+        </div>)}
+    </div>);
 }
 
 export default ChatBlock;

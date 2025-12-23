@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
+import {useState} from "react";
 import ChatsList from "./components/ChatsList";
-import styles from"./Chats.module.scss";
+import styles from "./Chats.module.scss";
 import Profile from "./components/Profile.jsx";
+import ChatWindow from "./components/ChatWindow.jsx";
+
 function ChatsPage() {
-  
+  const [selectedChatId, setSelectedChatId] = useState(null);
 
   return (
     <div className={styles.wrapper}>
@@ -13,10 +14,12 @@ function ChatsPage() {
           <Profile/>
         </div>
         <div>
-        <ChatsList />
+          <ChatsList onSelectedChat={setSelectedChatId}/>
         </div>
       </div>
+      <ChatWindow chatId={selectedChatId}/>
     </div>
   );
 }
+
 export default ChatsPage;

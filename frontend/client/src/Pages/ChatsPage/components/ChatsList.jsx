@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react';
-import { chatsService } from '../../../api/chatsService.js';
+import {useEffect, useState} from 'react';
+import {chatsService} from '../../../api/chatsService.js';
 import styles from "../Chats.module.scss"
 import ChatBlock from "./ChatBlock.jsx"
-function ChatsList(){
+
+function ChatsList({onSelectedChat}) {
   const [chats, setChats] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -22,6 +23,10 @@ function ChatsList(){
     fetchChats();
   }, []);
 
+  const handleChatClick = (chatId) => {
+    onSelectedChat(chatId);
+  }
+
   if (loading) return <div>Завантаження...</div>;
   if (!loading && chats.length === 0) {
     return <div> У вас ще немає активних чатів</div>;
@@ -33,9 +38,10 @@ function ChatsList(){
         <ChatBlock
           key={chat.id}
           chat={chat}
+          onClick={handleChatClick}
         />
       ))}
-    </div>
-  )
+    </div>)
 }
+
 export default ChatsList;

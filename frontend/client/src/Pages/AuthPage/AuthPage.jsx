@@ -1,12 +1,15 @@
-import { useState } from "react";
-import { useNavigate } from "react-router";
+import {useContext, useState} from "react";
+import {useNavigate} from "react-router";
 import axios from "axios";
-import "./Authpage.module.scss";
+import {Eye, EyeOff} from 'lucide-react';
 import logo from "../../loginlogo.png";
-import { Eye, EyeOff } from 'lucide-react';
 import AuthTabs from "./components/AuthTabs.jsx";
 import styles from "./Authpage.module.scss";
-function AuthPage({ setIsAuthenticated }) {
+import {UserContext} from "../../context/UserContext";
+
+function AuthPage() {
+  const {checkAuth} = useContext(UserContext);
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
@@ -22,11 +25,13 @@ function AuthPage({ setIsAuthenticated }) {
     password: false,
     confirmPassword: false,
   });
+  const [isLoading, setIsLoading] = useState(false);
 
   function generateUsername() {
     const randomNum = Math.floor(Math.random() * 10000);
     return "user" + randomNum;
   }
+
   let navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -44,6 +49,7 @@ function AuthPage({ setIsAuthenticated }) {
     }
 
     if (email && password) {
+      setIsLoading(true);
       try {
         if (activeButton === "signup") {
           const res = await axios.post("http://localhost:5000/api/auth/register", {
@@ -51,19 +57,25 @@ function AuthPage({ setIsAuthenticated }) {
             email,
             password,
           });
-          setMessage(res.data.message || "Реєстрація успішна!");
+          setMessage(res.data.message || "Реєстрація успішна! Тепер ви можете увійти.");
+          setActiveButton("signin");
         } else {
           const res = await axios.post("http://localhost:5000/api/auth/login", {
             email,
             password,
           });
+
           localStorage.setItem("token", res.data.token);
-          setMessage(res.data.message || "Вхід успішний!");
-          setIsAuthenticated(true);
+
+          await checkAuth();
+
+          setMessage("Вхід успішний!");
           navigate("/chats");
         }
       } catch (err) {
         setMessage(err.response?.data?.error || "Сталася помилка");
+      } finally {
+        setIsLoading(false);
       }
     } else {
       setMessage("Будь ласка, заповніть всі поля.");
@@ -74,11 +86,16 @@ function AuthPage({ setIsAuthenticated }) {
     <div className={styles.parentcontainer}>
       <div className={styles.formBlock}>
         <div className={styles.logoDiv}>
-          <img className={styles.logo} src={logo} alt="logo" />
+          <img
+            className={styles.logo}
+            src={logo}
+            alt="logo"/>
         </div>
         <h1 className={styles.LogoText}>Lysto</h1>
         <div className={styles.formContainer}>
-          <AuthTabs activeButton={activeButton} setActiveButton={setActiveButton} />
+          <AuthTabs
+            activeButton={activeButton}
+            setActiveButton={setActiveButton}/>
           <form onSubmit={handleSubmit}>
             <div
               className={`input-group ${
@@ -96,10 +113,10 @@ function AuthPage({ setIsAuthenticated }) {
                   setEmail(e.target.value);
                 }}
                 onFocus={() => {
-                  setIsFocused({ ...isFocused, email: true });
+                  setIsFocused({...isFocused, email: true});
                 }}
                 onBlur={() => {
-                  setIsFocused({ ...isFocused, email: false });
+                  setIsFocused({...isFocused, email: false});
                   if (email && !email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
                     setEmailError("Невірний формат");
                   } else {
@@ -126,9 +143,9 @@ function AuthPage({ setIsAuthenticated }) {
                 onChange={(e) => {
                   setPassword(e.target.value);
                 }}
-                onFocus={() => setIsFocused({ ...isFocused, password: true })}
+                onFocus={() => setIsFocused({...isFocused, password: true})}
                 onBlur={() => {
-                  setIsFocused({ ...isFocused, password: false });
+                  setIsFocused({...isFocused, password: false});
                   if (password && password.length < 8) {
                     setPasswordError("Пароль має бути від 8 символів");
                   } else {
@@ -144,9 +161,9 @@ function AuthPage({ setIsAuthenticated }) {
                 }
               >
                 {showPassword === true ? (
-                  <Eye />
+                  <Eye/>
                 ) : (
-                  <EyeOff />
+                  <EyeOff/>
                 )}
               </button>
             </div>
@@ -169,10 +186,10 @@ function AuthPage({ setIsAuthenticated }) {
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   onFocus={() =>
-                    setIsFocused({ ...isFocused, confirmPassword: true })
+                    setIsFocused({...isFocused, confirmPassword: true})
                   }
                   onBlur={() => {
-                    setIsFocused({ ...isFocused, confirmPassword: false });
+                    setIsFocused({...isFocused, confirmPassword: false});
                     if (confirmPassword && confirmPassword !== password) {
                       setConfirmPasswordError("Паролі не співпадають");
                     } else {
@@ -186,9 +203,9 @@ function AuthPage({ setIsAuthenticated }) {
                   onClick={() => setShowConfirmPassword((prev) => !prev)}
                 >
                   {showConfirmPassword ? (
-                    <Eye />
+                    <Eye/>
                   ) : (
-                    <EyeOff />
+                    <EyeOff/>
                   )}
                 </button>
               </div>
@@ -199,6 +216,7 @@ function AuthPage({ setIsAuthenticated }) {
                 className={styles.sbmbutton}
                 type="submit"
                 disabled={
+                  isLoading ||
                   !email ||
                   !password ||
                   emailError ||
@@ -206,7 +224,7 @@ function AuthPage({ setIsAuthenticated }) {
                   (activeButton === "signup" && !confirmPassword)
                 }
               >
-                {activeButton === "signin" ? "Sign In" : "Sign Up"}
+                {isLoading ? "Завантаження" : activeButton === "signin" ? "Sign In" : "Sign Up"}
               </button>
             </div>
             {message && <p>{message}</p>}
@@ -216,4 +234,5 @@ function AuthPage({ setIsAuthenticated }) {
     </div>
   );
 }
+
 export default AuthPage;
