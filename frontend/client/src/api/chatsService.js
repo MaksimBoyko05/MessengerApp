@@ -9,4 +9,8 @@ export const chatsService = {
     const response = await api.get(`messages/chat/${chatId}`);
     return response.data;
   },
+  sendMessage: async (payload) => {
+    const response = await api.post('/messages', payload)
+    return response.data;
+  }
 };
