@@ -3,7 +3,7 @@ import {chatsService} from '../../../api/chatsService.js';
 import styles from "../Chats.module.scss"
 import ChatBlock from "./ChatBlock.jsx"
 
-function ChatsList({onSelectedChat}) {
+function ChatsList({onSelectedChat, selectedChatId}) {
   const [chats, setChats] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -39,6 +39,7 @@ function ChatsList({onSelectedChat}) {
           key={chat.id}
           chat={chat}
           onClick={handleChatClick}
+          isActive={chat.id === selectedChatId}
         />
       ))}
     </div>)

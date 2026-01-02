@@ -54,15 +54,17 @@ function ChatWindow({chatId}) {
   return (
     <>
       <div className={styles.chatwindow}>
-        {messages.length > 0 ? (
-          messages.map((msg) => (
-            <ChatMessages
-              key={msg.id}
-              msg={msg}/>
-          ))
-        ) : (
-          <div className={styles.noMessages}>У вас ще немає повідомлень у цьому чаті</div>
-        )}
+        <div className={styles.messagesArea}>
+          {messages.length > 0 ? (
+            messages.map((msg) => (
+              <ChatMessages
+                key={msg.id}
+                msg={msg}/>
+            ))
+          ) : (
+            <div className={styles.noMessages}>У вас ще немає повідомлень у цьому чаті</div>
+          )}
+        </div>
         <SendMessageComponent chatId={chatId}/>
       </div>
     </>

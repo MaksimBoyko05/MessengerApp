@@ -14,7 +14,9 @@ function ChatsPage() {
           <Profile/>
         </div>
         <div>
-          <ChatsList onSelectedChat={setSelectedChatId}/>
+          <ChatsList
+            onSelectedChat={setSelectedChatId}
+            selectedChatId={selectedChatId}/>
         </div>
       </div>
       <ChatWindow chatId={selectedChatId}/>

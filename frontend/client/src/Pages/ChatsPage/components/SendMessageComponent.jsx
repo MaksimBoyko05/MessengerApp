@@ -1,5 +1,7 @@
 import {useState, useEffect} from "react";
 import {chatsService} from '../../../api/chatsService.js';
+import styles from "../Chats.module.scss";
+import {Send} from 'lucide-react';
 
 function SendMessageComponent({chatId}) {
   const [messageData, setMessageData] = useState({
@@ -32,12 +34,20 @@ function SendMessageComponent({chatId}) {
   }
   return (
     <>
-      <input
-        name="text"
-        value={messageData.text}
-        onChange={handleChange}
-      />
-      <button onClick={handleSendMessage}>Send</button>
+      <div className={styles.sendcomponent}>
+        <input
+          name="text"
+          placeholder="Type a message..."
+          value={messageData.text}
+          onChange={handleChange}
+          className={styles.textfield}
+        />
+        <button
+          onClick={handleSendMessage}
+          className={styles.sendbtn}>
+          <Send/>
+        </button>
+      </div>
     </>
   )
 }
