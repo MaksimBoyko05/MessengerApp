@@ -7,6 +7,9 @@ function Profile() {
   const [userId, setUserId] = useState("");
   const [username, setUsername] = useState("");
   const [userimg, setUserimg] = useState("");
+
+  const API_URL = "http://localhost:5000";
+
   useEffect(() => {
     const fetchProfile = async () => {
       const token = localStorage.getItem("token");
@@ -55,7 +58,7 @@ function Profile() {
     <div className={styles.profileblock}>
       <img
         className={styles.avatarImg}
-        src={userimg}
+        src={`${API_URL}${userimg}`}
         alt="avatar"/>
       <p className={styles.usertitle}>{username}</p>
       <div className={styles.icons}>

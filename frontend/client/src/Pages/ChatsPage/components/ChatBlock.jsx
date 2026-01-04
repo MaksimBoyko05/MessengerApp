@@ -2,6 +2,8 @@ import styles from "../Chats.module.scss";
 import Avvvatars from 'avvvatars-react'
 
 function ChatBlock({chat, onClick, isActive}) {
+
+  const API_URL = "http://localhost:5000";
   return (
     <div
       className={styles.chatblock}
@@ -11,7 +13,7 @@ function ChatBlock({chat, onClick, isActive}) {
       {chat.avatar_url ? (
         <img
           alt={chat.name}
-          src={chat.avatar_url}/>
+          src={`${API_URL}${chat.avatar_url}`}/>
       ) : (
         <Avvvatars value={chat.name}/>
       )}

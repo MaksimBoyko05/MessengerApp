@@ -2,6 +2,8 @@ import {useState} from "react";
 import ChatsList from "./components/ChatsList";
 import styles from "./Chats.module.scss";
 import Profile from "./components/Profile.jsx";
+import SearchBlock from "./components/Search.jsx";
+import Filter from "./components/Filter.jsx";
 import ChatWindow from "./components/ChatWindow.jsx";
 
 function ChatsPage() {
@@ -12,6 +14,12 @@ function ChatsPage() {
       <div className={styles.sidebarwrapper}>
         <div className={styles.profile}>
           <Profile/>
+        </div>
+        <div className={styles.searchcontainer}>
+          <SearchBlock/>
+        </div>
+        <div className={styles.filtercontainer}>
+          <Filter/>
         </div>
         <div>
           <ChatsList
