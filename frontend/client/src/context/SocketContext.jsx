@@ -16,9 +16,15 @@ export const useSocket = () => {
 export const SocketProvider = ({children}) => {
   const {user} = useContext(UserContext);
   const [socket, setSocket] = useState(null);
+
   useEffect(() => {
-    if (user) {
-      const newSocket = io("http://localhost:5000");
+    if (user && user.id) {
+      const newSocket = io("http://localhost:5000", {
+        query: {
+          userId: user.id
+        }
+      });
+
       newSocket.on("connect", () => {
         setSocket(newSocket);
         console.log("Сокет підключено:", newSocket.id);

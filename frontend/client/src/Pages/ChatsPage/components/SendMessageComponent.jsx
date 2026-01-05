@@ -3,7 +3,7 @@ import {chatsService} from '../../../api/chatsService.js';
 import styles from "../Chats.module.scss";
 import {Send} from 'lucide-react';
 
-function SendMessageComponent({chatId}) {
+function SendMessageComponent({chatId, receiverId}) {
   const [messageData, setMessageData] = useState({
     text: "",
   });
@@ -18,7 +18,8 @@ function SendMessageComponent({chatId}) {
   const handleSendMessage = async () => {
     if (!messageData.text.trim()) return;
     const payload = {
-      receiverId: chatId,
+      chatId,
+      receiverId: receiverId,
       text: messageData.text,
     }
     console.log(payload)

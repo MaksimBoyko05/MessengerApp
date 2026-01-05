@@ -34,10 +34,20 @@ export const sendMessage = async (req: Request, res: Response) => {
 export const getMessagesByChat = async (req: Request, res: Response) => {
     try {
         const chatId = parseInt(req.params.chatId);
+        const userId = req.user?.id;
+
+        if (!userId) {
+            return res.status(401).json({error: "Unauthorized"});
+        }
+        const companion = await chatRepo.getCompanionInfo(chatId, userId);
+        await messageRepo.markAsRead(chatId, userId);
         const messages = await messageRepo.findByChat(chatId);
-        res.json(messages);
+        res.json({
+            messages,
+            companion
+        });
     } catch (err) {
-        console.error(err);
+        console.error("Error in getMessagesByChat:", err);
         res.status(500).json({error: "Database error"});
     }
 };

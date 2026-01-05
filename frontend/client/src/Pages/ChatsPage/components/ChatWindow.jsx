@@ -1,31 +1,39 @@
 import {useEffect, useState} from "react";
 import {chatsService} from '../../../api/chatsService.js';
-import styles from "../Chats.module.scss"
+import styles from "../Chats.module.scss";
 import ChatMessages from "./ChatMessages";
 import SendMessageComponent from "./SendMessageComponent.jsx";
-import {useSocket} from "../../../context/SocketContext.jsx"
+import {useSocket} from "../../../context/SocketContext.jsx";
 
 function ChatWindow({chatId}) {
   const [messages, setMessages] = useState([]);
+  const [companion, setCompanion] = useState(null);
   const [loading, setLoading] = useState(true);
   const {socket} = useSocket();
+  const API_URL = "http://localhost:5000";
 
   useEffect(() => {
     if (!chatId || isNaN(chatId)) return;
-    const fetchChatMessages = async () => {
+
+    const fetchChatData = async () => {
       setLoading(true);
       setMessages([]);
+      setCompanion(null);
+
       try {
         const data = await chatsService.getMessages(chatId);
-        setMessages(data);
-        console.log(data);
+        setMessages(data.messages || []);
+        setCompanion(data.companion || null);
+
+        console.log("Дані чату:", data);
       } catch (error) {
-        console.error("Помилка при завантаженні повідомлень:", error);
+        console.error("Помилка при завантаженні даних чату:", error);
       } finally {
         setLoading(false);
       }
     };
-    fetchChatMessages();
+
+    fetchChatData();
   }, [chatId]);
 
   useEffect(() => {
@@ -34,8 +42,6 @@ function ChatWindow({chatId}) {
     socket.emit('join_chat', roomName);
 
     const handleReceiveMessage = (newMessage) => {
-      console.log("Нове повідомлення отримано:", newMessage);
-
       if (Number(newMessage.chat_id) === Number(chatId)) {
         setMessages((prev) => [...prev, newMessage]);
       }
@@ -49,26 +55,27 @@ function ChatWindow({chatId}) {
     };
   }, [socket, chatId]);
 
-  if (loading) return <div>Завантаження...</div>;
+  if (loading) return <div className={styles.loading}>Завантаження...</div>;
 
   return (
-    <>
-      <div className={styles.chatwindow}>
-        <div className={styles.messagesArea}>
-          {messages.length > 0 ? (
-            messages.map((msg) => (
-              <ChatMessages
-                key={msg.id}
-                msg={msg}/>
-            ))
-          ) : (
-            <div className={styles.noMessages}>У вас ще немає повідомлень у цьому чаті</div>
-          )}
-        </div>
-        <SendMessageComponent chatId={chatId}/>
+    <div className={styles.chatwindow}>
+      <div className={styles.messagesArea}>
+        {messages.length > 0 ? (
+          messages.map((msg) => (
+            <ChatMessages
+              key={msg.id}
+              msg={msg}/>
+          ))
+        ) : (
+          <div className={styles.noMessages}>У вас ще немає повідомлень у цьому чаті</div>
+        )}
       </div>
-    </>
-  )
+
+      <SendMessageComponent
+        chatId={chatId}
+        receiverId={companion?.id}/>
+    </div>
+  );
 }
 
 export default ChatWindow;

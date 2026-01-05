@@ -35,8 +35,8 @@ const httpServer = createServer(app);
 initSocket(httpServer);
 
 const limiter = rateLimit({
-    windowMs: 15 * 60 * 1000,
-    max: 100,
+    windowMs: 15 * 60 * 10000,
+    max: 200,
     message: "Занадто багато запитів з вашої IP-адреси. Спробуйте пізніше.",
     standardHeaders: true,
     legacyHeaders: false,
