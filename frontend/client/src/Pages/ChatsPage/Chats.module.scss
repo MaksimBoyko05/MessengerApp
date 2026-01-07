@@ -93,7 +93,7 @@
     .chatsList {
       display: flex;
       flex-direction: column;
-      gap: 13px;
+      gap: 8px;
       margin-top: 20px;
       transition: all 0.3s ease;
 
@@ -151,6 +151,7 @@
 
         .chatText {
           display: flex;
+          position: relative;
           flex-direction: column;
           overflow: hidden;
           width: 200px;
@@ -190,6 +191,18 @@
           line-height: 0;
           padding: 0;
           margin: 0;
+        }
+
+        .msgtime {
+          position: absolute;
+          font-size: 0.8rem;
+          right: 12px;
+          top: 70%;
+          color: #6b7280;
+        }
+
+        .ticks {
+
         }
       }
     }
@@ -234,28 +247,58 @@
         display: none;
       }
 
+      %time-styles {
+        font-size: 0.75rem;
+        margin-left: auto;
+        margin-top: 4px;
+        opacity: 0.7;
+        line-height: 1;
+        white-space: nowrap;
+      }
+
       .mymsg {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-end;
         align-self: flex-end;
+        position: relative;
+        gap: 8px;
         background: linear-gradient(135deg, #2B7FFF 0%, #7E57FF 100%);
         color: #fff;
         border-radius: 18px 18px 4px 18px;
         padding: 10px 16px;
         width: fit-content;
-        max-width: 70%;
+        max-width: 30%;
         font-weight: 400;
         box-shadow: 0 4px 12px rgba(43, 127, 255, 0.25);
+        word-break: break-word;
+
+        .readtime {
+          @extend %time-styles;
+          color: rgba(255, 255, 255, 0.8);
+        }
       }
 
       .msgbubble {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-end;
+        gap: 8px;
         align-self: flex-start;
         width: fit-content;
-        max-width: 70%;
+        max-width: 30%;
         padding: 10px 16px;
         background: #ffffff;
         color: #1a1a1a;
         border-radius: 18px 18px 18px 4px;
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
         border: 1px solid rgba(0, 0, 0, 0.03);
+        word-break: break-word;
+
+        .readtime {
+          @extend %time-styles;
+          color: #999;
+        }
       }
     }
 

@@ -5,7 +5,7 @@ import {Eye, EyeOff} from 'lucide-react';
 import logo from "../../loginlogo.png";
 import AuthTabs from "./components/AuthTabs.jsx";
 import styles from "./Authpage.module.scss";
-import {UserContext} from "../../context/UserContext";
+import UserContext from "../../context/UserContext";
 
 function AuthPage() {
   const {checkAuth} = useContext(UserContext);
