@@ -1,6 +1,6 @@
 import {useState, useEffect} from "react";
 import axios from "axios";
-import styles from "../Chats.module.scss"
+import styles from "@/Pages/ChatsPage/Chats.module.scss";
 import {Settings} from 'lucide-react';
 
 function Profile() {
@@ -60,7 +60,10 @@ function Profile() {
         className={styles.avatarImg}
         src={`${API_URL}${userimg}`}
         alt="avatar"/>
-      <p className={styles.usertitle}>{username}</p>
+      <div className={styles.profiletitles}>
+        <p className={styles.usertitle}>{username}</p>
+        <p className={styles.userstatus}>online</p>
+      </div>
       <div className={styles.icons}>
         <Settings/>
       </div>

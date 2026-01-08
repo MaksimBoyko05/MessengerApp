@@ -1,16 +1,17 @@
 import {useEffect, useState} from "react";
-import {chatsService} from '../../../api/chatsService.js';
-import styles from "../Chats.module.scss";
-import ChatMessages from "./ChatMessages";
+import {chatsService} from '@/api/chatsService.js';
+import styles from "@/Pages/ChatsPage/Chats.module.scss";
+import ChatMessages from "./ChatMessages.jsx";
 import SendMessageComponent from "./SendMessageComponent.jsx";
-import {useSocket} from "../../../context/SocketContext.jsx";
+import {useSocket} from "@/context/SocketContext.jsx";
+import ChatHeader from "./ChatHeader.jsx";
+import NoChatSelected from "./NoChatSelected.jsx";
 
 function ChatWindow({chatId}) {
   const [messages, setMessages] = useState([]);
   const [companion, setCompanion] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const {socket} = useSocket();
-  const API_URL = "http://localhost:5000";
 
   useEffect(() => {
     if (!chatId || isNaN(chatId)) return;
@@ -54,11 +55,14 @@ function ChatWindow({chatId}) {
       socket.emit('leave_chat', roomName);
     };
   }, [socket, chatId]);
-
+  if (!chatId) {
+    return <NoChatSelected/>;
+  }
   if (loading) return <div className={styles.loading}>Завантаження...</div>;
 
   return (
     <div className={styles.chatwindow}>
+      <ChatHeader companion={companion}/>
       <div className={styles.messagesArea}>
         {messages.length > 0 ? (
           messages.map((msg) => (

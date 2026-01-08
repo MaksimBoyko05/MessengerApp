@@ -1,4 +1,4 @@
-import styles from "../Chats.module.scss"
+import styles from "../../Chats.module.scss"
 
 function Filter() {
   return (

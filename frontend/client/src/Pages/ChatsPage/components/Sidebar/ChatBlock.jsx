@@ -1,7 +1,7 @@
-import styles from "../Chats.module.scss";
+import styles from "../../Chats.module.scss";
 import Avvvatars from 'avvvatars-react'
 import {CheckCheck, Check} from 'lucide-react';
-import UserContext from "../../../context/UserContext"
+import UserContext from "@/context/UserContext.jsx"
 import {useContext} from "react";
 
 function ChatBlock({chat, onClick, isActive}) {

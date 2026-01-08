@@ -1,8 +1,8 @@
 import {useEffect, useState} from 'react';
-import {chatsService} from '../../../api/chatsService.js';
-import styles from "../Chats.module.scss"
+import {chatsService} from '@/api/chatsService.js';
+import styles from "@/Pages/ChatsPage/Chats.module.scss";
 import ChatBlock from "./ChatBlock.jsx"
-import {useSocket} from "../../../context/SocketContext.jsx";
+import {useSocket} from "@/context/SocketContext.jsx";
 
 function ChatsList({onSelectedChat, selectedChatId}) {
   const [chats, setChats] = useState([]);

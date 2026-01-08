@@ -1,6 +1,6 @@
-import {UserContext} from "../../../context/UserContext.jsx";
+import {UserContext} from "@/context/UserContext.jsx";
 import {useContext} from "react";
-import styles from "../Chats.module.scss"
+import styles from "@/Pages/ChatsPage/Chats.module.scss";
 
 
 function ChatMessages({msg}) {

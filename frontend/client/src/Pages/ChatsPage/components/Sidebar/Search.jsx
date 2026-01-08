@@ -1,5 +1,5 @@
 import {Search} from 'lucide-react';
-import styles from "../Chats.module.scss";
+import styles from "../../Chats.module.scss";
 
 function SearchBlock() {
   return (
