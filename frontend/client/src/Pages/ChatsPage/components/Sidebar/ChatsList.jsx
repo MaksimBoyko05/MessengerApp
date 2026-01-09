@@ -1,20 +1,28 @@
-import {useEffect, useState} from 'react';
+import {useContext, useEffect, useRef, useState} from 'react';
 import {chatsService} from '@/api/chatsService.js';
 import styles from "@/Pages/ChatsPage/Chats.module.scss";
-import ChatBlock from "./ChatBlock.jsx"
+import ChatBlock from "./ChatBlock.jsx";
 import {useSocket} from "@/context/SocketContext.jsx";
+import UserContext from "@/context/UserContext.jsx";
 
 function ChatsList({onSelectedChat, selectedChatId}) {
   const [chats, setChats] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  const selectedChatIdRef = useRef(selectedChatId);
+
   const {socket} = useSocket();
+  const {user} = useContext(UserContext);
+
+  useEffect(() => {
+    selectedChatIdRef.current = selectedChatId;
+  }, [selectedChatId]);
 
   useEffect(() => {
     const fetchChats = async () => {
       try {
         const data = await chatsService.getAll();
         setChats(data);
-        console.log(data);
       } catch (error) {
         console.error("Помилка при завантаженні чатів:", error);
       } finally {
@@ -23,73 +31,97 @@ function ChatsList({onSelectedChat, selectedChatId}) {
     };
 
     fetchChats();
-  }, []);
+  }, [user]);
+
   useEffect(() => {
     if (!socket) return;
 
-    const handleNewMessage = async (newMessage) => {
-      console.log("Нове повідомлення отримано:", newMessage);
-      console.log("--- НОВЕ ПОВІДОМЛЕННЯ ВІД СОКЕТА ---");
-      console.log("Дані повідомлення:", newMessage);
-      console.log("Тип chat_id:", typeof newMessage.chat_id);
+    const handleNewMessage = (rawMessage) => {
+      const message = {
+        ...rawMessage,
+        chat_id: Number(rawMessage.chat_id || rawMessage.chatId),
+        user_id: Number(rawMessage.user_id || rawMessage.senderId),
+      };
 
       setChats((prevChats) => {
-        const existingChat = prevChats.find((c) => c.id === newMessage.chat_id);
+        const existingChat = prevChats.find((c) => Number(c.id) === message.chat_id);
 
         if (existingChat) {
-          const otherChats = prevChats.filter((c) => c.id !== newMessage.chat_id);
-          console.log(newMessage)
+          const isChatOpen = Number(selectedChatIdRef.current) === message.chat_id;
+
           const updatedChat = {
             ...existingChat,
-            last_message: newMessage.text,
-            last_message_time: newMessage.created_at,
-            unread_count: selectedChatId === newMessage.chat_id
+            last_message: message.text || message.message,
+            last_message_time: message.created_at || new Date().toISOString(),
+            last_message_author_id: message.user_id,
+            is_last_message_read: false,
+            unread_count: isChatOpen
               ? 0
               : (Number(existingChat.unread_count) || 0) + 1,
           };
 
+          const otherChats = prevChats.filter((c) => Number(c.id) !== message.chat_id);
           return [updatedChat, ...otherChats];
-        } else {
-          fetchNewChat(newMessage.chat_id);
-          return prevChats;
         }
+
+        fetchMissingChat(message.chat_id);
+        return prevChats;
       });
     };
 
-    const fetchNewChat = async (chatId) => {
-      try {
-        const newChatData = await chatsService.getChatDetails(chatId);
-        setChats((prev) => {
-          if (prev.some(c => c.id === newChatData.id)) return prev;
-          return [newChatData, ...prev];
-        });
-      } catch (err) {
-        console.error("Помилка завантаження чату:", err);
-      }
+    const handleMessageRead = ({chat_id}) => {
+      setChats((prevChats) =>
+        prevChats.map((chat) =>
+          chat.id === Number(chat_id)
+            ? {...chat, is_last_message_read: true}
+            : chat
+        )
+      );
     };
 
     socket.on("receive_message", handleNewMessage);
+    socket.on("message_read", handleMessageRead);
 
     return () => {
       socket.off("receive_message", handleNewMessage);
+      socket.off("message_read", handleMessageRead);
     };
-  }, [socket, selectedChatId]);
+  }, [socket]);
+  const fetchMissingChat = async (chatId) => {
+    try {
+      const newChatData = await chatsService.getChatDetails(chatId);
+      setChats((prev) => {
+        if (prev.some(c => c.id === newChatData.id)) return prev;
+        return [newChatData, ...prev];
+      });
+    } catch (err) {
+      console.error(`Не вдалося завантажити деталі чату ${chatId}:`, err);
+    }
+  };
 
   const handleChatClick = (chatId) => {
+    if (socket && user) {
+      socket.emit("mark_messages_read", {
+        chatId: chatId,
+        userId: user.id
+      });
+    }
+
     onSelectedChat(chatId);
+
     setChats(prevChats => prevChats.map(chat =>
       (chat.id === chatId && chat.unread_count > 0)
         ? {...chat, unread_count: 0}
         : chat
     ));
-  }
+  };
 
   if (loading) return <div>Завантаження...</div>;
   if (!loading && chats.length === 0) {
-    return <div> У вас ще немає активних чатів</div>;
+    return <div>У вас ще немає активних чатів</div>;
   }
-  return (
 
+  return (
     <div className={styles.chatsList}>
       {chats.map(chat => (
         <ChatBlock
@@ -99,7 +131,8 @@ function ChatsList({onSelectedChat, selectedChatId}) {
           isActive={chat.id === selectedChatId}
         />
       ))}
-    </div>)
+    </div>
+  );
 }
 
 export default ChatsList;

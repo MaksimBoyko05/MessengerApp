@@ -1,5 +1,5 @@
 import {Request, Response} from "express";
-import {MessageRepository} from "../repositories/messageRepository.js";
+import {MessageRepository} from "../repositories/MessageRepository.js";
 import {ChatRepository} from "../repositories/ChatRepository.js";
 import {getIO} from "../socket.js";
 

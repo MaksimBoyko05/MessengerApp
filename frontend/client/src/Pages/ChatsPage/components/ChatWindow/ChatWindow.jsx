@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import {chatsService} from '@/api/chatsService.js';
 import styles from "@/Pages/ChatsPage/Chats.module.scss";
 import ChatMessages from "./ChatMessages.jsx";
@@ -6,12 +6,14 @@ import SendMessageComponent from "./SendMessageComponent.jsx";
 import {useSocket} from "@/context/SocketContext.jsx";
 import ChatHeader from "./ChatHeader.jsx";
 import NoChatSelected from "./NoChatSelected.jsx";
+import UserContext from "@/context/UserContext.jsx";
 
 function ChatWindow({chatId}) {
   const [messages, setMessages] = useState([]);
   const [companion, setCompanion] = useState(null);
   const [loading, setLoading] = useState(false);
   const {socket} = useSocket();
+  const {user} = useContext(UserContext);
 
   useEffect(() => {
     if (!chatId || isNaN(chatId)) return;
@@ -45,6 +47,13 @@ function ChatWindow({chatId}) {
     const handleReceiveMessage = (newMessage) => {
       if (Number(newMessage.chat_id) === Number(chatId)) {
         setMessages((prev) => [...prev, newMessage]);
+        if (newMessage.user_id !== user?.id) {
+          console.log("Читаю нове повідомлення в реальному часі...");
+          socket.emit("mark_messages_read", {
+            chatId: chatId,
+            userId: user.id
+          });
+        }
       }
     };
 
@@ -52,9 +61,8 @@ function ChatWindow({chatId}) {
 
     return () => {
       socket.off("receive_message", handleReceiveMessage);
-      socket.emit('leave_chat', roomName);
     };
-  }, [socket, chatId]);
+  }, [socket, chatId, user]);
   if (!chatId) {
     return <NoChatSelected/>;
   }

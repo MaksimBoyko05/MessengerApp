@@ -1,9 +1,11 @@
 import {Server as HttpServer} from "http";
 import {Server, Socket} from "socket.io";
 import {ChatRepository} from "./repositories/ChatRepository.js";
+import {MessageRepository} from "./repositories/MessageRepository.js";
 
 let io: Server;
 const chatRepo = new ChatRepository();
+const messageRepo = new MessageRepository();
 export const initSocket = (httpServer: HttpServer) => {
     io = new Server(httpServer, {
         cors: {
@@ -35,7 +37,21 @@ export const initSocket = (httpServer: HttpServer) => {
             socket.join(roomName);
             console.log(` User ${socket.id} joined room: ${roomName}`);
         });
+        socket.on("mark_messages_read", async ({chatId, userId}) => {
+            try {
+                await messageRepo.markAsRead(Number(chatId), Number(userId));
+                const roomName = `chat_${chatId}`;
+                socket.to(roomName).emit("message_read", {
+                    chat_id: chatId,
+                    user_id: userId
+                });
 
+                console.log(`User ${userId} read messages in chat ${chatId}`);
+
+            } catch (err) {
+                console.error("Error marking messages read:", err);
+            }
+        });
         socket.on("leave_chat", (chatId: string | number) => {
             const roomName = `chat_${chatId}`;
             socket.leave(roomName);
