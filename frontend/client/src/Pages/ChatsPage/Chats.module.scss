@@ -12,7 +12,7 @@ $color-primary: #2B7FFF;
 $color-primary-hover: #2471e7;
 $color-gradient-start: #2B7FFF;
 $color-gradient-end: #7E57FF;
-$color-success: #22c55e;
+$color-status-online: #22c55e;
 $color-text-primary: #1a1a1a;
 $color-text-secondary: #666;
 $color-text-tertiary: #999;
@@ -152,7 +152,7 @@ body {
     .userstatus {
       font-size: 14px;
       font-weight: 500;
-      color: $color-success;
+      color: $color-status-online;
     }
   }
 
@@ -462,6 +462,6 @@ body {
 
   .userstatus {
     font-size: 0.85rem;
-    color: $color-success;
+    color: $color-status-online;
   }
 }

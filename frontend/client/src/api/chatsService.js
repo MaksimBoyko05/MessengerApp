@@ -16,5 +16,15 @@ export const chatsService = {
   sendMessage: async (payload) => {
     const response = await api.post('/messages', payload);
     return response.data;
+  },
+  searchUsers: async (query) => {
+    const response = await api.get('/users/search', {
+      params: {q: query}
+    });
+    return response.data;
+  },
+  createOrOpenChat: async (targetUserId) => {
+    const response = await api.post('/chats', {targetUserId});
+    return response.data;
   }
 };

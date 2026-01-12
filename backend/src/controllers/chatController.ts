@@ -38,3 +38,26 @@ export const getChatDetails = async (req: Request, res: Response) => {
         res.status(500).json({message: 'Помилка сервера'});
     }
 };
+export const createOrOpenChat = async (req: Request, res: Response) => {
+    try {
+        const myId = req.user?.id;
+        const {targetUserId} = req.body;
+
+        if (!myId || !targetUserId) {
+            return res.status(400).json({message: "Некоректні дані"});
+        }
+
+        let chat = await chatRepo.findPrivateChat(myId, targetUserId);
+
+        if (!chat) {
+            chat = await chatRepo.createPrivateChat(myId, targetUserId);
+        }
+        const fullChatData = await chatRepo.getChatByIdForSidebar(chat.id, myId);
+
+        res.json(fullChatData);
+
+    } catch (error) {
+        console.error('Помилка в createOrOpenChat:', error);
+        res.status(500).json({message: 'Не вдалося відкрити чат'});
+    }
+};

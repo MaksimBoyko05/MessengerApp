@@ -1,0 +1,79 @@
+$color-main: #ffff;
+$input-focus-bg: #f5f5f5;
+$border-radius: 16px;
+$modal-border-radius: 16px;
+
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.button {
+  position: absolute;
+  padding: 10px;
+  align-self: flex-end;
+  transform: translate(400px, -50px);
+  background-color: $color-main;
+  border: none;
+  border-radius: $border-radius;
+}
+
+.modalcontainer {
+  width: 100%;
+  height: 100%;
+  @include flex-center;
+  position: absolute;
+
+  .modalcontent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    background-color: $color-main;
+    width: 400px;
+    height: 400px;
+    border-radius: $modal-border-radius;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+
+    svg {
+      position: absolute;
+      top: 3px;
+      right: 10px;
+      cursor: pointer;
+    }
+
+    input {
+      padding: 5px;
+      margin-top: 20px;
+      border-radius: 6px;
+      border: 1px solid #787a85;
+      transition: border-color 0.3s ease;
+
+      &:focus {
+        border-color: #2B7FFF;
+        background-color: $input-focus-bg;
+        outline: none;
+      }
+    }
+  }
+
+  .userblock {
+    display: flex;
+    margin-top: 10px;
+    align-items: center;
+    padding: 10px;
+    border-radius: 12px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    width: 200px;
+    height: 35px;
+
+
+    img {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      object-fit: contain;
+    }
+  }
+}

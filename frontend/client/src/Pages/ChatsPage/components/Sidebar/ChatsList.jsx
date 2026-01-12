@@ -2,12 +2,15 @@ import {useContext, useEffect, useRef, useState} from 'react';
 import {chatsService} from '@/api/chatsService.js';
 import styles from "@/Pages/ChatsPage/Chats.module.scss";
 import ChatBlock from "./ChatBlock.jsx";
+import CreateChatButton from "@/Pages/ChatsPage/components/CreateChat/CreateChatButton.jsx";
+import NewChatModal from "@/Pages/ChatsPage/components/CreateChat/NewChatModal.jsx";
 import {useSocket} from "@/context/SocketContext.jsx";
 import UserContext from "@/context/UserContext.jsx";
 
 function ChatsList({onSelectedChat, selectedChatId}) {
   const [chats, setChats] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
 
   const selectedChatIdRef = useRef(selectedChatId);
 
@@ -115,6 +118,15 @@ function ChatsList({onSelectedChat, selectedChatId}) {
         : chat
     ));
   };
+  const handleChatCreated = (newChat) => {
+    setChats(prevChats => {
+      const exists = prevChats.find(c => c.id === newChat.id);
+      if (exists) return prevChats;
+
+      return [newChat, ...prevChats];
+    });
+    onSelectedChat(newChat.id);
+  }
 
   if (loading) return <div>Завантаження...</div>;
   if (!loading && chats.length === 0) {
@@ -131,6 +143,12 @@ function ChatsList({onSelectedChat, selectedChatId}) {
           isActive={chat.id === selectedChatId}
         />
       ))}
+      <CreateChatButton setIsOpen={setIsOpen}/>
+      {isOpen && (
+        <NewChatModal
+          setIsOpen={setIsOpen}
+          onChatCreated={handleChatCreated}/>
+      )}
     </div>
   );
 }
