@@ -20,6 +20,8 @@ export const initSocket = (httpServer: HttpServer) => {
         if (userId) {
             console.log(`Користувач ${userId} підключився`);
 
+            socket.join(`user_${userId}`);
+
             try {
                 const userChats = await chatRepo.getUserChats(Number(userId));
                 userChats.forEach(chat => {

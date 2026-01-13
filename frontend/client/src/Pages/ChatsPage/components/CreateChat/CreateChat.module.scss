@@ -1,7 +1,10 @@
 $color-main: #ffff;
-$input-focus-bg: #f5f5f5;
+$modal-color-main: #ffffff;
+$input-focus-bg: #f2f2f2;
 $border-radius: 16px;
-$modal-border-radius: 16px;
+$modal-border-radius: 24px;
+$modal-search-radius: 16px;
+$modal-list-hover-radius: 12px;
 
 @mixin flex-center {
   display: flex;
@@ -13,41 +16,55 @@ $modal-border-radius: 16px;
   position: absolute;
   padding: 10px;
   align-self: flex-end;
-  transform: translate(400px, -50px);
+  left: 12%;
+  bottom: 30px;
+  transform: translate(00px);
   background-color: $color-main;
   border: none;
   border-radius: $border-radius;
 }
 
 .modalcontainer {
-  width: 100%;
-  height: 100%;
-  @include flex-center;
-  position: absolute;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(2px);
 
   .modalcontent {
     display: flex;
-    flex-direction: column;
-    align-items: center;
     position: relative;
-    background-color: $color-main;
+    flex-direction: column;
+    background-color: $modal-color-main;
     width: 400px;
     height: 400px;
+    max-height: 600px;
+    padding: 24px;
     border-radius: $modal-border-radius;
-    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
 
     svg {
+      background: #e7e7e7;
+      padding: 5px;
+      border-radius: 50%;
       position: absolute;
-      top: 3px;
+      top: 10px;
       right: 10px;
       cursor: pointer;
     }
 
     input {
-      padding: 5px;
+      height: 38px;
+      padding: 5px 5px 1px 15px;
       margin-top: 20px;
-      border-radius: 6px;
-      border: 1px solid #787a85;
+      background: #FAFAFA;
+      border-radius: $modal-search-radius;
+      border: 1px solid rgba(120, 122, 133, 0.07);
       transition: border-color 0.3s ease;
 
       &:focus {
@@ -64,16 +81,27 @@ $modal-border-radius: 16px;
     align-items: center;
     padding: 10px;
     border-radius: 12px;
-    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-    width: 200px;
-    height: 35px;
+    height: 45px;
+    transition: all 0.3s;
+    border: 1px solid #FFFF;
+
+    &:hover {
+      background: #f2f2f2;
+    }
 
 
     img {
-      width: 26px;
-      height: 26px;
+      width: 32px;
+      height: 32px;
       border-radius: 50%;
       object-fit: contain;
     }
+  }
+
+  .empty {
+    @include flex-center;
+    margin-top: 10px;
+    font-size: 14px;
+    color: #6b7280;
   }
 }

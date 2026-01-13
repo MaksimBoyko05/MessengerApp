@@ -15,10 +15,10 @@ const NoChatSelected = () => {
         <h3>Оберіть чат</h3>
         <p>Виберіть співрозмовника зі списку зліва, щоб почати спілкування.</p>
       </div>
-      <CreateChatButton setIsOpen={setIsOpen}/>
-      {isOpen && (
-        <NewChatModal setIsOpen={setIsOpen}/>
-      )}
+      {/*<CreateChatButton setIsOpen={setIsOpen}/>*/}
+      {/*{isOpen && (*/}
+      {/*  <NewChatModal setIsOpen={setIsOpen}/>*/}
+      {/*)}*/}
     </div>
   );
 };

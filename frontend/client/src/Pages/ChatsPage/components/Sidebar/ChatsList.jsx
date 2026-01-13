@@ -11,11 +11,15 @@ function ChatsList({onSelectedChat, selectedChatId}) {
   const [chats, setChats] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
-
+  const chatsRef = useRef(chats);
   const selectedChatIdRef = useRef(selectedChatId);
 
   const {socket} = useSocket();
   const {user} = useContext(UserContext);
+
+  useEffect(() => {
+    chatsRef.current = chats;
+  }, [chats]);
 
   useEffect(() => {
     selectedChatIdRef.current = selectedChatId;
@@ -40,36 +44,42 @@ function ChatsList({onSelectedChat, selectedChatId}) {
     if (!socket) return;
 
     const handleNewMessage = (rawMessage) => {
+      console.log(" SOCKET ОТРИМАВ ПОВІДОМЛЕННЯ:", rawMessage);
+
       const message = {
         ...rawMessage,
         chat_id: Number(rawMessage.chat_id || rawMessage.chatId),
         user_id: Number(rawMessage.user_id || rawMessage.senderId),
       };
 
-      setChats((prevChats) => {
-        const existingChat = prevChats.find((c) => Number(c.id) === message.chat_id);
+      const currentChats = chatsRef.current;
+      const existingChat = currentChats.find((c) => Number(c.id) === message.chat_id);
 
-        if (existingChat) {
+      if (existingChat) {
+        setChats((prevChats) => {
+          const chatToUpdate = prevChats.find((c) => Number(c.id) === message.chat_id);
+          if (!chatToUpdate) return prevChats;
+
           const isChatOpen = Number(selectedChatIdRef.current) === message.chat_id;
 
           const updatedChat = {
-            ...existingChat,
+            ...chatToUpdate,
             last_message: message.text || message.message,
             last_message_time: message.created_at || new Date().toISOString(),
             last_message_author_id: message.user_id,
             is_last_message_read: false,
             unread_count: isChatOpen
               ? 0
-              : (Number(existingChat.unread_count) || 0) + 1,
+              : (Number(chatToUpdate.unread_count) || 0) + 1,
           };
 
           const otherChats = prevChats.filter((c) => Number(c.id) !== message.chat_id);
           return [updatedChat, ...otherChats];
-        }
-
+        });
+      } else {
+        console.log("Чат не знайдено, fetching ID: ", message.chat_id);
         fetchMissingChat(message.chat_id);
-        return prevChats;
-      });
+      }
     };
 
     const handleMessageRead = ({chat_id}) => {
@@ -92,7 +102,9 @@ function ChatsList({onSelectedChat, selectedChatId}) {
   }, [socket]);
   const fetchMissingChat = async (chatId) => {
     try {
+      console.log("Fetch дані для чату", chatId);
       const newChatData = await chatsService.getChatDetails(chatId);
+
       setChats((prev) => {
         if (prev.some(c => c.id === newChatData.id)) return prev;
         return [newChatData, ...prev];

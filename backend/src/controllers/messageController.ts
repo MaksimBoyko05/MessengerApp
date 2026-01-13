@@ -21,7 +21,9 @@ export const sendMessage = async (req: Request, res: Response) => {
         }
         const newMessage = await messageRepo.create(chat.id, senderId, text);
         const io = getIO();
+
         io.to(`chat_${chat.id}`).emit("receive_message", newMessage);
+        io.to(`user_${receiverId}`).emit("receive_message", newMessage);
 
         res.status(201).json(newMessage);
     } catch (err) {

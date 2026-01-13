@@ -19,15 +19,22 @@ export const SocketProvider = ({children}) => {
 
   useEffect(() => {
     if (user && user.id) {
+      console.log("Ініціалізація сокета для userId:", user.id)
+
       const newSocket = io("http://localhost:5000", {
         query: {
           userId: user.id
-        }
+        },
+        reconnectionAttempts: 5,
+        transports: ['websocket'],
       });
+      setSocket(newSocket);
 
       newSocket.on("connect", () => {
-        setSocket(newSocket);
         console.log("Сокет підключено:", newSocket.id);
+      });
+      newSocket.on("connect_error", (err) => {
+        console.error("Помилка з'єднання сокету", err.message);
       });
 
       return () => {

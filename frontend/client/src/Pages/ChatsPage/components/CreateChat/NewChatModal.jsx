@@ -40,7 +40,10 @@ function CreateChatModal({setIsOpen, onChatCreated}) {
     <>
       <div className={styles.modalcontainer}>
         <div className={styles.modalcontent}>
-          <X onClick={() => setIsOpen(false)}/>
+          <X
+            size={24}
+            onClick={() => setIsOpen(false)}/>
+          <h4>New Chat</h4>
           <input
             type="text"
             placeholder="Пошук користувачів..."
