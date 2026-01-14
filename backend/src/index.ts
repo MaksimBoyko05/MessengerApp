@@ -34,28 +34,35 @@ app.use(express.json());
 const httpServer = createServer(app);
 initSocket(httpServer);
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+app.use('/avatars', express.static(path.join(__dirname, '../public/avatars')));
+
 const limiter = rateLimit({
-    windowMs: 15 * 60 * 10000,
-    max: 200,
+    windowMs: 15 * 60 * 1000,
+    max: 500,
     message: "Занадто багато запитів з вашої IP-адреси. Спробуйте пізніше.",
     standardHeaders: true,
     legacyHeaders: false,
 });
 
-app.use(limiter);
+app.use("/api", limiter);
 
 
 app.get("/", (req, res) => {
-    res.send("Backend is working 🚀");
+    res.send("Backend is working ");
 });
+app.use("/api/users", userRoutes);
+app.use("/api/messages", messageRoutes);
+app.use('/api/chats', chatRoutes);
 
 app.get("/test-email", async (req, res) => {
     await emailQueue.add("sendTestEmail", {
         email: "vvangog52@gmail.com",
         subject: "Тестова розсилка від месенджера",
-        text: "Це тест перевірки BullMQ 🚀",
+        text: "Це тест перевірки BullMQ ",
     });
-    res.send("📬 Задача надіслана у чергу");
+    res.send(" Задача надіслана у чергу");
 });
 
 app.use("/api/auth", authRoutes);
@@ -69,14 +76,6 @@ app.get("/users", async (req, res) => {
         res.status(500).send("DB error");
     }
 });
-
-app.use("/api/users", userRoutes);
-app.use("/api/messages", messageRoutes);
-app.use('/api/chats', chatRoutes);
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-app.use('/avatars', express.static(path.join(__dirname, '../public/avatars')));
 
 const PORT = process.env.PORT || 5000;
 httpServer.listen(PORT, () => {

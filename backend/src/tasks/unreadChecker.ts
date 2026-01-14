@@ -1,25 +1,37 @@
 import pool from "../db.js";
-import { emailQueue } from "../queues/emailQueue.js";
+import {emailQueue} from "../queues/emailQueue.js";
 
 export const checkUnreadMessages = async () => {
-  const query = `
-    SELECT u.email, u.username, COUNT(m.id) AS unread_count
-    FROM messages m
-    JOIN users u ON u.id = m.user_id
-    LEFT JOIN read_receipts rr ON rr.message_id = m.id
-    WHERE rr.id IS NULL AND m.created_at < NOW() - INTERVAL '2 days'
-    GROUP BY u.email, u.username
-  `;
+    const query = `
+        SELECT u.email, u.username, COUNT(m.id) AS unread_count
+        FROM messages m
+                 JOIN chat_members cm ON cm.chat_id = m.chat_id
+                 JOIN users u ON u.id = cm.user_id
+                 LEFT JOIN read_receipts rr ON rr.message_id = m.id AND rr.user_id = u.id
+        WHERE m.user_id != u.id 
+        AND rr.id IS NULL 
+        AND m.created_at < NOW() - INTERVAL '2 days'
+        GROUP BY u.email, u.username;
+    `;
 
-  const result = await pool.query(query);
+    try {
+        const result = await pool.query(query);
 
-  for (const row of result.rows) {
-    await emailQueue.add("sendUnreadEmail", {
-      email: row.email,
-      subject: "У вас є непрочитані повідомлення ",
-      text: `Привіт, ${row.username}! У вас ${row.unread_count} непрочитаних повідомлень.`,
-    });
-  }
+        if (result.rows.length === 0) {
+            console.log("📭 Немає користувачів з давніми непрочитаними повідомленнями.");
+            return;
+        }
 
-  console.log(` Перевірено ${result.rows.length} користувачів`);
+        for (const row of result.rows) {
+            await emailQueue.add("sendUnreadEmail", {
+                email: row.email,
+                subject: "Нагадування: Вас чекають повідомлення 📩",
+                text: `Привіт, ${row.username}! Ви маєте ${row.unread_count} непрочитаних повідомлень, яким вже більше 2 днів. Заходьте в чат!`,
+            });
+        }
+
+        console.log(` Відправлено нагадування ${result.rows.length} користувачам.`);
+    } catch (error) {
+        console.error(" Помилка при перевірці непрочитаних повідомлень:", error);
+    }
 };

@@ -1,4 +1,4 @@
-import {useContext, useEffect, useState} from "react";
+import {useContext, useEffect, useState, useRef} from "react";
 import {chatsService} from '@/api/chatsService.js';
 import styles from "@/Pages/ChatsPage/Chats.module.scss";
 import ChatMessages from "./ChatMessages.jsx";
@@ -15,6 +15,7 @@ function ChatWindow({chatId}) {
   const {socket} = useSocket();
   const {user} = useContext(UserContext);
 
+  const messagesEndRef = useRef();
   useEffect(() => {
     if (!chatId || isNaN(chatId)) return;
 
@@ -56,13 +57,29 @@ function ChatWindow({chatId}) {
         }
       }
     };
+    const handleMessageRead = ({chat_id, user_id}) => {
+      if (Number(chat_id) === Number(chatId)) {
+        setMessages(prev =>
+          prev.map((msg) =>
+            !msg.is_read
+              ? {...msg, is_read: true}
+              : msg
+          )
+        )
+      }
+    }
 
+    socket.on("message_read", handleMessageRead)
     socket.on("receive_message", handleReceiveMessage);
-
     return () => {
       socket.off("receive_message", handleReceiveMessage);
+      socket.off("message_read", handleMessageRead);
     };
   }, [socket, chatId, user]);
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({behavior: "smooth", block: "end"})
+  }, [messages]);
+
   if (!chatId) {
     return <NoChatSelected/>;
   }
@@ -81,6 +98,9 @@ function ChatWindow({chatId}) {
         ) : (
           <div className={styles.noMessages}>У вас ще немає повідомлень у цьому чаті</div>
         )}
+        <div
+          className={styles.msganchor}
+          ref={messagesEndRef}/>
       </div>
 
       <SendMessageComponent
