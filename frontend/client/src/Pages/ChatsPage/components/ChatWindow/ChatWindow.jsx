@@ -68,12 +68,27 @@ function ChatWindow({chatId}) {
         )
       }
     }
+    const handleStatusChange = (statusData) => {
+      setCompanion(prevCompanion => {
+        if (!prevCompanion) return prevCompanion;
+        if (prevCompanion.id === statusData.userId) {
+          return {
+            ...prevCompanion,
+            is_online: statusData.online,
+            last_seen: statusData.lastSeen
+          };
+        }
+        return prevCompanion;
+      })
+    }
 
     socket.on("message_read", handleMessageRead)
     socket.on("receive_message", handleReceiveMessage);
+    socket.on("user_status_change", handleStatusChange);
     return () => {
       socket.off("receive_message", handleReceiveMessage);
       socket.off("message_read", handleMessageRead);
+      socket.off("user_status_change", handleStatusChange);
     };
   }, [socket, chatId, user]);
   useEffect(() => {

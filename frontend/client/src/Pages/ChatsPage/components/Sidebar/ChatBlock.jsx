@@ -17,13 +17,20 @@ function ChatBlock({chat, onClick, isActive}) {
       onClick={() => onClick(chat.id)}
       data-active={isActive}
     >
-      {chat.avatar_url ? (
-        <img
-          alt={chat.name}
-          src={`${API_URL}${chat.avatar_url}`}/>
-      ) : (
-        <Avvvatars value={chat.name}/>
-      )}
+      <div className={styles.avatarContainer}>
+        {chat.avatar_url ? (
+          <>
+            <img
+              alt={chat.name}
+              src={`${API_URL}${chat.avatar_url}`}/>
+          </>
+        ) : (
+          <Avvvatars value={chat.name}/>
+        )}
+        {chat.is_online && (
+          <div className={styles.online}/>
+        )}
+      </div>
       <div className={styles.chatText}>
         <h4>{chat.name}</h4>
         <p>{chat.last_message || "Немає повідомлень"}</p>

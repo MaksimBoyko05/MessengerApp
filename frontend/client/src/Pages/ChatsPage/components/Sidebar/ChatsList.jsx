@@ -30,6 +30,7 @@ function ChatsList({onSelectedChat, selectedChatId}) {
       try {
         const data = await chatsService.getAll();
         setChats(data);
+        console.log(data);
       } catch (error) {
         console.error("Помилка при завантаженні чатів:", error);
       } finally {
@@ -81,7 +82,21 @@ function ChatsList({onSelectedChat, selectedChatId}) {
         fetchMissingChat(message.chat_id);
       }
     };
-
+    const handleStatusChange = (statusData) => {
+      setChats(prevChats => {
+        return prevChats.map(chat => {
+          if (chat.partner_id === statusData.userId) {
+            console.log("✅ ЗНАЙДЕНО ЧАТ ДЛЯ ОНОВЛЕННЯ!", chat.id);
+            return {
+              ...chat,
+              is_online: statusData.online,
+              last_seen: statusData.lastSeen
+            };
+          }
+          return chat;
+        })
+      })
+    }
     const handleMessageRead = ({chat_id}) => {
       setChats((prevChats) =>
         prevChats.map((chat) =>
@@ -94,10 +109,12 @@ function ChatsList({onSelectedChat, selectedChatId}) {
 
     socket.on("receive_message", handleNewMessage);
     socket.on("message_read", handleMessageRead);
+    socket.on("user_status_change", handleStatusChange);
 
     return () => {
       socket.off("receive_message", handleNewMessage);
       socket.off("message_read", handleMessageRead);
+      socket.off("user_status_change", handleStatusChange);
     };
   }, [socket]);
   const fetchMissingChat = async (chatId) => {

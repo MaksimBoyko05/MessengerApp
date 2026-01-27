@@ -10,6 +10,30 @@ export class ChatRepository {
                 c.is_group,
                 CASE
                     WHEN c.is_group = false THEN (
+                        SELECT u.id FROM chat_members cm2
+                                             JOIN users u ON cm2.user_id = u.id
+                        WHERE cm2.chat_id = c.id AND cm2.user_id != $1 LIMIT 1
+                )
+                    ELSE NULL
+            END as partner_id,
+                CASE
+                    WHEN c.is_group = false THEN (
+                        SELECT us.online FROM chat_members cm2
+                        JOIN user_statuses us ON cm2.user_id = us.user_id
+                        WHERE cm2.chat_id = c.id AND cm2.user_id != $1 LIMIT 1
+            )
+            ELSE NULL
+            END as is_online,
+                CASE
+                    WHEN c.is_group = false THEN (
+                        SELECT us.last_seen FROM chat_members cm2
+                        JOIN user_statuses us ON cm2.user_id = us.user_id
+                        WHERE cm2.chat_id = c.id AND cm2.user_id != $1 LIMIT 1
+            )
+            ELSE NULL
+            END as last_seen,
+                CASE
+                    WHEN c.is_group = false THEN (
                         SELECT u.username FROM chat_members cm2
                                                    JOIN users u ON cm2.user_id = u.id
                         WHERE cm2.chat_id = c.id AND cm2.user_id != $1 LIMIT 1
@@ -51,6 +75,30 @@ export class ChatRepository {
             SELECT
                 c.id,
                 c.is_group,
+                CASE
+                    WHEN c.is_group = false THEN (
+                        SELECT u.id FROM chat_members cm2
+                                             JOIN users u ON cm2.user_id = u.id
+                        WHERE cm2.chat_id = c.id AND cm2.user_id != $1 LIMIT 1
+                )
+                    ELSE NULL
+            END as partner_id,
+                CASE
+                    WHEN c.is_group = false THEN (
+                        SELECT us.online FROM chat_members cm2
+                        JOIN user_statuses us ON cm2.user_id = us.user_id
+                        WHERE cm2.chat_id = c.id AND cm2.user_id != $1 LIMIT 1
+            )
+            ELSE NULL
+            END as is_online,
+                CASE
+                    WHEN c.is_group = false THEN (
+                        SELECT us.last_seen FROM chat_members cm2
+                        JOIN user_statuses us ON cm2.user_id = us.user_id
+                        WHERE cm2.chat_id = c.id AND cm2.user_id != $1 LIMIT 1
+            )
+            ELSE NULL
+            END as last_seen,
                 CASE
                     WHEN c.is_group = false THEN (
                         SELECT u.username FROM chat_members cm2
@@ -138,9 +186,15 @@ export class ChatRepository {
 
     async getCompanionInfo(chatId: number, userId: number): Promise<any> {
         const query = `
-            SELECT u.id, u.username, u.avatar_url
+            SELECT
+                u.id,
+                u.username,
+                u.avatar_url,
+                us.online as is_online,
+                us.last_seen
             FROM users u
                      JOIN chat_members cm ON u.id = cm.user_id
+                     LEFT JOIN user_statuses us ON u.id = us.user_id
             WHERE cm.chat_id = $1
               AND cm.user_id != $2
                 LIMIT 1;

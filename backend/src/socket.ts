@@ -2,6 +2,7 @@ import {Server as HttpServer} from "http";
 import {Server, Socket} from "socket.io";
 import {ChatRepository} from "./repositories/ChatRepository.js";
 import {MessageRepository} from "./repositories/MessageRepository.js";
+import pool from "./db.js"
 
 let io: Server;
 const chatRepo = new ChatRepository();
@@ -16,6 +17,17 @@ export const initSocket = (httpServer: HttpServer) => {
 
     io.on("connection", async (socket: Socket) => {
         const userId = socket.handshake.query.userId;
+        await pool.query(`
+            INSERT INTO user_statuses (user_id, online, last_seen)
+            VALUES ($1, true, NOW()) ON CONFLICT (user_id) 
+    DO
+            UPDATE SET online = true, last_seen = NOW()
+        `, [userId]);
+        console.log(`📢 SERVER: Відправляю broadcast про User ${userId} (Online)`);
+        socket.broadcast.emit("user_status_change", {
+            userId: Number(userId),
+            online: true,
+        });
 
         if (userId) {
             console.log(`Користувач ${userId} підключився`);
@@ -60,8 +72,17 @@ export const initSocket = (httpServer: HttpServer) => {
             console.log(`User left room: ${roomName}`);
         });
 
-        socket.on("disconnect", () => {
+        socket.on("disconnect", async () => {
             console.log(" User disconnected:", socket.id);
+            await pool.query(
+                "UPDATE user_statuses SET online = false, last_seen = NOW() WHERE user_id = $1",
+                [userId]
+            );
+            socket.broadcast.emit("user_status_change", {
+                userId: Number(userId),
+                online: false,
+                lastSeen: new Date(),
+            });
         });
     });
 
