@@ -43,7 +43,7 @@ function ChatsList({onSelectedChat, selectedChatId}) {
 
   useEffect(() => {
     if (!socket) return;
-
+    console.log("--- СТВОРЕННЯ ПІДПИСОК НА СОКЕТ ---");
     const handleNewMessage = (rawMessage) => {
       console.log(" SOCKET ОТРИМАВ ПОВІДОМЛЕННЯ:", rawMessage);
 

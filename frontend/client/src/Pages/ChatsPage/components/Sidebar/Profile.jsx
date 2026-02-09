@@ -2,6 +2,7 @@ import {useState, useEffect} from "react";
 import axios from "axios";
 import styles from "@/Pages/ChatsPage/Chats.module.scss";
 import {Settings} from 'lucide-react';
+import {userService} from "@/api/userService.js";
 
 function Profile() {
   const [userId, setUserId] = useState("");
@@ -16,12 +17,10 @@ function Profile() {
       if (!token) return;
 
       try {
-        const res = await axios.get("http://localhost:5000/api/auth/me", {
-          headers: {Authorization: `Bearer ${token}`}
-        });
-        setUsername(res.data.username);
-        setUserimg(res.data.avatar_url);
-        setUserId(res.data.id);
+        const data = await userService.getUserData();
+        setUsername(data.username);
+        setUserimg(data.avatar_url);
+        setUserId(data.id);
       } catch (err) {
         console.error(err);
       }
@@ -29,30 +28,6 @@ function Profile() {
     fetchProfile();
   }, []);
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      const token = localStorage.getItem("token");
-      if (token && userId) {
-        try {
-          const res = await axios.get(
-            `http://localhost:5000/api/users/${userId}`,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
-          setUsername(res.data.username);
-          setUserimg(res.data.avatar_url);
-          console.log(userimg)
-        } catch (err) {
-          console.error("Помилка отримання даних користувача", err);
-          localStorage.removeItem("token");
-        }
-      }
-    };
-    fetchUserData();
-  }, [userId]);
 
   return (
     <div className={styles.profileblock}>
