@@ -2,6 +2,7 @@ import pool from "../db.js";
 import {Chat} from "../types/db.js";
 
 export class ChatRepository {
+
     async getUserChats(userId: number): Promise<any[]> {
         // @formatter:off
         const query = `
@@ -201,5 +202,44 @@ export class ChatRepository {
         `;
         const result = await pool.query(query, [chatId, userId]);
         return result.rows[0];
+    }
+    async deleteChat(chatId: number, userId: number, forEveryone: boolean): Promise<void> {
+        const client = await pool.connect();
+
+        try {
+            await client.query("BEGIN");
+
+            const checkQuery = `
+                SELECT 1 FROM chat_members WHERE chat_id = $1 AND user_id = $2
+            `;
+            const checkRes = await client.query(checkQuery, [chatId, userId]);
+
+            if (checkRes.rowCount === 0) {
+                throw new Error("Access denied or chat not found");
+            }
+
+            if (forEveryone) {
+
+                await client.query("DELETE FROM read_receipts WHERE message_id IN (SELECT id FROM messages WHERE chat_id = $1)", [chatId]);
+                await client.query("DELETE FROM messages WHERE chat_id = $1", [chatId]);
+                await client.query("DELETE FROM chat_members WHERE chat_id = $1", [chatId]);
+
+                await client.query("DELETE FROM chats WHERE id = $1", [chatId]);
+
+            } else {
+                await client.query(
+                    "DELETE FROM chat_members WHERE chat_id = $1 AND user_id = $2",
+                    [chatId, userId]
+                );
+            }
+
+            await client.query("COMMIT");
+        } catch (err) {
+            await client.query("ROLLBACK");
+            console.error("Error deleting chat:", err);
+            throw err;
+        } finally {
+            client.release();
+        }
     }
 }

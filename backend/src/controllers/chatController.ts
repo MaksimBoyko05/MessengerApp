@@ -61,3 +61,31 @@ export const createOrOpenChat = async (req: Request, res: Response) => {
         res.status(500).json({message: 'Не вдалося відкрити чат'});
     }
 };
+export const deleteChat = async (req: Request, res: Response) => {
+    try {
+        const userId = req.user?.id;
+        const chatId = parseInt(req.params.chatId);
+        const {forEveryone} = req.body;
+
+        if (!userId) {
+            return res.status(401).json({message: "Неавторизований користувач"});
+        }
+
+        if (!chatId || isNaN(chatId)) {
+            return res.status(400).json({message: "Некоректний ID чату"});
+        }
+
+        await chatRepo.deleteChat(chatId, userId, !!forEveryone);
+
+        res.json({message: "Чат успішно видалено"});
+
+    } catch (error: any) {
+        console.error('Помилка в deleteChat:', error);
+
+        if (error.message === "Access denied or chat not found") {
+            return res.status(403).json({message: "Доступ заборонено або чат не знайдено"});
+        }
+
+        res.status(500).json({message: 'Не вдалося видалити чат'});
+    }
+};

@@ -6,6 +6,7 @@ import CreateChatButton from "@/Pages/ChatsPage/components/CreateChat/CreateChat
 import NewChatModal from "@/Pages/ChatsPage/components/CreateChat/NewChatModal.jsx";
 import {useSocket} from "@/context/SocketContext.jsx";
 import UserContext from "@/context/UserContext.jsx";
+import ContextWindow from "@/Pages/ChatsPage/components/Sidebar/ContextWindow.jsx";
 
 function ChatsList({onSelectedChat, selectedChatId}) {
   const [chats, setChats] = useState([]);
@@ -13,6 +14,12 @@ function ChatsList({onSelectedChat, selectedChatId}) {
   const [isOpen, setIsOpen] = useState(false);
   const chatsRef = useRef(chats);
   const selectedChatIdRef = useRef(selectedChatId);
+  const [contextMenu, setContextMenu] = useState({
+    id: null,
+    x: null,
+    y: null,
+    visible: false,
+  })
 
   const {socket} = useSocket();
   const {user} = useContext(UserContext);
@@ -24,6 +31,22 @@ function ChatsList({onSelectedChat, selectedChatId}) {
   useEffect(() => {
     selectedChatIdRef.current = selectedChatId;
   }, [selectedChatId]);
+  useEffect(() => {
+    const handleClickOutside = () => {
+      setContextMenu({
+        id: null,
+        x: null,
+        y: null,
+        visible: false,
+      });
+    };
+
+    window.addEventListener('click', handleClickOutside);
+
+    return () => {
+      window.removeEventListener('click', handleClickOutside);
+    };
+  }, []);
 
   useEffect(() => {
     const fetchChats = async () => {
@@ -156,22 +179,59 @@ function ChatsList({onSelectedChat, selectedChatId}) {
     });
     onSelectedChat(newChat.id);
   }
+  const handleDeleteChat = async (forEveryone) => {
+    const id = contextMenu.id
+    try {
+      const res = await chatsService.deleteChat(id, forEveryone);
+      setChats(prevChats => prevChats.filter(chat => chat.id !== id))
+    } catch (err) {
+      console.log(err)
+    } finally {
+      setContextMenu({
+        id: null,
+        x: null,
+        y: null,
+        visible: false,
+      })
+    }
+  }
+  const handleRightClick = (e, id) => {
+    e.preventDefault()
+    setContextMenu({
+      ...contextMenu,
+      id: id,
+      x: e.clientX,
+      y: e.clientY,
+      visible: true
+    })
+  };
 
   if (loading) return <div>Завантаження...</div>;
   if (!loading && chats.length === 0) {
     return <div>У вас ще немає активних чатів</div>;
   }
-
   return (
     <div className={styles.chatsList}>
       {chats.map(chat => (
-        <ChatBlock
-          key={chat.id}
-          chat={chat}
-          onClick={handleChatClick}
-          isActive={chat.id === selectedChatId}
-        />
+        <div onContextMenu={(e) => handleRightClick(e, chat.id)}>
+          <ChatBlock
+            key={chat.id}
+            chat={chat}
+            onClick={handleChatClick}
+            isActive={chat.id === selectedChatId}
+          />
+        </div>
       ))}
+      {contextMenu.visible && (
+        <>
+          <ContextWindow
+            id={contextMenu.id}
+            x={contextMenu.x}
+            y={contextMenu.y}
+            handleDelete={handleDeleteChat}
+          />
+        </>
+      )}
       <CreateChatButton setIsOpen={setIsOpen}/>
       {isOpen && (
         <NewChatModal

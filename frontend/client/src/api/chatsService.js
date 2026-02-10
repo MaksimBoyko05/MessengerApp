@@ -26,5 +26,11 @@ export const chatsService = {
   createOrOpenChat: async (targetUserId) => {
     const response = await api.post('/chats', {targetUserId});
     return response.data;
+  },
+  deleteChat: async (chatId, forEveryone) => {
+    const response = await api.delete(`/chats/${chatId}`, {
+      data: {forEveryone}
+    });
+    return response.data;
   }
 };
