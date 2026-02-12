@@ -8,21 +8,31 @@ import {useSocket} from "@/context/SocketContext.jsx";
 import UserContext from "@/context/UserContext.jsx";
 import ContextWindow from "@/Pages/ChatsPage/components/Sidebar/ContextWindow.jsx";
 
-function ChatsList({onSelectedChat, selectedChatId}) {
+function ChatsList({onSelectedChat, selectedChatId, onFilterType}) {
   const [chats, setChats] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
   const chatsRef = useRef(chats);
   const selectedChatIdRef = useRef(selectedChatId);
+  const {socket} = useSocket();
+  const {user} = useContext(UserContext);
   const [contextMenu, setContextMenu] = useState({
     id: null,
     x: null,
     y: null,
     visible: false,
   })
+  const filteredChats = (() => {
+    switch (onFilterType) {
+      case 'all':
+        return chats;
+      case 'unread' :
+        return chats.filter(chatsList => !chatsList.is_last_message_read && chatsList.last_message_author_id !== user.id);
+      case 'group' :
+        return chats.filter(chatsList => chatsList.is_group);
+    }
+  })();
 
-  const {socket} = useSocket();
-  const {user} = useContext(UserContext);
 
   useEffect(() => {
     chatsRef.current = chats;
@@ -212,7 +222,7 @@ function ChatsList({onSelectedChat, selectedChatId}) {
   }
   return (
     <div className={styles.chatsList}>
-      {chats.map(chat => (
+      {filteredChats.map(chat => (
         <div onContextMenu={(e) => handleRightClick(e, chat.id)}>
           <ChatBlock
             key={chat.id}

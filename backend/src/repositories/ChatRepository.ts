@@ -52,10 +52,26 @@ export class ChatRepository {
                 (SELECT text FROM messages WHERE chat_id = c.id ORDER BY created_at DESC LIMIT 1) as last_message,
                 (SELECT created_at FROM messages WHERE chat_id = c.id ORDER BY created_at DESC LIMIT 1) as last_message_time,
                 (SELECT user_id FROM messages WHERE chat_id = c.id ORDER BY created_at DESC LIMIT 1) as last_message_author_id,
-                EXISTS (
-                    SELECT 1 FROM read_receipts rr
-                    JOIN messages m ON rr.message_id = m.id
-                    WHERE m.chat_id = c.id AND m.user_id = $1 AND rr.user_id != $1
+                (
+    SELECT 
+        CASE 
+            -- Якщо останнє повідомлення від МЕНЕ ($1)
+            WHEN m.user_id = $1 THEN
+            EXISTS (
+            SELECT 1 FROM read_receipts rr
+            WHERE rr.message_id = m.id AND rr.user_id != $1
+            )
+            -- Якщо останнє повідомлення ВІД ПАРТНЕРА (не $1)
+            ELSE
+            EXISTS (
+            SELECT 1 FROM read_receipts rr
+            WHERE rr.message_id = m.id AND rr.user_id = $1
+            )
+            END
+            FROM messages m
+            WHERE m.chat_id = c.id
+            ORDER BY m.created_at DESC
+            LIMIT 1
             ) as is_last_message_read,
             (
             SELECT CAST(COUNT(*) AS INTEGER)
@@ -119,10 +135,24 @@ export class ChatRepository {
             (SELECT text FROM messages WHERE chat_id = c.id ORDER BY created_at DESC LIMIT 1) as last_message,
             (SELECT created_at FROM messages WHERE chat_id = c.id ORDER BY created_at DESC LIMIT 1) as last_message_time,
             (SELECT user_id FROM messages WHERE chat_id = c.id ORDER BY created_at DESC LIMIT 1) as last_message_author_id,
+           (
+    SELECT 
+        CASE 
+            WHEN m.user_id = $1 THEN
             EXISTS (
-                SELECT 1 FROM read_receipts rr
-                JOIN messages m ON rr.message_id = m.id
-                WHERE m.chat_id = c.id AND m.user_id = $1 AND rr.user_id != $1
+            SELECT 1 FROM read_receipts rr
+            WHERE rr.message_id = m.id AND rr.user_id != $1
+            )
+            ELSE
+            EXISTS (
+            SELECT 1 FROM read_receipts rr
+            WHERE rr.message_id = m.id AND rr.user_id = $1
+            )
+            END
+            FROM messages m
+            WHERE m.chat_id = c.id
+            ORDER BY m.created_at DESC
+            LIMIT 1
             ) as is_last_message_read,
             (
             SELECT CAST(COUNT(*) AS INTEGER)

@@ -481,6 +481,17 @@ body {
     background-color: rgba(253, 253, 253, 0.3);
     border: 1px solid rgb(253, 253, 253);
     border-radius: $border-radius-lg;
+    transition: all 0.2s ease;
+
+    &:hover {
+      cursor: pointer;
+      background-color: rgba(253, 253, 253, 0.5);
+    }
+
+    &[data-active="true"] {
+      background-color: rgb(253, 253, 253);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
   }
 }
 
@@ -509,14 +520,32 @@ body {
 }
 
 .contextmenu {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 3px;
+  z-index: 200;
   border-radius: 12px;
-  padding: .25rem 0;
+  padding: .45rem 0;
   background: var(--color-background-compact-menu);
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   font-size: 0.85rem;
 
   p {
+    padding: 5px;
+
+    &:hover {
+      background: rgba(150, 138, 138, 0.09);
+      border-radius: 8px;
+    }
+  }
+
+  .delete {
     color: #f61e1e;
+  }
+
+  svg {
+    transform: translateY(2px);
   }
 }

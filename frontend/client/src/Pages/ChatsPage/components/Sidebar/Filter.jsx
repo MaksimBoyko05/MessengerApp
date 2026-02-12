@@ -1,15 +1,27 @@
-import styles from "../../Chats.module.scss"
+import styles from "@/Pages/ChatsPage/Chats.module.scss"
+import {useState} from "react";
 
-function Filter() {
+function Filter({onSetFilterType}) {
+  const [isActive, setActive] = useState('all');
+  const handleClick = (type) => {
+    onSetFilterType(type);
+    setActive(type);
+  }
   return (
     <>
-      <div>
+      <div
+        onClick={() => handleClick('all')}
+        data-active={isActive === 'all'}>
         All
       </div>
-      <div>
+      <div
+        onClick={() => handleClick('unread')}
+        data-active={isActive === 'unread'}>
         Unread
       </div>
-      <div>
+      <div
+        onClick={() => handleClick('group')}
+        data-active={isActive === 'group'}>
         Groups
       </div>
     </>
