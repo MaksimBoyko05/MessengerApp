@@ -50,7 +50,6 @@ function ChatsList({onSelectedChat, selectedChatId, onFilterType}) {
         visible: false,
       });
     };
-
     window.addEventListener('click', handleClickOutside);
 
     return () => {
@@ -72,7 +71,7 @@ function ChatsList({onSelectedChat, selectedChatId, onFilterType}) {
     };
 
     fetchChats();
-  }, [user]);
+  }, [user, onFilterType]);
 
   useEffect(() => {
     if (!socket) return;
@@ -194,6 +193,7 @@ function ChatsList({onSelectedChat, selectedChatId, onFilterType}) {
     try {
       const res = await chatsService.deleteChat(id, forEveryone);
       setChats(prevChats => prevChats.filter(chat => chat.id !== id))
+      onSelectedChat(0);
     } catch (err) {
       console.log(err)
     } finally {

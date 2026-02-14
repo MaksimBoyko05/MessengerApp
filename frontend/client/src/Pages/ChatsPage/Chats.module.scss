@@ -9,6 +9,7 @@
 
 $font-main: 'Inter', sans-serif;
 $color-primary: #2B7FFF;
+$primary-blue: #1f5aee;
 $color-primary-hover: #2471e7;
 $color-gradient-start: #2B7FFF;
 $color-gradient-end: #7E57FF;
@@ -121,7 +122,6 @@ body {
   flex-shrink: 0;
   height: 100%;
   padding: 10px;
-  overflow-y: auto;
   @include hide-scrollbar;
 }
 
@@ -176,17 +176,26 @@ body {
   }
 }
 
-.chatsList {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-top: 20px;
-  transition: $transition-default;
+.chatslistwrapper {
+  flex-shrink: 0;
+  height: calc(100% - 100px);
+  overflow-y: auto;
+  @include hide-scrollbar;
+
+  .chatsList {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 20px;
+    transition: $transition-default;
+  }
 }
 
 .chatblock {
   position: relative;
   display: flex;
+  width: 320px;
+  height: 75px;
   align-items: center;
   gap: 12px;
   padding: 10px 15px;
@@ -429,6 +438,11 @@ body {
     font-size: 16px;
     border: 1px solid $color-border-light;
     border-radius: $border-radius-md;
+
+    &:focus {
+      border: 2px solid $primary-blue;
+      outline: none;
+    }
   }
 
   .sendbtn {
@@ -466,14 +480,21 @@ body {
     align-items: center;
 
     svg {
-      margin-right: 10px;
+      position: absolute;
+      left: 280px;
     }
 
     input {
-      width: 100%;
+      width: 320px;
       height: 40px;
       background: none;
       border: none;
+      padding-left: 10px;
+
+      &:focus {
+        border: 1px solid rgb(253, 253, 253);
+        border-radius: $border-radius-sm;
+      }
     }
   }
 }
@@ -483,6 +504,7 @@ body {
   gap: 16px;
   margin-top: 20px;
   text-align: center;
+  padding-bottom: 10px;
 
   div {
     width: 80%;

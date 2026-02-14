@@ -22,7 +22,7 @@ function ChatsPage() {
         <div className={styles.filtercontainer}>
           <Filter onSetFilterType={setFilterType}/>
         </div>
-        <div>
+        <div className={styles.chatslistwrapper}>
           <ChatsList
             onFilterType={filterType}
             onSelectedChat={setSelectedChatId}
