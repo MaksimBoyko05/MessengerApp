@@ -10,7 +10,7 @@ export class MessageRepository {
         return result.rows[0];
     }
 
-    async findByChat(chatId: number): Promise<Message[]> {
+    async findByChat(chatId: number, userId: number): Promise<Message[]> {
         const query = `
             SELECT m.*,
                    EXISTS (SELECT 1
@@ -18,10 +18,17 @@ export class MessageRepository {
                            WHERE rr.message_id = m.id
                              AND rr.user_id != m.user_id) AS is_read
             FROM messages m
+                     JOIN chat_members cm ON m.chat_id = cm.chat_id
             WHERE m.chat_id = $1
+              AND cm.user_id = $2
+              AND (
+                cm.cleared_history_at IS NULL
+                    OR m.created_at > cm.cleared_history_at
+                )
             ORDER BY m.created_at ASC;
         `;
-        const result = await pool.query(query, [chatId]);
+
+        const result = await pool.query(query, [chatId, userId]);
         return result.rows;
     }
 

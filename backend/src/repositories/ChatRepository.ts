@@ -258,7 +258,10 @@ export class ChatRepository {
 
             } else {
                 await client.query(
-                    "DELETE FROM chat_members WHERE chat_id = $1 AND user_id = $2",
+                    `UPDATE chat_members 
+                 SET is_hidden = true, 
+                     cleared_history_at = NOW() 
+                 WHERE chat_id = $1 AND user_id = $2`,
                     [chatId, userId]
                 );
             }

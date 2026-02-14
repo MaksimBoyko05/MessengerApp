@@ -23,7 +23,7 @@ export const sendMessage = async (req: Request, res: Response) => {
         const io = getIO();
 
         io.to(`chat_${chat.id}`).emit("receive_message", newMessage);
-        
+
 
         res.status(201).json(newMessage);
     } catch (err) {
@@ -43,7 +43,7 @@ export const getMessagesByChat = async (req: Request, res: Response) => {
         }
         const companion = await chatRepo.getCompanionInfo(chatId, userId);
         await messageRepo.markAsRead(chatId, userId);
-        const messages = await messageRepo.findByChat(chatId);
+        const messages = await messageRepo.findByChat(chatId, req.user.id);
         res.json({
             messages,
             companion
