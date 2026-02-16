@@ -17,6 +17,13 @@ export const chatsService = {
     const response = await api.post('/messages', payload);
     return response.data;
   },
+  generateSmartReply: async (chatId, messageId) => {
+    const response = await api.post('/chats/smart-reply', {
+      chatId,
+      messageId
+    });
+    return response.data.suggestions;
+  },
   searchUsers: async (query) => {
     const response = await api.get('/users/search', {
       params: {q: query}

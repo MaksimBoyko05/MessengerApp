@@ -6,10 +6,12 @@ import SendMessageComponent from "./SendMessageComponent.jsx";
 import {useSocket} from "@/context/SocketContext.jsx";
 import ChatHeader from "./ChatHeader.jsx";
 import NoChatSelected from "./NoChatSelected.jsx";
+import AIGenerateSuggestions from "@/Pages/ChatsPage/components/ChatWindow/AIComponents/AIGenerateSuggestions.jsx";
 import UserContext from "@/context/UserContext.jsx";
 
 function ChatWindow({chatId}) {
   const [messages, setMessages] = useState([]);
+  const [suggestions, setSuggestions] = useState([]);
   const [companion, setCompanion] = useState(null);
   const [loading, setLoading] = useState(false);
   const {socket} = useSocket();
@@ -106,9 +108,15 @@ function ChatWindow({chatId}) {
       <div className={styles.messagesArea}>
         {messages.length > 0 ? (
           messages.map((msg) => (
-            <ChatMessages
-              key={msg.id}
-              msg={msg}/>
+            <>
+              <ChatMessages
+                key={msg.id}
+                msg={msg}/>
+              <AIGenerateSuggestions
+                msg={msg}
+                suggestions={suggestions}
+                onSetSuggestions={setSuggestions}/>
+            </>
           ))
         ) : (
           <div className={styles.noMessages}>У вас ще немає повідомлень у цьому чаті</div>
@@ -117,10 +125,12 @@ function ChatWindow({chatId}) {
           className={styles.msganchor}
           ref={messagesEndRef}/>
       </div>
-
       <SendMessageComponent
         chatId={chatId}
-        receiverId={companion?.id}/>
+        receiverId={companion?.id}
+        suggestions={suggestions}
+        onSetSuggestions={setSuggestions}
+      />
     </div>
   );
 }

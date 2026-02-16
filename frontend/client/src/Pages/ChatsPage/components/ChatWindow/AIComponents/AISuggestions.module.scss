@@ -1,0 +1,59 @@
+$primary-blue: #1f5aee;
+$chip-shadow-color: 0 4px 6px rgba(58, 91, 196, 0.2);
+$chip-background: #ffffff;
+
+.sparkbutton {
+  width: fit-content;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #8e44ad;
+  padding: 4px;
+  margin-left: 8px;
+  opacity: 0.6;
+  transition: all 0.2s;
+
+  &:hover {
+    opacity: 1;
+    transform: scale(1.1);
+    color: #9b59b6;
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animatespin {
+  animation: spin 1s linear infinite;
+}
+
+.chipcontainer {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+
+  .suggestionchip {
+    background: $chip-background;
+    border: 1px solid #ddd;
+    border-radius: 16px;
+    padding: 6px 12px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+
+    &:hover {
+      background: #fff;
+      border-color: $primary-blue;
+      color: $primary-blue;
+      transform: translateY(-1px);
+      box-shadow: $chip-shadow-color;
+    }
+  }
+}

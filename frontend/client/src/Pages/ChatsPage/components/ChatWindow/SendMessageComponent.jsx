@@ -2,8 +2,9 @@ import {useState, useEffect} from "react";
 import {chatsService} from '@/api/chatsService.js';
 import styles from "@/Pages/ChatsPage/Chats.module.scss";
 import {Send} from 'lucide-react';
+import AISuggestions from "@/Pages/ChatsPage/components/ChatWindow/AIComponents/AISuggestions.jsx";
 
-function SendMessageComponent({chatId, receiverId}) {
+function SendMessageComponent({chatId, receiverId, suggestions, onSetSuggestions}) {
   const [messageData, setMessageData] = useState({
     text: "",
   });
@@ -14,7 +15,13 @@ function SendMessageComponent({chatId, receiverId}) {
       [name]: value,
     }));
   };
-
+  const handleSuggestionclick = (text) => {
+    setMessageData((prev) => ({
+      ...prev,
+      text: text,
+    }));
+    onSetSuggestions([]);
+  }
   const handleSendMessage = async () => {
     if (!messageData.text.trim()) return;
     const payload = {
@@ -35,6 +42,9 @@ function SendMessageComponent({chatId, receiverId}) {
   }
   return (
     <>
+      <AISuggestions
+        suggestions={suggestions}
+        onSelect={handleSuggestionclick}/>
       <div className={styles.sendcomponent}>
         <input
           name="text"
