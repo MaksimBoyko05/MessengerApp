@@ -9,6 +9,7 @@ import ChatWindow from "./components/ChatWindow/ChatWindow.jsx";
 function ChatsPage() {
   const [selectedChatId, setSelectedChatId] = useState(null);
   const [filterType, setFilterType] = useState('all');
+  const [searchQuery, setSearchQuery] = useState("");
 
   return (
     <div className={styles.wrapper}>
@@ -17,14 +18,19 @@ function ChatsPage() {
           <Profile/>
         </div>
         <div className={styles.searchcontainer}>
-          <SearchBlock/>
+          <SearchBlock
+            onSearchQuery={searchQuery}
+            onSetSearchQuery={setSearchQuery}/>
         </div>
         <div className={styles.filtercontainer}>
-          <Filter onSetFilterType={setFilterType}/>
+          <Filter
+            onSetFilterType={setFilterType}
+          />
         </div>
         <div className={styles.chatslistwrapper}>
           <ChatsList
             onFilterType={filterType}
+            onSearchQuery={searchQuery}
             onSelectedChat={setSelectedChatId}
             selectedChatId={selectedChatId}/>
         </div>

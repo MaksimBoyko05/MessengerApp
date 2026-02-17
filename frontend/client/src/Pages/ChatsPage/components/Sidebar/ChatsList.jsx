@@ -8,7 +8,7 @@ import {useSocket} from "@/context/SocketContext.jsx";
 import UserContext from "@/context/UserContext.jsx";
 import ContextWindow from "@/Pages/ChatsPage/components/Sidebar/ContextWindow.jsx";
 
-function ChatsList({onSelectedChat, selectedChatId, onFilterType}) {
+function ChatsList({onSelectedChat, selectedChatId, onFilterType, onSearchQuery}) {
   const [chats, setChats] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
@@ -23,14 +23,21 @@ function ChatsList({onSelectedChat, selectedChatId, onFilterType}) {
     visible: false,
   })
   const filteredChats = (() => {
+    let baseChats = [];
     switch (onFilterType) {
       case 'all':
-        return chats;
+        baseChats = chats;
+        break;
       case 'unread' :
-        return chats.filter(chatsList => !chatsList.is_last_message_read && chatsList.last_message_author_id !== user.id);
+        baseChats = chats.filter(chatsList => !chatsList.is_last_message_read && chatsList.last_message_author_id !== user.id);
+        break;
       case 'group' :
-        return chats.filter(chatsList => chatsList.is_group);
+        baseChats = chats.filter(chatsList => chatsList.is_group);
+        break;
+      default:
+        baseChats = chats;
     }
+    return baseChats.filter(chat => chat.name.toLowerCase().includes(onSearchQuery?.toLowerCase()));
   })();
 
 

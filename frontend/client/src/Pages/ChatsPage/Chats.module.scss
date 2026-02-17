@@ -472,7 +472,6 @@ body {
 
 .searchcontainer {
   @include flex-center;
-  border: 1px solid rgb(253, 253, 253);
   border-radius: $border-radius-sm;
 
   .searchdiv {
@@ -482,18 +481,24 @@ body {
     svg {
       position: absolute;
       left: 280px;
+      color: $color-text-primary;
     }
 
     input {
       width: 320px;
       height: 40px;
       background: none;
-      border: none;
+      border: 1px solid rgb(253, 253, 253);
+      border-radius: $border-radius-sm;
+      color: $color-text-primary;
       padding-left: 10px;
+      transition: border-color 0.3s ease;
 
       &:focus {
-        border: 1px solid rgb(253, 253, 253);
+        border: 1px solid $primary-blue;
+        outline: none;
         border-radius: $border-radius-sm;
+        box-shadow: 0 0 0 3px rgba(31, 90, 238, 0.08);
       }
     }
   }

@@ -1,17 +1,23 @@
 $primary-blue: #1f5aee;
 $chip-shadow-color: 0 4px 6px rgba(58, 91, 196, 0.2);
 $chip-background: #ffffff;
+$sparks-bg-gradient: linear-gradient(180deg, #9EB5FF 0%, #5C7CFA 50%, #364FC7 100%);
 
 .sparkbutton {
   width: fit-content;
   background: none;
   border: none;
   cursor: pointer;
-  color: #8e44ad;
+  color: $sparks-bg-gradient;
   padding: 4px;
   margin-left: 8px;
   opacity: 0.6;
   transition: all 0.2s;
+  font-weight: 700;
+
+  svg {
+    filter: drop-shadow(0px 4px 8px rgba(54, 79, 199, 0.5));
+  }
 
   &:hover {
     opacity: 1;
