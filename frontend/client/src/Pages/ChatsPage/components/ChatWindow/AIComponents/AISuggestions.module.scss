@@ -4,13 +4,15 @@ $chip-background: #ffffff;
 $sparks-bg-gradient: linear-gradient(180deg, #9EB5FF 0%, #5C7CFA 50%, #364FC7 100%);
 
 .sparkbutton {
+  display: flex;
   width: fit-content;
   background: none;
   border: none;
   cursor: pointer;
   color: $sparks-bg-gradient;
-  padding: 4px;
-  margin-left: 8px;
+  padding: 10px;
+  margin-bottom: 3px;
+  margin-left: 1rem;
   opacity: 0.6;
   transition: all 0.2s;
   font-weight: 700;

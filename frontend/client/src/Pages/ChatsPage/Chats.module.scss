@@ -171,6 +171,11 @@ body {
 
       svg {
         color: #333232;
+        animation: spin 1s linear;
+      }
+
+      svg {
+        color: #333232;
       }
     }
   }
@@ -385,38 +390,53 @@ body {
     opacity: 0.7;
   }
 
-  .mymsg {
-    position: relative;
-    @include message-bubble('right');
-    background: linear-gradient(135deg, $color-gradient-start 0%, $color-gradient-end 100%);
-    color: #fff;
-    font-weight: 400;
-    border-radius: $border-radius-xl $border-radius-xl 4px $border-radius-xl;
-    box-shadow: 0 4px 12px rgba(43, 127, 255, 0.25);
+  .messageRow {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    width: 100%;
 
-    .readtime {
-      @extend %time-styles;
-      color: rgba(255, 255, 255, 0.8);
+    &:has(.mymsg) {
+      justify-content: flex-end;
     }
-  }
 
-  .msgbubble {
-    @include message-bubble('left');
-    background: $color-bg-white;
-    color: $color-text-primary;
-    border: 1px solid rgba(0, 0, 0, 0.03);
-    border-radius: $border-radius-xl $border-radius-xl $border-radius-xl 4px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
-
-    .readtime {
-      @extend %time-styles;
-      color: $color-text-tertiary;
+    &:has(.msgbubble) {
+      justify-content: flex-start;
     }
-  }
 
-  .msganchor {
-    margin: 0;
-    padding: 0;
+    .mymsg {
+      position: relative;
+      @include message-bubble('right');
+      background: linear-gradient(135deg, $color-gradient-start 0%, $color-gradient-end 100%);
+      color: #fff;
+      font-weight: 400;
+      border-radius: $border-radius-xl $border-radius-xl 4px $border-radius-xl;
+      box-shadow: 0 4px 12px rgba(43, 127, 255, 0.25);
+
+      .readtime {
+        @extend %time-styles;
+        color: rgba(255, 255, 255, 0.8);
+      }
+    }
+
+    .msgbubble {
+      @include message-bubble('left');
+      background: $color-bg-white;
+      color: $color-text-primary;
+      border: 1px solid rgba(0, 0, 0, 0.03);
+      border-radius: $border-radius-xl $border-radius-xl $border-radius-xl 4px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+
+      .readtime {
+        @extend %time-styles;
+        color: $color-text-tertiary;
+      }
+    }
+
+    .msganchor {
+      margin: 0;
+      padding: 0;
+    }
   }
 }
 
@@ -438,9 +458,11 @@ body {
     font-size: 16px;
     border: 1px solid $color-border-light;
     border-radius: $border-radius-md;
+    transition: border-color 0.3s ease;
 
     &:focus {
-      border: 2px solid $primary-blue;
+      border: 1px solid $primary-blue;
+      box-shadow: 0 0 0 3px rgba(31, 90, 238, 0.08);
       outline: none;
     }
   }
@@ -583,5 +605,14 @@ body {
 
   svg {
     transform: translateY(2px);
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(90deg);
   }
 }

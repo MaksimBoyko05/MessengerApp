@@ -107,16 +107,18 @@ function ChatWindow({chatId}) {
       <ChatHeader companion={companion}/>
       <div className={styles.messagesArea}>
         {messages.length > 0 ? (
-          messages.map((msg) => (
-            <>
+          messages.map((msg, index) => (
+            <div className={styles.messageRow}>
               <ChatMessages
                 key={msg.id}
                 msg={msg}/>
-              <AIGenerateSuggestions
-                msg={msg}
-                suggestions={suggestions}
-                onSetSuggestions={setSuggestions}/>
-            </>
+              {index === messages.length - 1 && (
+                <AIGenerateSuggestions
+                  msg={msg}
+                  suggestions={suggestions}
+                  onSetSuggestions={setSuggestions}/>
+              )}
+            </div>
           ))
         ) : (
           <div className={styles.noMessages}>У вас ще немає повідомлень у цьому чаті</div>

@@ -31,7 +31,8 @@ function AIGenerateSuggestions({msg, suggestions, onSetSuggestions}) {
           disabled={isLoading}>
           <Sparkles
             size={16}
-            className={isLoading ? "animate-spin" : ""}/>
+            color={"#1f5aee"}
+            className={isLoading ? styles.animatespin : ""}/>
         </button>
       )}
     </>
