@@ -32,6 +32,7 @@ export class MessageRepository {
         return result.rows;
     }
 
+
     async delete(messageId: number): Promise<number> {
         const result = await pool.query(
             "DELETE FROM messages WHERE id=$1 RETURNING id",
@@ -56,5 +57,19 @@ export class MessageRepository {
               AND rr.id IS NULL;
         `;
         await pool.query(query, [chatId, userId]);
+    }
+
+    async findRecentByChat(chatId: number, userId: number, limit = 15): Promise<Message[]> {
+        const query = `
+            SELECT m.*
+            FROM messages m
+                     JOIN chat_members cm ON m.chat_id = cm.chat_id
+            WHERE m.chat_id = $1
+              AND cm.user_id = $2
+            ORDER BY m.created_at DESC
+                LIMIT $3
+        `;
+        const res = await pool.query(query, [chatId, userId, limit]);
+        return res.rows.reverse();
     }
 }
