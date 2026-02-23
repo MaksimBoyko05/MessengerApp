@@ -1,10 +1,13 @@
 $color-main: #ffff;
-$modal-color-main: #ffffff;
+$modal-color-main: #F1F1F3;
 $input-focus-bg: #f2f2f2;
 $border-radius: 16px;
 $modal-border-radius: 24px;
 $modal-search-radius: 16px;
 $modal-list-hover-radius: 12px;
+$color-text-secondary: #666;
+$create-button-color: #1f5aee;
+$color-primary-hover: #2471e7;
 
 @mixin flex-center {
   display: flex;
@@ -48,8 +51,9 @@ $modal-list-hover-radius: 12px;
     padding: 24px;
     border-radius: $modal-border-radius;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+    gap: 10px;
 
-    svg {
+    .closebtn {
       background: #e7e7e7;
       padding: 5px;
       border-radius: 50%;
@@ -59,13 +63,65 @@ $modal-list-hover-radius: 12px;
       cursor: pointer;
     }
 
+    .creategroupblock {
+      @include flex-center;
+      background: $color-main;
+      padding: 14px;
+      border-radius: 20px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06),
+      0 4px 12px rgba(0, 0, 0, 0.08),
+      inset 0 1px 0 rgba(255, 255, 255, 1);
+
+      button {
+        background: $create-button-color;
+        border: #1c50d3;
+        color: white;
+        flex: 1;
+        border-radius: 13px;
+        padding: 12px;
+        transition: all 0.3s ease;
+
+        &:hover {
+          background: $color-primary-hover;
+        }
+      }
+    }
+
+    .modalheader {
+      margin-top: 20px;
+      background: $color-main;
+      border-radius: 20px;
+      padding: 14px 16px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06),
+      0 4px 12px rgba(0, 0, 0, 0.08),
+      inset 0 1px 0 rgba(255, 255, 255, 1);
+
+      input {
+        margin-top: 5px;
+        width: 100%;
+        box-shadow: none;
+      }
+
+      h4 {
+        font-size: 1rem;
+      }
+
+      span {
+        font-size: 0.85rem;
+        color: $color-text-secondary;
+      }
+    }
+
     input {
       height: 38px;
+      min-height: 38px;
       padding: 5px 5px 1px 15px;
-      margin-top: 20px;
       background: #FAFAFA;
       border-radius: $modal-search-radius;
       border: 1px solid rgba(120, 122, 133, 0.07);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06),
+      0 4px 12px rgba(0, 0, 0, 0.08),
+      inset 0 1px 0 rgba(255, 255, 255, 1);
       transition: border-color 0.3s ease;
 
       &:focus {
@@ -78,6 +134,7 @@ $modal-list-hover-radius: 12px;
 
   .userblock {
     display: flex;
+    background: #FFFFFF;
     margin-top: 10px;
     align-items: center;
     padding: 10px;
@@ -87,7 +144,7 @@ $modal-list-hover-radius: 12px;
     border: 1px solid #FFFF;
 
     &:hover {
-      background: #f2f2f2;
+      background: #fafafa;
     }
 
 
@@ -104,5 +161,43 @@ $modal-list-hover-radius: 12px;
     margin-top: 10px;
     font-size: 14px;
     color: #6b7280;
+  }
+
+
+  .backbtn {
+    align-self: flex-start;
+    position: absolute;
+    top: 10px;
+    cursor: pointer;
+
+    &:hover {
+      opacity: 0.7;
+    }
+  }
+
+  .selecteduserscontainer {
+    display: flex;
+    gap: 5px;
+
+    .selecteduser {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 0px 10px 0px 5px;
+      background: #FFFFFF;
+      width: fit-content;
+      border-radius: 18px;
+
+      img {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        object-fit: contain;
+      }
+    }
+  }
+
+  .nameblock {
+    display: flex;
   }
 }

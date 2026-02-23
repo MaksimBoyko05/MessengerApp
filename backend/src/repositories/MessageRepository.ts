@@ -2,23 +2,35 @@ import pool from "../db.js";
 import {Message} from "../types/db.js";
 
 export class MessageRepository {
-    async create(chatId: number, senderId: number, text: string): Promise<Message> {
-        const result = await pool.query(
-            "INSERT INTO messages (chat_id, user_id, text) VALUES ($1, $2, $3) RETURNING *",
-            [chatId, senderId, text]
-        );
+    async create(chatId: number, senderId: number, text: string): Promise<any> {
+        const query = `
+            WITH inserted_msg AS (
+            INSERT
+            INTO messages (chat_id, user_id, text)
+            VALUES ($1, $2, $3)
+                RETURNING *
+                )
+            SELECT i.*, u.username as sender_name, u.avatar_url as sender_avatar
+            FROM inserted_msg i
+                     JOIN users u ON i.user_id = u.id;
+        `;
+
+        const result = await pool.query(query, [chatId, senderId, text]);
         return result.rows[0];
     }
 
-    async findByChat(chatId: number, userId: number): Promise<Message[]> {
+    async findByChat(chatId: number, userId: number): Promise<any[]> {
         const query = `
             SELECT m.*,
+                   u.username                             as sender_name,
+                   u.avatar_url                           as sender_avatar,
                    EXISTS (SELECT 1
                            FROM read_receipts rr
                            WHERE rr.message_id = m.id
                              AND rr.user_id != m.user_id) AS is_read
             FROM messages m
                      JOIN chat_members cm ON m.chat_id = cm.chat_id
+                     JOIN users u ON m.user_id = u.id
             WHERE m.chat_id = $1
               AND cm.user_id = $2
               AND (

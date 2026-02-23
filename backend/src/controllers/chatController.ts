@@ -61,6 +61,30 @@ export const createOrOpenChat = async (req: Request, res: Response) => {
         res.status(500).json({message: 'Не вдалося відкрити чат'});
     }
 };
+export const createGroupChat = async (req: Request, res: Response) => {
+    try {
+        const {name, memberIds} = req.body;
+        const creatorId = (req as any).user?.id;
+
+        if (!name || !memberIds || !Array.isArray(memberIds)) {
+            return res.status(400).json({message: "Назва групи та список учасників  обов'язкові"});
+        }
+
+        if (memberIds.length === 0) {
+            return res.status(400).json({message: "Група повинна мати хоча б одного учасника крім вас"});
+        }
+        const newChat = await chatRepo.createGroupChat(creatorId, name, memberIds);
+
+        res.status(201).json({
+            message: "Групу успішно створено",
+            chat: newChat
+        });
+
+    } catch (error) {
+        console.error("Помилка створення групи:", error);
+        res.status(500).json({message: "Не вдалося створити групу"});
+    }
+};
 export const deleteChat = async (req: Request, res: Response) => {
     try {
         const userId = req.user?.id;

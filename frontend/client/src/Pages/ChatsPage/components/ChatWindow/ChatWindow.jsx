@@ -11,6 +11,7 @@ import UserContext from "@/context/UserContext.jsx";
 
 function ChatWindow({chatId}) {
   const [messages, setMessages] = useState([]);
+  const [chatDetails, setChatDetails] = useState([]);
   const [suggestions, setSuggestions] = useState([]);
   const [companion, setCompanion] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -29,8 +30,8 @@ function ChatWindow({chatId}) {
       try {
         const data = await chatsService.getMessages(chatId);
         setMessages(data.messages || []);
-        setCompanion(data.companion || null);
-
+        setCompanion(data.chatDetails.companion || null);
+        setChatDetails(data.chatDetails)
         console.log("Дані чату:", data);
       } catch (error) {
         console.error("Помилка при завантаженні даних чату:", error);
@@ -104,7 +105,9 @@ function ChatWindow({chatId}) {
 
   return (
     <div className={styles.chatwindow}>
-      <ChatHeader companion={companion}/>
+      <ChatHeader
+        chatDetails={chatDetails}
+        companion={companion}/>
       <div className={styles.messagesArea}>
         {messages.length > 0 ? (
           messages.map((msg, index) => (

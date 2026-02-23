@@ -1,5 +1,11 @@
 import {Router} from 'express';
-import {getMyChats, getChatDetails, createOrOpenChat, deleteChat} from '../controllers/chatController.js';
+import {
+    getMyChats,
+    getChatDetails,
+    createOrOpenChat,
+    deleteChat,
+    createGroupChat
+} from '../controllers/chatController.js';
 import {generateSmartReplies} from "../controllers/AIController.js";
 import {protect} from '../middleware/authMiddleware.js';
 
@@ -11,6 +17,7 @@ router.get('/:chatId', protect, getChatDetails);
 
 //POST /api/chats
 router.post('/', protect, createOrOpenChat);
+router.post('/groups', protect, createGroupChat);
 router.post('/smart-reply', protect, generateSmartReplies);
 
 // DELETE /api/chats/:chatId
