@@ -30,6 +30,10 @@ export const chatsService = {
     });
     return response.data;
   },
+  getRecentUsers: async () => {
+    const response = await api.get('/users/recent');
+    return response.data;
+  },
   createOrOpenChat: async (targetUserId) => {
     const response = await api.post('/chats', {targetUserId});
     return response.data;

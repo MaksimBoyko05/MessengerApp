@@ -55,13 +55,11 @@ export class ChatRepository {
                 (
     SELECT 
         CASE 
-            -- Якщо останнє повідомлення від МЕНЕ ($1)
             WHEN m.user_id = $1 THEN
             EXISTS (
             SELECT 1 FROM read_receipts rr
             WHERE rr.message_id = m.id AND rr.user_id != $1
             )
-            -- Якщо останнє повідомлення ВІД ПАРТНЕРА (не $1)
             ELSE
             EXISTS (
             SELECT 1 FROM read_receipts rr

@@ -38,6 +38,18 @@ export const getUserById = async (req: Request, res: Response) => {
         res.status(500).json({error: "Database error"});
     }
 };
+export const getRecentUsers = async (req: Request, res: Response) => {
+    try {
+        const userId = req.user.id;
+
+        const users = await UserRepository.getRecentOnlineUsers(userId);
+
+        res.status(200).json(users);
+    } catch (error) {
+        console.error("Error fetching recent online users:", error);
+        res.status(500).json({message: "Internal server error"});
+    }
+};
 
 // ==== Create user (registration-like) ====
 interface CreateUserBody {

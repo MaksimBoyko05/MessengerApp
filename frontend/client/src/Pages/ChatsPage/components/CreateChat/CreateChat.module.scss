@@ -145,7 +145,7 @@ body, button {
       display: flex;
       flex-direction: column;
       flex: 1;
-      max-height: 50vh;
+      max-height: 470px;
       height: auto;
       overflow-y: auto;
       background: #FFFFFF;
@@ -154,6 +154,10 @@ body, button {
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06),
       0 4px 12px rgba(0, 0, 0, 0.08),
       inset 0 1px 0 rgba(255, 255, 255, 1);
+
+      @media (max-width: 768px) {
+        max-height: 500px;
+      }
 
       &::-webkit-scrollbar {
         width: 20px;
@@ -164,6 +168,7 @@ body, button {
         flex: 1;
         background: #FFFFFF;
         margin-top: 10px;
+        margin-bottom: 10px;
         align-items: center;
         border-radius: 12px;
         height: 45px;
@@ -181,6 +186,13 @@ body, button {
           height: 32px;
           border-radius: 50%;
           object-fit: contain;
+        }
+
+        .userdata {
+          p {
+            font-size: 0.85rem;
+            color: #6b7280;
+          }
         }
       }
     }

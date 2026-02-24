@@ -3,8 +3,9 @@ import {useEffect, useState} from "react";
 import {chatsService} from "@/api/chatsService.js";
 import {ChevronLeft} from 'lucide-react';
 import Avvvatars from "avvvatars-react";
+import UserStatus from "@/Pages/ChatsPage/components/ChatWindow/UserStatus.jsx";
 
-function CreateGroup({onClose}) {
+function CreateGroup({onClose, defaultUsers}) {
   const [query, setQuery] = useState("");
   const [users, setUsers] = useState([]);
   const API_URL = "http://localhost:5000";
@@ -14,7 +15,7 @@ function CreateGroup({onClose}) {
   useEffect(() => {
     const search = async () => {
       if (query.trim().length < 2) {
-        setUsers([]);
+        setUsers(defaultUsers);
         return;
       }
       try {
@@ -99,7 +100,12 @@ function CreateGroup({onClose}) {
                 alt={user.username}
                 src={`${API_URL}${user.avatar_url}`}/>
             )}
-            <span>{user.username}</span>
+            <div className={styles.userdata}>
+              <span>{user.username}</span>
+              <UserStatus
+                isOnline={user.is_online}
+                lastSeen={user.last_seen}/>
+            </div>
           </div>
         ))}
         {users.length === 0 && query.length > 2 && (

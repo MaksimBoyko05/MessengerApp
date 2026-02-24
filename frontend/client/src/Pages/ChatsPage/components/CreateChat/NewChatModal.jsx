@@ -1,20 +1,35 @@
-import {useState, useEffect, use} from "react";
+import {useState, useEffect} from "react";
 import Avvvatars from 'avvvatars-react'
 import {chatsService} from "@/api/chatsService.js";
 import {X} from 'lucide-react';
 import styles from "./CreateChat.module.scss"
 import CreateGroup from "@/Pages/ChatsPage/components/CreateChat/CreateGroup.jsx";
+import UserStatus from "@/Pages/ChatsPage/components/ChatWindow/UserStatus.jsx";
 
 function CreateChatModal({setIsOpen, onChatCreated}) {
   const [query, setQuery] = useState("");
   const [users, setUsers] = useState([]);
+  const [defaultUsers, setDefaultUsers] = useState([]);
   const [isCreateGroup, setIsCreateGroup] = useState(false);
   const API_URL = "http://localhost:5000";
 
   useEffect(() => {
+    const fetchDefaultUsers = async () => {
+      try {
+        const res = await chatsService.getRecentUsers();
+        setDefaultUsers(res);
+        console.log(res)
+      } catch (err) {
+        console.error("Error to fetch user list", err)
+      }
+    }
+    fetchDefaultUsers();
+  }, []);
+
+  useEffect(() => {
     const search = async () => {
       if (query.trim().length < 2) {
-        setUsers([]);
+        setUsers(defaultUsers);
         return;
       }
       try {
@@ -26,7 +41,7 @@ function CreateChatModal({setIsOpen, onChatCreated}) {
     };
     const timer = setTimeout(search, 300);
     return () => clearTimeout(timer);
-  }, [query]);
+  }, [query, defaultUsers]);
 
   const handleUserClick = async (userId) => {
     try {
@@ -62,7 +77,9 @@ function CreateChatModal({setIsOpen, onChatCreated}) {
           )}
           {isCreateGroup ? (
             <>
-              <CreateGroup onClose={setIsCreateGroup}/>
+              <CreateGroup
+                defaultUsers={defaultUsers}
+                onClose={setIsCreateGroup}/>
             </>
           ) : (
             <>
@@ -80,7 +97,12 @@ function CreateChatModal({setIsOpen, onChatCreated}) {
                         alt={user.username}
                         src={`${API_URL}${user.avatar_url}`}/>
                     )}
-                    <span>{user.username}</span>
+                    <div className={styles.userdata}>
+                      <span>{user.username}</span>
+                      <UserStatus
+                        isOnline={user.is_online}
+                        lastSeen={user.last_seen}/>
+                    </div>
                   </div>
                 ))}
                 {users.length === 0 && query.length > 2 && (

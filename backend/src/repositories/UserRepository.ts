@@ -34,15 +34,41 @@ export class UserRepository {
         return result.rows;
     }
 
-    static async search(query: string, currentUserId: number): Promise<User[]> {
+    static async getRecentOnlineUsers(currentUserId: number, limit: number = 20): Promise<User[]> {
+        const query = `
+            SELECT u.id,
+                   u.username,
+                   u.avatar_url,
+                   us.online as is_online,
+                   us.last_seen
+            FROM users u
+                     LEFT JOIN user_statuses us ON u.id = us.user_id
+            WHERE u.id != $1
+            ORDER BY
+                us.online DESC NULLS LAST,
+                us.last_seen DESC NULLS LAST
+                LIMIT $2;
+        `;
+
+        const result = await pool.query(query, [currentUserId, limit]);
+        return result.rows;
+    }
+
+    static async search(query: string, currentUserId: number): Promise<any[]> {
         const sql = `
-            SELECT id, username, email, avatar_url
-            FROM users
-            WHERE username ILIKE $1
-              AND id != $2
+            SELECT u.id,
+                   u.username,
+                   u.email,
+                   u.avatar_url,
+                   us.last_seen,
+                   us.online as is_online
+            FROM users u
+                     LEFT JOIN user_statuses us ON u.id = us.user_id
+            WHERE u.username ILIKE $1
+              AND u.id != $2
                 LIMIT 20
         `;
-        const result = await pool.query<User>(sql, [`%${query}%`, currentUserId]);
+        const result = await pool.query(sql, [`%${query}%`, currentUserId]);
         return result.rows;
     }
 }
