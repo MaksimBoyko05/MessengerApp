@@ -1,5 +1,6 @@
 import styles from "@/Pages/ChatsPage/Chats.module.scss";
 import UserStatus from "./UserStatus.jsx"
+import Avvvatars from "avvvatars-react";
 
 function ChatHeader({chatDetails, companion}) {
   const API_URL = "http://localhost:5000";
@@ -8,10 +9,12 @@ function ChatHeader({chatDetails, companion}) {
       <div className={styles.chatheaderwrapper}>
         {chatDetails.is_group ? (
           <>
+            <div className={styles.groupimage}><Avvvatars
+              size={40}
+              value={chatDetails.name}/></div>
             <div className={styles.headertext}>
               <p>{chatDetails.name}</p>
-              <p>Members: {chatDetails.members.length}, {chatDetails.members?.filter(members => members.is_online).length} в
-                мережі</p>
+              <p className={styles.groupmembers}>Members: {chatDetails.members.length}, {chatDetails.members?.filter(members => members.is_online).length} online</p>
             </div>
           </>
         ) : (

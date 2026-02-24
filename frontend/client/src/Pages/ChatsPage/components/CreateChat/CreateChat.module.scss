@@ -1,5 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+
+
+$font-main: 'Inter', sans-serif;
 $color-main: #ffff;
-$modal-color-main: #F1F1F3;
+$modal-color-main: #f5f5f6;
 $input-focus-bg: #f2f2f2;
 $border-radius: 16px;
 $modal-border-radius: 24px;
@@ -8,6 +12,14 @@ $modal-list-hover-radius: 12px;
 $color-text-secondary: #666;
 $create-button-color: #1f5aee;
 $color-primary-hover: #2471e7;
+
+
+body, button {
+  font-family: $font-main;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 
 @mixin flex-center {
   display: flex;
@@ -46,8 +58,7 @@ $color-primary-hover: #2471e7;
     flex-direction: column;
     background-color: $modal-color-main;
     width: 400px;
-    height: 400px;
-    max-height: 600px;
+    height: clamp(500px, 100vh, 800px);
     padding: 24px;
     border-radius: $modal-border-radius;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
@@ -71,11 +82,13 @@ $color-primary-hover: #2471e7;
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06),
       0 4px 12px rgba(0, 0, 0, 0.08),
       inset 0 1px 0 rgba(255, 255, 255, 1);
+      margin-top: auto;
 
       button {
         background: $create-button-color;
         border: #1c50d3;
         color: white;
+        font-weight: 600;
         flex: 1;
         border-radius: 13px;
         padding: 12px;
@@ -119,9 +132,6 @@ $color-primary-hover: #2471e7;
       background: #FAFAFA;
       border-radius: $modal-search-radius;
       border: 1px solid rgba(120, 122, 133, 0.07);
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06),
-      0 4px 12px rgba(0, 0, 0, 0.08),
-      inset 0 1px 0 rgba(255, 255, 255, 1);
       transition: border-color 0.3s ease;
 
       &:focus {
@@ -130,31 +140,52 @@ $color-primary-hover: #2471e7;
         outline: none;
       }
     }
+
+    .searchusers {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      max-height: 50vh;
+      height: auto;
+      overflow-y: auto;
+      background: #FFFFFF;
+      border-radius: 20px;
+      padding: 10px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06),
+      0 4px 12px rgba(0, 0, 0, 0.08),
+      inset 0 1px 0 rgba(255, 255, 255, 1);
+
+      &::-webkit-scrollbar {
+        width: 20px;
+      }
+
+      .userblock {
+        display: flex;
+        flex: 1;
+        background: #FFFFFF;
+        margin-top: 10px;
+        align-items: center;
+        border-radius: 12px;
+        height: 45px;
+        max-height: 45px;
+        transition: all 0.3s;
+        border: 1px solid #FFFF;
+
+        &:hover {
+          background: #fafafa;
+        }
+
+
+        img {
+          width: 32px;
+          height: 32px;
+          border-radius: 50%;
+          object-fit: contain;
+        }
+      }
+    }
   }
 
-  .userblock {
-    display: flex;
-    background: #FFFFFF;
-    margin-top: 10px;
-    align-items: center;
-    padding: 10px;
-    border-radius: 12px;
-    height: 45px;
-    transition: all 0.3s;
-    border: 1px solid #FFFF;
-
-    &:hover {
-      background: #fafafa;
-    }
-
-
-    img {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      object-fit: contain;
-    }
-  }
 
   .empty {
     @include flex-center;

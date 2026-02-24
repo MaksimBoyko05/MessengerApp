@@ -51,6 +51,13 @@ function CreateChatModal({setIsOpen, onChatCreated}) {
             <div className={styles.modalheader}>
               <h4>New Chat</h4>
               <span>Choose someone to message</span>
+              <input
+                type="text"
+                placeholder="Search users..."
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                autoFocus
+              />
             </div>
           )}
           {isCreateGroup ? (
@@ -59,14 +66,7 @@ function CreateChatModal({setIsOpen, onChatCreated}) {
             </>
           ) : (
             <>
-              <input
-                type="text"
-                placeholder="Search users..."
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                autoFocus
-              />
-              <div>
+              <div className={styles.searchusers}>
                 {users.map(user => (
                   <div
                     key={user.id}

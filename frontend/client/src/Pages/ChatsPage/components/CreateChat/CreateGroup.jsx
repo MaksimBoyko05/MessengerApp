@@ -78,14 +78,14 @@ function CreateGroup({onClose}) {
           </div>
         ))}
       </div>
-      <input
-        type="text"
-        placeholder="Search users..."
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        autoFocus
-      />
-      <div>
+      <div className={styles.searchusers}>
+        <input
+          type="text"
+          placeholder="Search users..."
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          autoFocus
+        />
         {users.map(user => (
           <div
             key={user.id}
