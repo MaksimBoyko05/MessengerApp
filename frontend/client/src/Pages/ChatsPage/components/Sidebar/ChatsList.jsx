@@ -230,9 +230,10 @@ function ChatsList({onSelectedChat, selectedChatId, onFilterType, onSearchQuery}
   return (
     <div className={styles.chatsList}>
       {filteredChats.map(chat => (
-        <div onContextMenu={(e) => handleRightClick(e, chat.id)}>
+        <div
+          key={chat.id}
+          onContextMenu={(e) => handleRightClick(e, chat.id)}>
           <ChatBlock
-            key={chat.id}
             chat={chat}
             onClick={handleChatClick}
             isActive={chat.id === selectedChatId}

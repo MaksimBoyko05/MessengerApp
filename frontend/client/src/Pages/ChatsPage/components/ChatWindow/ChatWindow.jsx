@@ -111,7 +111,9 @@ function ChatWindow({chatId}) {
       <div className={styles.messagesArea}>
         {messages.length > 0 ? (
           messages.map((msg, index) => (
-            <div className={styles.messageRow}>
+            <div
+              key={index}
+              className={styles.messageRow}>
               <ChatMessages
                 key={msg.id}
                 msg={msg}/>

@@ -101,11 +101,11 @@ export const getMe = async (req: Request, res: Response) => {
     res.json(userData);
 
 }
-// ==== Update user ====
+/// ==== Update user ====
 export const updateUser = async (req: Request, res: Response) => {
     try {
         const userId = parseInt(req.params.id);
-        const {username, email, password, avatar_url} = req.body;
+        const {username, email, password} = req.body;
 
         const currentUserId = (req as any).user?.id;
         if (currentUserId !== userId) {
@@ -115,10 +115,13 @@ export const updateUser = async (req: Request, res: Response) => {
         const updateData: any = {};
         if (username) updateData.username = username;
         if (email) updateData.email = email;
-        if (avatar_url) updateData.avatar_url = avatar_url;
 
         if (password) {
             updateData.password_hash = await bcrypt.hash(password, 10);
+        }
+
+        if (req.file) {
+            updateData.avatar_url = `/avatars/${req.file.filename}`;
         }
 
         if (Object.keys(updateData).length === 0) {
