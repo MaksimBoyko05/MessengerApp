@@ -5,4 +5,12 @@ export const userService = {
     const response = await api.get('auth/me');
     return response.data;
   },
+  updateUser: async (userId, payload) => {
+    const response = await api.put(`users/${userId}`, payload, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    })
+    return response.data;
+  },
 }

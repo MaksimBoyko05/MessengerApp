@@ -103,49 +103,37 @@ export const getMe = async (req: Request, res: Response) => {
 }
 // ==== Update user ====
 export const updateUser = async (req: Request, res: Response) => {
-    const {username, email, password, avatar_url} = req.body;
     try {
-        const fields = [];
-        const values = [];
-        let query = "UPDATE users SET ";
+        const userId = parseInt(req.params.id);
+        const {username, email, password, avatar_url} = req.body;
 
-        if (username) {
-            fields.push("username");
-            values.push(username);
+        const currentUserId = (req as any).user?.id;
+        if (currentUserId !== userId) {
+            return res.status(403).json({error: "Access denied: you can only update your own profile"});
         }
-        if (email) {
-            fields.push("email");
-            values.push(email);
-        }
+
+        const updateData: any = {};
+        if (username) updateData.username = username;
+        if (email) updateData.email = email;
+        if (avatar_url) updateData.avatar_url = avatar_url;
+
         if (password) {
-            const hashedPassword = await bcrypt.hash(password, 10);
-            fields.push("password_hash");
-            values.push(hashedPassword);
-        }
-        if (avatar_url) {
-            fields.push("avatar_url");
-            values.push(avatar_url);
+            updateData.password_hash = await bcrypt.hash(password, 10);
         }
 
-        if (fields.length === 0) {
+        if (Object.keys(updateData).length === 0) {
             return res.status(400).json({error: "No fields to update"});
         }
 
-        const setQuery = fields
-            .map((field, i) => `${field}=$${i + 1}`)
-            .join(", ");
-        query += setQuery + " WHERE id=$" + (fields.length + 1) + " RETURNING id, username, email, avatar_url, created_at";
+        const updatedUser = await UserRepository.update(userId, updateData);
 
-        values.push(req.params.id);
-
-        const result = await pool.query(query, values);
-
-        if (result.rows.length === 0)
+        if (!updatedUser) {
             return res.status(404).json({error: "User not found"});
+        }
 
-        res.json(result.rows[0]);
+        res.json(updatedUser);
     } catch (err) {
-        console.error(err);
+        console.error("Error in updateUser:", err);
         res.status(500).json({error: "Database error"});
     }
 };

@@ -1,0 +1,78 @@
+import styles from "./Settings.module.scss"
+import {Camera} from 'lucide-react';
+import {useEffect, useRef, useState} from "react";
+import {userService} from "@/api/userService.js";
+
+function ProfileSettings({user}) {
+  const [data, setData] = useState({
+    avatar_url: null,
+    username: "",
+  })
+  const [preview, setPreview] = useState("");
+  const API_URL = "http://localhost:5000";
+  const filePickerRef = useRef(null);
+
+  useEffect(() => {
+    const fetchUserName = () => {
+      setData({...data, username: user.username})
+    }
+    fetchUserName();
+  }, [user.username]);
+  const handleImageClick = () => {
+    filePickerRef.current.click();
+  }
+  const handleFileChange = (e) => {
+    const file = e.target.files;
+    if (file && file.length > 0) {
+      setData({
+        ...data,
+        avatar_url: file[0]
+      });
+      const imageUrl = URL.createObjectURL(file[0]);
+      setPreview(imageUrl);
+    }
+  }
+  const handleNameChange = (e) => {
+    setData({...data, username: e.target.value})
+  }
+  const handleSave = async () => {
+    const payload = new FormData();
+    payload.append("username", data.username);
+    if (data.avatar_url) {
+      payload.append("avatar", data.avatar_url);
+    }
+    try {
+      const res = await userService.updateUser(user.id, payload);
+    } catch (err) {
+      console.error("Error with update data", err)
+    }
+  }
+  return (
+    <>
+      <div className={styles.profilesettingscontainer}>
+        <div className={styles.imgblock}>
+          <img
+            alt={"avatar"}
+            src={preview ? preview : `${API_URL}${user.avatar_url}`}/>
+          <div
+            className={styles.editimg}
+            onClick={handleImageClick}><Camera/></div>
+          <input
+            type={"file"}
+            ref={filePickerRef}
+            style={{display: 'none'}}
+            onChange={(e) => handleFileChange(e)}/>
+        </div>
+        <div className={styles.nameblock}>
+          <input
+            type={"text"}
+            value={data.username}
+            onChange={(e) => handleNameChange(e)}/>
+        </div>
+        <button onClick={handleSave}>Save</button>
+      </div>
+    </>
+  )
+}
+
+export default ProfileSettings;

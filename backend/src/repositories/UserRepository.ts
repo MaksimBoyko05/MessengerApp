@@ -71,4 +71,48 @@ export class UserRepository {
         const result = await pool.query(sql, [`%${query}%`, currentUserId]);
         return result.rows;
     }
+
+    static async update(userId: number, updateData: {
+        username?: string;
+        email?: string;
+        password_hash?: string;
+        avatar_url?: string;
+    }): Promise<User | null> {
+
+        const setClauses: string[] = [];
+        const values: any[] = [];
+        let paramIndex = 1;
+        
+        if (updateData.username !== undefined) {
+            setClauses.push(`username=$${paramIndex++}`);
+            values.push(updateData.username);
+        }
+        if (updateData.email !== undefined) {
+            setClauses.push(`email=$${paramIndex++}`);
+            values.push(updateData.email);
+        }
+        if (updateData.password_hash !== undefined) {
+            setClauses.push(`password_hash=$${paramIndex++}`);
+            values.push(updateData.password_hash);
+        }
+        if (updateData.avatar_url !== undefined) {
+            setClauses.push(`avatar_url=$${paramIndex++}`);
+            values.push(updateData.avatar_url);
+        }
+
+        if (setClauses.length === 0) {
+            return null;
+        }
+
+        const query = `
+            UPDATE users
+            SET ${setClauses.join(", ")}
+            WHERE id = $${paramIndex} RETURNING id, username, email, avatar_url, created_at
+        `;
+
+        values.push(userId);
+
+        const result = await pool.query(query, values);
+        return result.rows[0] || null;
+    }
 }
