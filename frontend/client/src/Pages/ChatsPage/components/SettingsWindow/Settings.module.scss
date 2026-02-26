@@ -1,5 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
+$font-main: 'Inter', sans-serif;
+$color-main: #ffff;
+$modal-color-main: #f5f5f6;
+$modal-element-shadow: 0 1px 3px rgba(0, 0, 0, 0.06),
+0 4px 12px rgba(0, 0, 0, 0.08),
+inset 0 1px 0 rgba(255, 255, 255, 1);
+$modal-element-radius: 20px;
+
 
 // Shared colors
 $color-primary: #2B7FFF;
@@ -29,10 +37,56 @@ $glass-border: rgba(255, 255, 255, 0.4);
 $text-primary: #1a1a1a;
 $text-secondary: #4b5563;
 
+$input-focus-bg: #f2f2f2;
+$border-radius: 16px;
+$color-text-secondary: #666;
+$modal-search-radius: 12px;
+$color-primary-hover: #2471e7;
+
 @mixin flex-center {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+@mixin input-style {
+  height: 38px;
+  min-height: 38px;
+  padding: 5px 5px 1px 15px;
+  background: #FAFAFA;
+  border-radius: $modal-search-radius;
+  border: 1px solid rgba(120, 122, 133, 0.07);
+  transition: border-color 0.3s ease;
+
+  &:focus {
+    border-color: #2B7FFF;
+    background-color: $input-focus-bg;
+    outline: none;
+  }
+}
+
+@mixin button-style {
+  @include flex-center;
+  padding: 9px 14px;
+  border: none;
+  border-radius: 10px;
+  height: 38px;
+  width: 100px;
+  background: $color-primary;
+  color: white;
+  font-weight: 600;
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    background: $color-primary-hover;
+  }
+}
+
+body, button {
+  font-family: $font-main;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .modalwrapper {
@@ -49,7 +103,7 @@ $text-secondary: #4b5563;
 
   .modalcontainer {
     display: flex;
-    background-color: #FAFAFA;
+    background-color: $modal-color-main;
     border-radius: 12px;
     position: relative;
     flex-direction: column;
@@ -72,28 +126,38 @@ $text-secondary: #4b5563;
 }
 
 .profilesettingscontainer {
-  @include flex-center;
+  display: flex;
   flex-direction: column;
+  background: $color-main;
+  padding: 10px 20px;
+  box-shadow: $modal-element-shadow;
+  border-radius: $modal-element-radius;
 
+  .profiletop {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+  }
 
   .imgblock {
     display: grid;
-    width: 120px;
-    height: 120px;
+    width: 90px;
+    height: 90px;
     border-radius: 50%;
     border: 1px solid $light-border;
     place-items: center;
     overflow: hidden;
 
     img {
-      width: 100%;
+      width: 90px;
+      height: 90px;
       object-fit: cover;
       grid-area: 1/1;
     }
 
     .editimg {
       grid-area: 1/1;
-      width: 100px;
+      width: 80px;
       display: none;
       background: rgba(0, 0, 0, 0.29);
       transition: all 0.3s ease;
@@ -108,7 +172,47 @@ $text-secondary: #4b5563;
   }
 
   .nameblock {
+    flex: 1;
+    padding-left: 15px;
 
+    .namelabel {
+      display: flex;
+      font-size: 0.75rem;
+      font-weight: 500;
+      margin-bottom: 4px;
+      color: $color-text-secondary;
+    }
+
+    .editnameblock {
+      display: flex;
+      gap: 10px;
+    }
+
+    input {
+      @include input-style;
+    }
+
+    .savenamebtn {
+      @include button-style;
+    }
+  }
+
+  .innerDivider {
+    height: 1px;
+    background: #F1F1F3;
+    width: 100%;
+  }
+
+  .emailblock {
+    display: flex;
+    flex-direction: column;
+
+    p {
+      font-size: 0.75rem;
+      font-weight: 500;
+      padding: 2px 0px;
+      color: $color-text-secondary;
+    }
   }
 }
 
@@ -117,6 +221,10 @@ $text-secondary: #4b5563;
   width: 100%;
   justify-content: center;
   gap: 10px;
+  background: $color-main;
+  box-shadow: $modal-element-shadow;
+  border-radius: $modal-element-radius;
+
 
   .lenguageButton {
     display: flex;
@@ -156,6 +264,9 @@ $text-secondary: #4b5563;
   padding: 32px 40px;
   max-width: 500px;
   width: 100%;
+  background: $color-main;
+  box-shadow: $modal-element-shadow;
+  border-radius: $modal-element-radius;
 }
 
 .title {

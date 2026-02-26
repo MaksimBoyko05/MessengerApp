@@ -9,6 +9,7 @@ function ProfileSettings({user}) {
     username: "",
   })
   const [preview, setPreview] = useState("");
+  const [isChanged, setIsChanged] = useState(false);
   const API_URL = "http://localhost:5000";
   const filePickerRef = useRef(null);
 
@@ -33,7 +34,8 @@ function ProfileSettings({user}) {
     }
   }
   const handleNameChange = (e) => {
-    setData({...data, username: e.target.value})
+    setData({...data, username: e.target.value});
+    setIsChanged(true);
   }
   const handleSave = async () => {
     const payload = new FormData();
@@ -50,26 +52,43 @@ function ProfileSettings({user}) {
   return (
     <>
       <div className={styles.profilesettingscontainer}>
-        <div className={styles.imgblock}>
-          <img
-            alt={"avatar"}
-            src={preview ? preview : `${API_URL}${user.avatar_url}`}/>
-          <div
-            className={styles.editimg}
-            onClick={handleImageClick}><Camera/></div>
-          <input
-            type={"file"}
-            ref={filePickerRef}
-            style={{display: 'none'}}
-            onChange={(e) => handleFileChange(e)}/>
+        <div className={styles.profiletop}>
+          <div className={styles.imgblock}>
+            <img
+              alt={"avatar"}
+              src={preview ? preview : `${API_URL}${user.avatar_url}`}/>
+            <div
+              className={styles.editimg}
+              onClick={handleImageClick}><Camera/></div>
+            <input
+              type={"file"}
+              ref={filePickerRef}
+              style={{display: 'none'}}
+              onChange={(e) => handleFileChange(e)}/>
+          </div>
+          <div className={styles.nameblock}>
+            <div className={styles.namelabel}>
+              <label>Display name</label>
+            </div>
+            <div className={styles.editnameblock}>
+              <input
+                type={"text"}
+                value={data.username}
+                onChange={(e) => handleNameChange(e)}/>
+              {isChanged && (
+                <button
+                  className={styles.savenamebtn}
+                  onClick={handleSave}>Save
+                </button>
+              )}
+            </div>
+          </div>
         </div>
-        <div className={styles.nameblock}>
-          <input
-            type={"text"}
-            value={data.username}
-            onChange={(e) => handleNameChange(e)}/>
+        <div className={styles.innerDivider}></div>
+        <div className={styles.emailblock}>
+          <p>Email</p>
+          <span>{user.email}</span>
         </div>
-        <button onClick={handleSave}>Save</button>
       </div>
     </>
   )

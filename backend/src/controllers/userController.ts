@@ -115,10 +115,7 @@ export const updateUser = async (req: Request, res: Response) => {
         const updateData: any = {};
         if (username) updateData.username = username;
         if (email) updateData.email = email;
-
-        if (password) {
-            updateData.password_hash = await bcrypt.hash(password, 10);
-        }
+        
 
         if (req.file) {
             updateData.avatar_url = `/avatars/${req.file.filename}`;
@@ -138,6 +135,51 @@ export const updateUser = async (req: Request, res: Response) => {
     } catch (err) {
         console.error("Error in updateUser:", err);
         res.status(500).json({error: "Database error"});
+    }
+};
+// ==== Change Password ====
+export const changePassword = async (req: Request, res: Response) => {
+    try {
+        const userId = parseInt(req.params.id);
+        const {oldPassword, newPassword} = req.body;
+
+        const currentUserId = (req as any).user?.id;
+        if (currentUserId !== userId) {
+            return res.status(403).json({error: "Access denied: you can only update your own password"});
+        }
+
+        if (!oldPassword || !newPassword) {
+            return res.status(400).json({error: "Old and new passwords are required"});
+        }
+
+        const userResult = await pool.query(
+            "SELECT password_hash FROM users WHERE id = $1",
+            [userId]
+        );
+
+        const user = userResult.rows[0];
+        if (!user) {
+            return res.status(404).json({error: "User not found"});
+        }
+
+        const isMatch = await bcrypt.compare(oldPassword, user.password_hash);
+        if (!isMatch) {
+            return res.status(401).json({error: "Invalid current password"});
+        }
+
+        const isSamePassword = await bcrypt.compare(newPassword, user.password_hash);
+        if (isSamePassword) {
+            return res.status(400).json({error: "New password must be different from the old one"});
+        }
+
+        const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+
+        await UserRepository.update(userId, {password_hash: hashedNewPassword});
+
+        res.json({message: "Password updated successfully"});
+    } catch (err) {
+        console.error("Error changing password:", err);
+        res.status(500).json({error: "Server error"});
     }
 };
 //=== Search user for create Chat===

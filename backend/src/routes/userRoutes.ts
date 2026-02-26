@@ -7,7 +7,8 @@ import {
     updateUser,
     deleteUser,
     searchUsers,
-    getRecentUsers
+    getRecentUsers,
+    changePassword
 } from "../controllers/userController.js";
 
 const router = express.Router();
@@ -18,6 +19,7 @@ router.get('/recent', protect, getRecentUsers);
 router.get("/:id", protect, getUserById);
 
 // PUT /api/users
+router.put("/:id/password", protect, changePassword);
 router.put("/:id", protect, upload.single("avatar"), updateUser);
 
 // DELETE /api/users

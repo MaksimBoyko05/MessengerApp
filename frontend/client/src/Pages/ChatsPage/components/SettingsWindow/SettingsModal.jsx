@@ -5,6 +5,7 @@ import LanguageSwitcher from "@/Pages/ChatsPage/components/SettingsWindow/Langua
 import {useEffect, useState} from "react";
 import {userService} from "@/api/userService.js";
 import ProfileSettings from "@/Pages/ChatsPage/components/SettingsWindow/ProfileSettings.jsx";
+import SecuritySettings from "@/Pages/ChatsPage/components/SettingsWindow/SecuritySettings.jsx";
 
 function SettingsModal({onClose}) {
   const [userData, setUserData] = useState({})
@@ -30,6 +31,7 @@ function SettingsModal({onClose}) {
             onClick={onClose}/>
           <h2>Settings</h2>
           <ProfileSettings user={userData}/>
+          <SecuritySettings user={userData}/>
           <LanguageSwitcher/>
           <ThemeSwitcher/>
         </div>
