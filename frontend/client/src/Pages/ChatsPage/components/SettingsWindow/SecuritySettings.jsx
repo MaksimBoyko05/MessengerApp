@@ -1,5 +1,6 @@
 import {useState} from "react";
 import {userService} from "@/api/userService.js";
+import styles from "./Settings.module.scss"
 
 function SecuritySettings({user}) {
   const [newPassword, setNewPassword] = useState({
@@ -16,26 +17,30 @@ function SecuritySettings({user}) {
   }
   return (
     <>
-      <div>
-        <p onClick={() => setIsChangingPassword(true)}>Change Password?</p>
-      </div>
-      {isChangingPassword && (
-        <div>
-          <input
-            type={"text"}
-            placeholder={"old password"}
-            value={newPassword.oldPassword}
-            onChange={(e) => setNewPassword({...newPassword, oldPassword: e.target.value})}
-          />
-          <input
-            type={"text"}
-            placeholder={"new password"}
-            value={newPassword.newPassword}
-            onChange={(e) => setNewPassword({...newPassword, newPassword: e.target.value})}
-          />
-          <button onClick={handleSubmit}>Sumbit</button>
+      <div className={styles.changepassblock}>
+        <div className={styles.changepasstitle}>
+          <p onClick={() => setIsChangingPassword(true)}>Change Password?</p>
         </div>
-      )}
+        {isChangingPassword && (
+          <div className={styles.passinputcontainer}>
+            <input
+              type={"password"}
+              placeholder={"Current password"}
+              value={newPassword.oldPassword}
+              onChange={(e) => setNewPassword({...newPassword, oldPassword: e.target.value})}
+            />
+            <input
+              type={"password"}
+              placeholder={"New password"}
+              value={newPassword.newPassword}
+              onChange={(e) => setNewPassword({...newPassword, newPassword: e.target.value})}
+            />
+            <button
+              className={styles.sbmbtn}
+              onClick={handleSubmit}>Sumbit
+            </button>
+          </div>
+        )}</div>
     </>
   )
 }

@@ -9,15 +9,17 @@ function LanguageSwitcher() {
   };
   return (
     <>
-      <h4 className={styles.title}>Change Language</h4>
-      <div className={styles.languagecontainer}>
-        <div
-          onClick={() => handleLanguageClick('ua')}
-          className={`${styles.lenguageButton} ${activeLanguage === 'ua' ? styles.active : ''}`}>Ukrainian
-        </div>
-        <div
-          onClick={() => handleLanguageClick('en')}
-          className={`${styles.lenguageButton} ${activeLanguage === 'en' ? styles.active : ''}`}>English
+      <div className={styles.languageblock}>
+        <h4 className={styles.title}>Language</h4>
+        <div className={styles.languagecontainer}>
+          <div
+            onClick={() => handleLanguageClick('ua')}
+            className={`${styles.lenguageButton} ${activeLanguage === 'ua' ? styles.active : ''}`}>Ukrainian
+          </div>
+          <div
+            onClick={() => handleLanguageClick('en')}
+            className={`${styles.lenguageButton} ${activeLanguage === 'en' ? styles.active : ''}`}>English
+          </div>
         </div>
       </div>
     </>

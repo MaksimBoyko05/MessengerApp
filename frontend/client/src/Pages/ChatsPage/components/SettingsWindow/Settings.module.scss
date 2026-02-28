@@ -83,6 +83,12 @@ $color-primary-hover: #2471e7;
   }
 }
 
+@mixin hide-scrollbar {
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 body, button {
   font-family: $font-main;
   -webkit-font-smoothing: antialiased;
@@ -102,16 +108,19 @@ body, button {
   backdrop-filter: blur(2px);
 
   .modalcontainer {
+    @include hide-scrollbar;
     display: flex;
     background-color: $modal-color-main;
     border-radius: 12px;
     position: relative;
     flex-direction: column;
     width: 500px;
-    height: 450px;
-    max-height: 600px;
+    height: 650px;
+    max-height: 650px;
     padding: 24px;
+    gap: 10px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+    overflow-y: auto;
 
     .closebtn {
       background: #e7e7e7;
@@ -189,7 +198,7 @@ body, button {
     }
 
     input {
-      @include input-style;
+      @include input-style
     }
 
     .savenamebtn {
@@ -216,14 +225,46 @@ body, button {
   }
 }
 
-.languagecontainer {
+.changepassblock {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: $color-main;
+  padding: 10px 20px;
+  box-shadow: $modal-element-shadow;
+  border-radius: $modal-element-radius;
+
+  .passinputcontainer {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    input {
+      @include input-style;
+    }
+
+    .sbmbtn {
+      @include button-style;
+      width: 100%;
+    }
+  }
+}
+
+.languageblock {
   display: flex;
   width: 100%;
-  justify-content: center;
+  flex-direction: column;
+  padding: 10px 20px;
   gap: 10px;
   background: $color-main;
   box-shadow: $modal-element-shadow;
   border-radius: $modal-element-radius;
+
+  .languagecontainer {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+  }
 
 
   .lenguageButton {
@@ -270,7 +311,6 @@ body, button {
 }
 
 .title {
-  text-align: center;
   font-size: 20px;
   font-weight: 600;
   color: $text-primary;
