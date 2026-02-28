@@ -82,7 +82,7 @@ export class UserRepository {
         const setClauses: string[] = [];
         const values: any[] = [];
         let paramIndex = 1;
-        
+
         if (updateData.username !== undefined) {
             setClauses.push(`username=$${paramIndex++}`);
             values.push(updateData.username);
@@ -115,4 +115,27 @@ export class UserRepository {
         const result = await pool.query(query, values);
         return result.rows[0] || null;
     }
+
+    static async updateEmailAndClearTokens(userId: number, newEmail: string, tokenType: string) {
+        const client = await pool.connect();
+        try {
+            await client.query("BEGIN");
+            
+            await client.query("UPDATE users SET email = $1 WHERE id = $2", [newEmail, userId]);
+
+            await client.query(
+                "DELETE FROM verification_tokens WHERE user_id = $1 AND type = $2",
+                [userId, tokenType]
+            );
+
+            await client.query("COMMIT");
+            return true;
+        } catch (error) {
+            await client.query("ROLLBACK");
+            throw error;
+        } finally {
+            client.release();
+        }
+    }
+
 }

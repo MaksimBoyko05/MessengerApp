@@ -8,15 +8,22 @@ import {
     deleteUser,
     searchUsers,
     getRecentUsers,
-    changePassword
+    changePassword,
+    requestEmailChange,
+    verifyEmailChange
 } from "../controllers/userController.js";
 
 const router = express.Router();
+
 // GET /api/users
 router.get("/", protect, getUsers);
 router.get('/search', protect, searchUsers);
 router.get('/recent', protect, getRecentUsers);
 router.get("/:id", protect, getUserById);
+
+//POST /api/users
+router.post("/:id/request-email-change", protect, requestEmailChange);
+router.post("/verify-email", verifyEmailChange);
 
 // PUT /api/users
 router.put("/:id/password", protect, changePassword);

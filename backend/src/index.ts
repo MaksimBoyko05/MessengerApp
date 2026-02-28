@@ -1,10 +1,14 @@
 import express from "express";
-
 import path from 'path';
 import {fileURLToPath} from 'url';
 import dotenv from "dotenv";
 import cors from "cors";
 import {createServer} from "http";
+
+dotenv.config({path: ".env"});
+console.log("EMAIL_USER:", process.env.EMAIL_USER);
+console.log("EMAIL_PASS:", process.env.EMAIL_PASS ? " Loaded" : " Missing");
+
 import {initSocket} from "./socket.js";
 import pool from "./db.js";
 import authRoutes from "./routes/auth.js";
@@ -13,13 +17,10 @@ import userRoutes from "./routes/userRoutes.js";
 import chatRoutes from './routes/chatsRoutes.js';
 import messageRoutes from "./routes/messageRoutes.js";
 import rateLimit from "express-rate-limit";
-import "./queues/emailQueue.js";
+
+
 import "./cron.js";
-
-
-dotenv.config({path: ".env"});
-console.log("EMAIL_USER:", process.env.EMAIL_USER);
-console.log("EMAIL_PASS:", process.env.EMAIL_PASS ? "✅ Loaded" : "❌ Missing");
+import "./workers/emailWorker.js";
 
 
 const app = express();

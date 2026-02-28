@@ -1,9 +1,12 @@
 import {Request, Response} from "express";
 import pool from "../db.js";
 import bcrypt from "bcryptjs";
+import * as crypto from "node:crypto";
 import redis from "../redisClient.js"
 import jwt from 'jsonwebtoken';
 import {UserRepository} from "../repositories/UserRepository.js";
+import {TokenRepository} from "../repositories/TokenRepository.js";
+import {emailQueue} from "../queues/emailQueue.js";
 
 // ==== Get all users ====
 export const getUsers = async (req: Request, res: Response) => {
@@ -115,7 +118,7 @@ export const updateUser = async (req: Request, res: Response) => {
         const updateData: any = {};
         if (username) updateData.username = username;
         if (email) updateData.email = email;
-        
+
 
         if (req.file) {
             updateData.avatar_url = `/avatars/${req.file.filename}`;
@@ -135,6 +138,66 @@ export const updateUser = async (req: Request, res: Response) => {
     } catch (err) {
         console.error("Error in updateUser:", err);
         res.status(500).json({error: "Database error"});
+    }
+};
+//==== Email Change Request (token) ====
+export const requestEmailChange = async (req: Request, res: Response) => {
+    try {
+        const userId = parseInt(req.params.id);
+        const {newEmail} = req.body;
+
+        const currentUserId = (req as any).user?.id;
+        if (currentUserId !== userId) {
+            return res.status(403).json({error: "Access denied"});
+        }
+
+        if (!newEmail) {
+            return res.status(400).json({error: "New email is required"});
+        }
+
+        const existingUser = await UserRepository.findByEmail(newEmail);
+        if (existingUser) {
+            return res.status(400).json({error: "This email is already in use"});
+        }
+
+        await TokenRepository.deleteUserTokensByType(userId, 'EMAIL_UPDATE');
+
+        const token = crypto.randomBytes(32).toString("hex");
+        const expiresAt = new Date(Date.now() + 60 * 60 * 1000);
+
+        await TokenRepository.createToken(userId, token, 'EMAIL_UPDATE', newEmail, expiresAt);
+
+        const confirmLink = `http://localhost:5173/verify-email?token=${token}`;
+        await emailQueue.add("sendEmail", {
+            email: newEmail,
+            subject: "Підтвердження нової електронної пошти",
+            text: `Перейдіть за посиланням: ${confirmLink} \nДійсне 1 годину.`
+        });
+
+        res.json({message: "Лист надіслано"});
+    } catch (err) {
+        console.error("Error requesting email change:", err);
+        res.status(500).json({error: "Server error"});
+    }
+};
+//=== Email Change Verification ====
+export const verifyEmailChange = async (req: Request, res: Response) => {
+    try {
+        const {token} = req.body;
+        if (!token) return res.status(400).json({error: "Token is required"});
+        const validToken = await TokenRepository.findValidToken(token, 'EMAIL_UPDATE');
+        if (!validToken) {
+            return res.status(400).json({error: "Invalid or expired token"});
+        }
+
+        const {user_id, payload: newEmail} = validToken;
+
+        await UserRepository.updateEmailAndClearTokens(user_id, newEmail, 'EMAIL_UPDATE');
+
+        res.json({message: "Email successfully updated"});
+    } catch (err) {
+        console.error("Error verifying email:", err);
+        res.status(500).json({error: "Server error"});
     }
 };
 // ==== Change Password ====
