@@ -20,4 +20,16 @@ export const userService = {
     });
     return response.data;
   },
+  changeEmail: async (userId, newEmail) => {
+    const response = await api.post(`/users/${userId}/request-email-change`, {
+      newEmail
+    });
+    return response.data;
+  },
+  verifyEmail: async (token) => {
+    const response = await api.post(`/users/verify-email`, {
+      token
+    });
+    return response.data;
+  },
 }

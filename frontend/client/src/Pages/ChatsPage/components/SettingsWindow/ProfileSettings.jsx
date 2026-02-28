@@ -8,8 +8,10 @@ function ProfileSettings({user}) {
     avatar_url: null,
     username: "",
   })
+  const [newEmail, setNewEmail] = useState("")
   const [preview, setPreview] = useState("");
   const [isChanged, setIsChanged] = useState(false);
+  const [changeEmail, setChangeEmail] = useState(false);
   const API_URL = "http://localhost:5000";
   const filePickerRef = useRef(null);
 
@@ -47,6 +49,14 @@ function ProfileSettings({user}) {
       const res = await userService.updateUser(user.id, payload);
     } catch (err) {
       console.error("Error with update data", err)
+    }
+  }
+  const handleSendVerification = async () => {
+    try {
+      const res = await userService.changeEmail(user.id, newEmail)
+      console.log("Email send")
+    } catch (err) {
+      console.error("Error with sending", err)
     }
   }
   return (
@@ -88,6 +98,20 @@ function ProfileSettings({user}) {
         <div className={styles.emailblock}>
           <p>Email</p>
           <span>{user.email}</span>
+          {!changeEmail && (
+            <button onClick={() => setChangeEmail(true)}>Change</button>
+          )}
+          {changeEmail && (
+            <div>
+              <input
+                type={"email"}
+                placeholder={"New Email"}
+                value={newEmail}
+                onChange={(e) => setNewEmail(e.target.value)}
+              />
+              <button onClick={handleSendVerification}>Send verification</button>
+            </div>
+          )}
         </div>
       </div>
     </>

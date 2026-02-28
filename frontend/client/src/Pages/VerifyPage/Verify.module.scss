@@ -1,0 +1,92 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+$font-main: 'Inter', sans-serif;
+$color-main: #ffff;
+$modal-color-main: #f5f5f6;
+$modal-element-shadow: 0 1px 3px rgba(0, 0, 0, 0.06),
+0 4px 12px rgba(0, 0, 0, 0.08),
+inset 0 1px 0 rgba(255, 255, 255, 1);
+$modal-element-radius: 20px;
+
+@mixin flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@mixin block-styles {
+  @include flex-center;
+  flex-direction: column;
+  width: 300px;
+  height: 300px;
+  background: $color-main;
+  box-shadow: $modal-element-shadow;
+  border-radius: $modal-element-radius;
+}
+
+body {
+  font-family: $font-main;
+}
+
+.emailcontainer {
+  @include flex-center;
+  background: $modal-color-main;
+  width: 100%;
+  height: 100vh;
+
+  h4 {
+    margin: 0 0 8px 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+
+  p {
+    margin: 0;
+    font-size: 1rem;
+  }
+
+
+  .loadingblock {
+    @include block-styles;
+    background-color: #fffbeb;
+    border: 1px solid #fde68a;
+
+    h4 {
+      color: #d97706;
+    }
+
+    p {
+      color: #92400e;
+    }
+  }
+
+
+  .successblock {
+    @include block-styles;
+    background-color: #ecfdf5;
+    border: 1px solid #a7f3d0;
+
+    h4 {
+      color: #059669;
+    }
+
+    p {
+      color: #064e3b;
+    }
+  }
+
+  .errorblock {
+    @include block-styles;
+    background-color: #fef2f2;
+    border: 1px solid #fecaca;
+
+    h4 {
+      color: #dc2626;
+    }
+
+    p {
+      color: #7f1d1d;
+    }
+
+  }
+}
