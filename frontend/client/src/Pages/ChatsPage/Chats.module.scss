@@ -67,7 +67,7 @@ $transition-fast: all 0.2s ease;
   display: flex;
   flex-wrap: wrap;
   align-items: flex-end;
-  gap: 8px;
+  gap: 2px;
   max-width: 30%;
   width: fit-content;
   padding: 10px 16px;
@@ -75,6 +75,7 @@ $transition-fast: all 0.2s ease;
 
   @if $align == 'right' {
     align-self: flex-end;
+    gap: 8px;
   } @else {
     align-self: flex-start;
   }
@@ -396,6 +397,18 @@ body {
     align-items: flex-end;
     width: 100%;
 
+    .senderimg {
+      display: flex;
+      align-self: flex-start;
+
+      img {
+        border-radius: 50%;
+        width: 36px;
+        height: 36px;
+        object-fit: contain;
+      }
+    }
+
     &:has(.mymsg) {
       justify-content: flex-end;
     }
@@ -403,6 +416,7 @@ body {
     &:has(.msgbubble) {
       justify-content: flex-start;
     }
+
 
     .mymsg {
       position: relative;
@@ -421,11 +435,19 @@ body {
 
     .msgbubble {
       @include message-bubble('left');
+      flex-direction: column;
       background: $color-bg-white;
       color: $color-text-primary;
       border: 1px solid rgba(0, 0, 0, 0.03);
       border-radius: $border-radius-xl $border-radius-xl $border-radius-xl 4px;
       box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+
+      .sendername {
+        align-self: flex-start;
+        font-size: 0.72rem;
+        font-weight: 600;
+        margin-bottom: 3px;
+      }
 
       .readtime {
         @extend %time-styles;

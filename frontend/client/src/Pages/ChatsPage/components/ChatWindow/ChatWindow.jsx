@@ -116,6 +116,7 @@ function ChatWindow({chatId}) {
               className={styles.messageRow}>
               <ChatMessages
                 key={msg.id}
+                isGroup={chatDetails.is_group}
                 msg={msg}/>
               {index === messages.length - 1 && (
                 <AIGenerateSuggestions
