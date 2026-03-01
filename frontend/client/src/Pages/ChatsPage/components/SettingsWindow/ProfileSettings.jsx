@@ -51,6 +51,10 @@ function ProfileSettings({user}) {
       console.error("Error with update data", err)
     }
   }
+  const onClose = () => {
+    setNewEmail("");
+    setChangeEmail(false)
+  }
   const handleSendVerification = async () => {
     try {
       const res = await userService.changeEmail(user.id, newEmail)
@@ -95,21 +99,27 @@ function ProfileSettings({user}) {
           </div>
         </div>
         <div className={styles.innerDivider}></div>
-        <div className={styles.emailblock}>
+        <div className={styles.emailcontainer}>
           <p>Email</p>
-          <span>{user.email}</span>
-          {!changeEmail && (
-            <button onClick={() => setChangeEmail(true)}>Change</button>
-          )}
+          <div className={styles.emailblock}>
+            <span>{user.email}</span>
+            {!changeEmail && (
+              <button onClick={() => setChangeEmail(true)}>Change</button>
+            )}
+          </div>
           {changeEmail && (
-            <div>
+            <div className={styles.newemailblock}>
               <input
                 type={"email"}
                 placeholder={"New Email"}
                 value={newEmail}
                 onChange={(e) => setNewEmail(e.target.value)}
               />
-              <button onClick={handleSendVerification}>Send verification</button>
+              <button onClick={handleSendVerification}>Send</button>
+              <button
+                style={{background: "#FF2C2C"}}
+                onClick={onClose}>Cancel
+              </button>
             </div>
           )}
         </div>

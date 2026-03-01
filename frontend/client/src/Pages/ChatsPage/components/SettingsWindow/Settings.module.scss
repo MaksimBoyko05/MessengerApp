@@ -51,7 +51,6 @@ $color-primary-hover: #2471e7;
 
 @mixin input-style {
   height: 38px;
-  min-height: 38px;
   padding: 5px 5px 1px 15px;
   background: #FAFAFA;
   border-radius: $modal-search-radius;
@@ -76,6 +75,7 @@ $color-primary-hover: #2471e7;
   color: white;
   font-weight: 600;
   transition: all 0.3s ease;
+  cursor: pointer;
 
   &:hover {
     transform: translateY(-2px);
@@ -212,15 +212,40 @@ body, button {
     width: 100%;
   }
 
-  .emailblock {
+  .emailcontainer {
     display: flex;
     flex-direction: column;
+    gap: 10px;
+
+    .emailblock {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      span {
+        height: fit-content;
+      }
+    }
+
+    .newemailblock {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
 
     p {
       font-size: 0.75rem;
       font-weight: 500;
       padding: 2px 0px;
       color: $color-text-secondary;
+    }
+
+    button {
+      @include button-style;
+    }
+
+    input {
+      @include input-style;
     }
   }
 }
@@ -243,7 +268,7 @@ body, button {
       @include input-style;
     }
 
-    .sbmbtn {
+    button {
       @include button-style;
       width: 100%;
     }
