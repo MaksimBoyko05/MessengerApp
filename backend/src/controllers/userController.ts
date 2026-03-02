@@ -200,6 +200,72 @@ export const verifyEmailChange = async (req: Request, res: Response) => {
         res.status(500).json({error: "Server error"});
     }
 };
+//==== Password Reset Request (Forgot Password) ====
+export const forgotPassword = async (req: Request, res: Response) => {
+    try {
+        const {email} = req.body;
+
+        if (!email) {
+            return res.status(400).json({error: "Email is required"});
+        }
+
+        const user = await UserRepository.findByEmail(email);
+
+        if (!user) {
+            return res.json({message: "Якщо акаунт з таким email існує, ми надіслали інструкції з відновлення пароля."});
+        }
+
+        await TokenRepository.deleteUserTokensByType(user.id, 'PASSWORD_RESET');
+
+        const token = crypto.randomBytes(32).toString("hex");
+        const expiresAt = new Date(Date.now() + 15 * 60 * 1000);
+
+        await TokenRepository.createToken(user.id, token, 'PASSWORD_RESET', '', expiresAt);
+
+        const resetLink = `http://localhost:5173/reset-password?token=${token}`;
+
+        await emailQueue.add("sendEmail", {
+            email: user.email,
+            subject: "Відновлення пароля",
+            text: `Ви подали запит на скидання пароля.\nПерейдіть за посиланням, щоб встановити новий пароль: ${resetLink} \nПосилання дійсне 15 хвилин.`
+        });
+
+        res.json({message: "Якщо акаунт з таким email існує, ми надіслали інструкції з відновлення пароля."});
+    } catch (err) {
+        console.error("Error in forgotPassword:", err);
+        res.status(500).json({error: "Server error"});
+    }
+};
+//==== Password Reset Verification & Update ====
+export const resetPassword = async (req: Request, res: Response) => {
+    try {
+        const {token, newPassword} = req.body;
+
+        if (!token || !newPassword) {
+            return res.status(400).json({error: "Token and new password are required"});
+        }
+
+        const validToken = await TokenRepository.findValidToken(token, 'PASSWORD_RESET');
+
+        if (!validToken) {
+            return res.status(400).json({error: "Invalid or expired token"});
+        }
+
+        const userId = validToken.user_id;
+
+        const saltRounds = 10;
+        const hashedNewPassword = await bcrypt.hash(newPassword, saltRounds);
+        
+        await UserRepository.update(userId, {password_hash: hashedNewPassword});
+
+        await TokenRepository.deleteUserTokensByType(userId, 'PASSWORD_RESET');
+
+        res.json({message: "Password has been successfully reset"});
+    } catch (err) {
+        console.error("Error in resetPassword:", err);
+        res.status(500).json({error: "Server error"});
+    }
+};
 // ==== Change Password ====
 export const changePassword = async (req: Request, res: Response) => {
     try {
