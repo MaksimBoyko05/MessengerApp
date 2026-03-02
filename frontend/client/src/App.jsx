@@ -7,6 +7,7 @@ import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import {UserProvider} from "./context/UserContext.jsx";
 import {SocketProvider} from "./context/SocketContext.jsx";
 import VerifyEmail from "@/Pages/VerifyPage/VerifyEmail.jsx";
+import ResetPassword from "@/Pages/VerifyPage/ResetPassword.jsx";
 
 function App() {
   return (
@@ -23,6 +24,10 @@ function App() {
             <Route
               path="/verify-email"
               element={<VerifyEmail/>}
+            />
+            <Route
+              path={"/reset-password"}
+              element={<ResetPassword/>}
             />
             <Route
               path="/chats"

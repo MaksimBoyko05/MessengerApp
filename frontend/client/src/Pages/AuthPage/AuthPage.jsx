@@ -6,6 +6,7 @@ import logo from "../../loginlogo.png";
 import AuthTabs from "./components/AuthTabs.jsx";
 import styles from "./Authpage.module.scss";
 import UserContext from "../../context/UserContext";
+import SendResetPassEmail from "@/Pages/AuthPage/components/SendResetPassEmail.jsx";
 
 function AuthPage() {
   const {checkAuth} = useContext(UserContext);
@@ -17,6 +18,7 @@ function AuthPage() {
   const [passwordError, setPasswordError] = useState("");
   const [confirmPasswordError, setConfirmPasswordError] = useState("");
   const [activeButton, setActiveButton] = useState("signin");
+  const [status, setStatus] = useState("Auth")
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -93,142 +95,156 @@ function AuthPage() {
         </div>
         <h1 className={styles.LogoText}>Lysto</h1>
         <div className={styles.formContainer}>
-          <AuthTabs
-            activeButton={activeButton}
-            setActiveButton={setActiveButton}/>
-          <form onSubmit={handleSubmit}>
-            <div
-              className={`input-group ${
-                email || isFocused.email ? "active" : ""
-              }`}
-            >
-              <label className={styles.labelEmail}>Email</label>
-              <input
-                className={`formInput ${
-                  !isFocused.email && emailError ? "input-error" : ""
-                }`}
-                type="email"
-                value={email}
-                onChange={(e) => {
-                  setEmail(e.target.value);
-                }}
-                onFocus={() => {
-                  setIsFocused({...isFocused, email: true});
-                }}
-                onBlur={() => {
-                  setIsFocused({...isFocused, email: false});
-                  if (email && !email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
-                    setEmailError("Невірний формат");
-                  } else {
-                    setEmailError("");
-                  }
-                }}
-              />
-              {!isFocused.email && emailError && email && (
-                <p className={styles.error}>{emailError}</p>
-              )}
-            </div>
-            <div
-              className={`input-group ${
-                password || isFocused.password ? "active" : ""
-              }`}
-            >
-              <label className={styles.labelPass}>Password</label>
-              <input
-                className={`formInput ${
-                  !isFocused.password && passwordError ? "input-error" : ""
-                }`}
-                type={showPassword === true ? "text" : "password"}
-                value={password}
-                onChange={(e) => {
-                  setPassword(e.target.value);
-                }}
-                onFocus={() => setIsFocused({...isFocused, password: true})}
-                onBlur={() => {
-                  setIsFocused({...isFocused, password: false});
-                  if (password && password.length < 8) {
-                    setPasswordError("Пароль має бути від 8 символів");
-                  } else {
-                    setPasswordError("");
-                  }
-                }}
-              ></input>
-              <button
-                className={styles.showPassBtn}
-                type="button"
-                onClick={() =>
-                  setShowPassword((prev) => (prev === false ? true : false))
-                }
-              >
-                {showPassword === true ? (
-                  <Eye/>
-                ) : (
-                  <EyeOff/>
-                )}
-              </button>
-            </div>
-            {!isFocused.password && passwordError && password && (
-              <p className={styles.error}>{passwordError}</p>
-            )}
-
-            {activeButton === "signup" && (
-              <div
-                className={`input-group ${
-                  confirmPassword || isFocused.confirmPassword ? "active" : ""
-                }`}
-              >
-                <label className={styles.labelConfirmPass}>Confirm Password</label>
-                <input
-                  className={`formInput ${
-                    !isFocused.confirmPassword && confirmPasswordError ? "input-error" : ""
+          {status === "Auth" ? (
+            <>
+              <AuthTabs
+                activeButton={activeButton}
+                setActiveButton={setActiveButton}/>
+              <form onSubmit={handleSubmit}>
+                <div
+                  className={`input-group ${
+                    email || isFocused.email ? "active" : ""
                   }`}
-                  type={showConfirmPassword ? "text" : "password"}
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  onFocus={() =>
-                    setIsFocused({...isFocused, confirmPassword: true})
-                  }
-                  onBlur={() => {
-                    setIsFocused({...isFocused, confirmPassword: false});
-                    if (confirmPassword && confirmPassword !== password) {
-                      setConfirmPasswordError("Паролі не співпадають");
-                    } else {
-                      setConfirmPasswordError("");
-                    }
-                  }}
-                />
-                <button
-                  className={styles.showPassBtn}
-                  type="button"
-                  onClick={() => setShowConfirmPassword((prev) => !prev)}
                 >
-                  {showConfirmPassword ? (
-                    <Eye/>
-                  ) : (
-                    <EyeOff/>
+                  <label className={styles.labelEmail}>Email</label>
+                  <input
+                    className={`formInput ${
+                      !isFocused.email && emailError ? "input-error" : ""
+                    }`}
+                    type="email"
+                    value={email}
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                    }}
+                    onFocus={() => {
+                      setIsFocused({...isFocused, email: true});
+                    }}
+                    onBlur={() => {
+                      setIsFocused({...isFocused, email: false});
+                      if (email && !email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+                        setEmailError("Невірний формат");
+                      } else {
+                        setEmailError("");
+                      }
+                    }}
+                  />
+                  {!isFocused.email && emailError && email && (
+                    <p className={styles.error}>{emailError}</p>
                   )}
-                </button>
-              </div>
-            )}
-            <p className={styles.error}>{confirmPasswordError}</p>
-            <div className={styles.buttoncontainer}>
-              <button
-                className={styles.sbmbutton}
-                type="submit"
-                disabled={
-                  isLoading ||
-                  !email ||
-                  !password ||
-                  emailError ||
-                  passwordError ||
-                  (activeButton === "signup" && !confirmPassword)
-                }
-              >
-                {isLoading ? "Завантаження" : activeButton === "signin" ? "Sign In" : "Sign Up"}
-              </button>
-            </div>
-            {message && <p>{message}</p>}
-          </form>
+                </div>
+                <div
+                  className={`input-group ${
+                    password || isFocused.password ? "active" : ""
+                  }`}
+                >
+                  <label className={styles.labelPass}>Password</label>
+                  <input
+                    className={`formInput ${
+                      !isFocused.password && passwordError ? "input-error" : ""
+                    }`}
+                    type={showPassword === true ? "text" : "password"}
+                    value={password}
+                    onChange={(e) => {
+                      setPassword(e.target.value);
+                    }}
+                    onFocus={() => setIsFocused({...isFocused, password: true})}
+                    onBlur={() => {
+                      setIsFocused({...isFocused, password: false});
+                      if (password && password.length < 8) {
+                        setPasswordError("Пароль має бути від 8 символів");
+                      } else {
+                        setPasswordError("");
+                      }
+                    }}
+                  ></input>
+                  <button
+                    className={styles.showPassBtn}
+                    type="button"
+                    onClick={() =>
+                      setShowPassword((prev) => (prev === false ? true : false))
+                    }
+                  >
+                    {showPassword === true ? (
+                      <Eye/>
+                    ) : (
+                      <EyeOff/>
+                    )}
+                  </button>
+                </div>
+                {!isFocused.password && passwordError && password && (
+                  <p className={styles.error}>{passwordError}</p>
+                )}
+
+                {activeButton === "signup" && (
+                  <div
+                    className={`input-group ${
+                      confirmPassword || isFocused.confirmPassword ? "active" : ""
+                    }`}
+                  >
+                    <label className={styles.labelConfirmPass}>Confirm Password</label>
+                    <input
+                      className={`formInput ${
+                        !isFocused.confirmPassword && confirmPasswordError ? "input-error" : ""
+                      }`}
+                      type={showConfirmPassword ? "text" : "password"}
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      onFocus={() =>
+                        setIsFocused({...isFocused, confirmPassword: true})
+                      }
+                      onBlur={() => {
+                        setIsFocused({...isFocused, confirmPassword: false});
+                        if (confirmPassword && confirmPassword !== password) {
+                          setConfirmPasswordError("Паролі не співпадають");
+                        } else {
+                          setConfirmPasswordError("");
+                        }
+                      }}
+                    />
+                    <button
+                      className={styles.showPassBtn}
+                      type="button"
+                      onClick={() => setShowConfirmPassword((prev) => !prev)}
+                    >
+                      {showConfirmPassword ? (
+                        <Eye/>
+                      ) : (
+                        <EyeOff/>
+                      )}
+                    </button>
+                  </div>
+                )}
+                <p className={styles.error}>{confirmPasswordError}</p>
+                <p
+                  className={styles.forgotpass}
+                  onClick={() => setStatus("ForgotPass")}
+                >
+                  Forgot Password?
+                </p>
+                <div className={styles.buttoncontainer}>
+                  <button
+                    className={styles.sbmbutton}
+                    type="submit"
+                    disabled={
+                      isLoading ||
+                      !email ||
+                      !password ||
+                      emailError ||
+                      passwordError ||
+                      (activeButton === "signup" && !confirmPassword)
+                    }
+                  >
+                    {isLoading ? "Завантаження" : activeButton === "signin" ? "Sign In" : "Sign Up"}
+                  </button>
+                </div>
+                {message && <p>{message}</p>}
+              </form>
+            </>
+          ) : (
+            <>
+              <SendResetPassEmail setStatus={setStatus}/>
+            </>
+          )}
         </div>
       </div>
     </div>
