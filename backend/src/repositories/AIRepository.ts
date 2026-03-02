@@ -4,10 +4,16 @@ export interface ReplyTemplate {
     template_text: string;
 }
 
-export interface AISuggestion {
-    message_id: number;
-    suggestion_text: string;
-    model: string;
+export interface SavedSuggestion {
+    id: number;
+    text: string;
+}
+
+export interface AnalyticsData {
+    suggestion_id: number;
+    user_id: number;
+    useful: boolean;
+    response_time?: number | null;
 }
 
 export class AIRepository {
@@ -31,14 +37,29 @@ export class AIRepository {
     async saveSuggestions(
         messageId: number,
         suggestions: string[],
-        model: string
-    ): Promise<void> {
-        if (suggestions.length === 0) return;
+        model: string,
+        generationTimeMs: number = 0
+    ): Promise<SavedSuggestion[]> {
+        if (suggestions.length === 0) return [];
 
+        const result = await pool.query<SavedSuggestion>(
+            `INSERT INTO ai_suggestions (message_id, suggestion_text, model, generation_time_ms)
+             SELECT $1,
+                    unnest($2::text[]),
+                    $3,
+                    $4
+                        RETURNING id, suggestion_text AS text`,
+            [messageId, suggestions, model, generationTimeMs]
+        );
+
+        return result.rows;
+    }
+
+    async saveAnalytics(suggestionId: number, userId: number): Promise<void> {
         await pool.query(
-            `INSERT INTO ai_suggestions (message_id, suggestion_text, model)
-             SELECT $1, unnest($2::text[]), $3`,
-            [messageId, suggestions, model]
+            `INSERT INTO ai_analytics (suggestion_id, user_id, useful)
+             VALUES ($1, $2, true)`,
+            [suggestionId, userId]
         );
     }
 }

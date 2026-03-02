@@ -16,6 +16,7 @@ import {emailQueue} from "./queues/emailQueue.js";
 import userRoutes from "./routes/userRoutes.js";
 import chatRoutes from './routes/chatsRoutes.js';
 import messageRoutes from "./routes/messageRoutes.js";
+import aiRoutes from "./routes/aiRoutes.js"
 import rateLimit from "express-rate-limit";
 
 
@@ -56,6 +57,7 @@ app.get("/", (req, res) => {
 app.use("/api/users", userRoutes);
 app.use("/api/messages", messageRoutes);
 app.use('/api/chats', chatRoutes);
+app.use('/api/ai', aiRoutes);
 
 app.get("/test-email", async (req, res) => {
     await emailQueue.add("sendTestEmail", {

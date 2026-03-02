@@ -18,7 +18,7 @@ export const chatsService = {
     return response.data;
   },
   generateSmartReply: async (chatId, messageId) => {
-    const response = await api.post('/chats/smart-reply', {
+    const response = await api.post('/ai/smart-reply', {
       chatId,
       messageId
     });
