@@ -2,12 +2,15 @@ import {useState, useEffect} from "react";
 import {chatsService} from '@/api/chatsService.js';
 import styles from "@/Pages/ChatsPage/Chats.module.scss";
 import {Send} from 'lucide-react';
+import {Sparkles} from 'lucide-react';
 import AISuggestions from "@/Pages/ChatsPage/components/ChatWindow/AIComponents/AISuggestions.jsx";
+import AskAI from "@/Pages/ChatsPage/components/ChatWindow/AIComponents/AskAI.jsx";
 
 function SendMessageComponent({chatId, receiverId, suggestions, onSetSuggestions}) {
   const [messageData, setMessageData] = useState({
     text: "",
   });
+  const [showPopup, setShowPopup] = useState(false);
   const handleChange = (e) => {
     const {name, value} = e.target;
     setMessageData((prev) => ({
@@ -58,6 +61,14 @@ function SendMessageComponent({chatId, receiverId, suggestions, onSetSuggestions
           className={styles.sendbtn}>
           <Send/>
         </button>
+        <button
+          className={styles.sendbtn}
+          onClick={() => setShowPopup(true)}><Sparkles/></button>
+        {showPopup && (
+          <AskAI
+            chatId={chatId}
+            showPopup={setShowPopup}/>
+        )}
       </div>
     </>
   )

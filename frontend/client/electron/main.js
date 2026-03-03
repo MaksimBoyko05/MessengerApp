@@ -5,7 +5,7 @@ function createWindow() {
     width: 1280,
     height: 840,
     transparent: true,
-    frame: false,
+    frame: true,
     backgroundColor: "#00000000",
     webPreferences: {
       contextIsolation: true,

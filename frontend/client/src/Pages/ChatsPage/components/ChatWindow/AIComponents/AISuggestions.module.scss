@@ -1,7 +1,79 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+$font-main: 'Inter', sans-serif;
+$color-main: #ffff;
+$modal-color-main: #f5f5f6;
+$modal-element-shadow: 0 1px 3px rgba(0, 0, 0, 0.06),
+0 4px 12px rgba(0, 0, 0, 0.08),
+inset 0 1px 0 rgba(255, 255, 255, 1);
+$modal-element-radius: 20px;
+
 $primary-blue: #1f5aee;
+$color-primary: #2B7FFF;
+$color-primary-hover: #2471e7;
 $chip-shadow-color: 0 4px 6px rgba(58, 91, 196, 0.2);
 $chip-background: #ffffff;
 $sparks-bg-gradient: linear-gradient(180deg, #9EB5FF 0%, #5C7CFA 50%, #364FC7 100%);
+$input-focus-bg: #f2f2f2;
+$modal-search-radius: 12px;
+$modal-element-shadow: 0 1px 3px rgba(0, 0, 0, 0.06),
+0 4px 12px rgba(0, 0, 0, 0.08),
+inset 0 1px 0 rgba(255, 255, 255, 1);
+@mixin flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@mixin input-style {
+  height: 138px;
+  padding: 5px 5px 1px 15px;
+  background: #FAFAFA;
+  border-radius: $modal-search-radius;
+  border: 1px solid rgba(120, 122, 133, 0.07);
+  transition: border-color 0.3s ease;
+  box-shadow: $modal-element-shadow;
+
+  &:focus {
+    border-color: #2B7FFF;
+    background-color: $input-focus-bg;
+    outline: none;
+  }
+}
+
+@mixin button-style {
+  @include flex-center;
+  padding: 9px 14px;
+  border: none;
+  border-radius: 10px;
+  height: 38px;
+  width: 100px;
+  background: $color-primary;
+  color: white;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba($color-primary, 0.35);
+  user-select: none;
+  white-space: nowrap;
+
+  &:hover {
+    transform: translateY(-2px);
+    background: $color-primary-hover;
+  }
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+    box-shadow: none;
+  }
+}
+
+
+body {
+  font-family: $font-main;
+}
 
 .sparkbutton {
   display: flex;
@@ -62,6 +134,54 @@ $sparks-bg-gradient: linear-gradient(180deg, #9EB5FF 0%, #5C7CFA 50%, #364FC7 10
       color: $primary-blue;
       transform: translateY(-1px);
       box-shadow: $chip-shadow-color;
+    }
+  }
+}
+
+.askAipopupwrapper {
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  display: grid;
+  place-items: center;
+  bottom: 10px;
+
+  .popupcontent {
+    display: flex;
+    position: relative;
+    padding: 10px;
+    flex-direction: column;
+    width: 400px;
+    height: fit-content;
+    border-radius: 20px;
+    background: $modal-color-main;
+
+    h4 {
+      margin-left: 20px;
+      margin-top: 10px;
+      font-size: 1.25rem;
+    }
+
+    .closebutton {
+      background: #e7e7e7;
+      padding: 5px;
+      border-radius: 50%;
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      cursor: pointer;
+      border: none;
+    }
+
+    input {
+      @include input-style;
+      margin-top: 30px;
+    }
+
+    .sendbutton {
+      @include button-style;
+      margin-left: auto;
+      margin-top: 20px;
     }
   }
 }

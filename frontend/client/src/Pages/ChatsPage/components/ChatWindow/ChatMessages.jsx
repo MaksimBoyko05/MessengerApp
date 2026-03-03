@@ -1,6 +1,7 @@
 import {UserContext} from "@/context/UserContext.jsx";
 import {useContext} from "react";
 import {CheckCheck, Check} from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
 import styles from "@/Pages/ChatsPage/Chats.module.scss";
 
 
@@ -28,7 +29,9 @@ function ChatMessages({isGroup, msg}) {
         </div>
       )}
 
-      <div className={msg.user_id === user.id ? styles.mymsg : styles.msgbubble}>
+      <div
+        className={`${(msg.user_id === user.id && !msg.is_ai) ? styles.mymsg : styles.msgbubble} ${msg.is_ai ? styles.isAi : ''}`}
+      >
         {msg.user_id !== user.id && (
           isGroup && (
             <p
@@ -36,7 +39,9 @@ function ChatMessages({isGroup, msg}) {
               style={{color: getSenderColor(msg.sender_name)}}>{msg.sender_name}</p>
           )
         )}
-        {msg.text}
+        <div className={styles.markdownContent}>
+          <ReactMarkdown children={msg.text}/>
+        </div>
         <div className={styles.readtime}> {formatter.format(new Date(msg.created_at))}</div>
         {msg.user_id === user.id && (
           msg.is_read ? (

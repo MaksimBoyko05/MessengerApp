@@ -2,6 +2,7 @@ import {Request, Response} from "express";
 import {GoogleGenerativeAI} from "@google/generative-ai";
 import {MessageRepository} from "../repositories/MessageRepository.js";
 import {AIRepository} from "../repositories/AIRepository.js";
+import {getIO} from "../socket.js";
 
 const MODEL_NAME = "gemini-2.5-flash";
 const CONTEXT_LIMIT = 15;
@@ -184,6 +185,8 @@ export const askAiInChat = async (req: Request, res: Response): Promise<void> =>
         const aiResponseText = result.response.text();
 
         const savedMessage = await messageRepo.create(chatId, userId, aiResponseText, true);
+        const io = getIO();
+        io.to(`chat_${chatId}`).emit("receive_message", savedMessage);
 
         res.json({message: savedMessage});
     } catch (error) {
