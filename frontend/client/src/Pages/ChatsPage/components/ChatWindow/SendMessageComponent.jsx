@@ -15,7 +15,7 @@ function SendMessageComponent({chatId, receiverId, suggestions, onSetSuggestions
       [name]: value,
     }));
   };
-  const handleSuggestionclick = (text) => {
+  const handleSuggestionClick = (text) => {
     setMessageData((prev) => ({
       ...prev,
       text: text,
@@ -44,7 +44,7 @@ function SendMessageComponent({chatId, receiverId, suggestions, onSetSuggestions
     <>
       <AISuggestions
         suggestions={suggestions}
-        onSelect={handleSuggestionclick}/>
+        onSelect={handleSuggestionClick}/>
       <div className={styles.sendcomponent}>
         <input
           name="text"
