@@ -4,6 +4,7 @@ import {fileURLToPath} from 'url';
 import dotenv from "dotenv";
 import cors from "cors";
 import {createServer} from "http";
+import session from 'express-session';
 
 dotenv.config({path: ".env"});
 console.log("EMAIL_USER:", process.env.EMAIL_USER);
@@ -18,6 +19,7 @@ import chatRoutes from './routes/chatsRoutes.js';
 import messageRoutes from "./routes/messageRoutes.js";
 import aiRoutes from "./routes/aiRoutes.js"
 import rateLimit from "express-rate-limit";
+import {buildAdmin} from './admin.js';
 
 
 import "./cron.js";
@@ -27,11 +29,18 @@ import "./workers/emailWorker.js";
 const app = express();
 app.use(
     cors({
-        origin: "http://localhost:5173",
+        origin: ["http://localhost:5173", "http://localhost:5000"],
         credentials: true,
     })
 );
 app.use(express.json());
+
+app.use(session({
+    secret: process.env.SESSION_SECRET || 'supersecret',
+    resave: false,
+    saveUninitialized: true,
+    cookie: {secure: false},
+}));
 
 const httpServer = createServer(app);
 initSocket(httpServer);
@@ -70,15 +79,11 @@ app.get("/test-email", async (req, res) => {
 
 app.use("/api/auth", authRoutes);
 
-app.get("/users", async (req, res) => {
-    try {
-        const result = await pool.query("SELECT * FROM users");
-        res.json(result.rows);
-    } catch (err) {
-        console.error(err);
-        res.status(500).send("DB error");
-    }
-});
+
+console.log('⏳ Building AdminJS...');
+const {router: adminRouter} = buildAdmin();
+console.log('✅ AdminJS ready');
+app.use('/admin', adminRouter);
 
 const PORT = process.env.PORT || 5000;
 httpServer.listen(PORT, () => {

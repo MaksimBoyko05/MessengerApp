@@ -1,0 +1,152 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../node_modules/.prisma/client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model ai_analytics {
+  id             Int             @id @default(autoincrement())
+  suggestion_id  Int?
+  user_id        Int?
+  useful         Boolean?
+  response_time  Int?
+  ai_suggestions ai_suggestions? @relation(fields: [suggestion_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  users          users?          @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model ai_suggestions {
+  id                 Int            @id @default(autoincrement())
+  message_id         Int?
+  suggestion_text    String
+  model              String?        @db.VarChar(50)
+  created_at         DateTime?      @default(now()) @db.Timestamp(6)
+  generation_time_ms Int?           @default(0)
+  ai_analytics       ai_analytics[]
+  messages           messages?      @relation(fields: [message_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model attachments {
+  id         Int       @id @default(autoincrement())
+  message_id Int?
+  type       String?   @db.VarChar(20)
+  file_url   String
+  size       Int?
+  created_at DateTime? @default(now()) @db.Timestamp(6)
+  messages   messages? @relation(fields: [message_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model chat_members {
+  id                 Int       @id @default(autoincrement())
+  chat_id            Int?
+  user_id            Int?
+  role               String?   @default("member") @db.VarChar(20)
+  joined_at          DateTime? @default(now()) @db.Timestamp(6)
+  is_hidden          Boolean?  @default(false)
+  cleared_history_at DateTime? @db.Timestamptz(6)
+  chats              chats?    @relation(fields: [chat_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  users              users?    @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model chats {
+  id           Int            @id @default(autoincrement())
+  name         String?        @db.VarChar(100)
+  is_group     Boolean?       @default(false)
+  created_at   DateTime?      @default(now()) @db.Timestamp(6)
+  chat_members chat_members[]
+  messages     messages[]
+}
+
+model messages {
+  id             Int              @id @default(autoincrement())
+  chat_id        Int?
+  user_id        Int?
+  text           String?
+  created_at     DateTime?        @default(now()) @db.Timestamp(6)
+  is_ai          Boolean?         @default(false)
+  ai_suggestions ai_suggestions[]
+  attachments    attachments[]
+  chats          chats?           @relation(fields: [chat_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  users          users?           @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  read_receipts  read_receipts[]
+}
+
+model pgmigrations {
+  id     Int      @id @default(autoincrement())
+  name   String   @db.VarChar(255)
+  run_on DateTime @db.Timestamp(6)
+}
+
+model read_receipts {
+  id         Int       @id @default(autoincrement())
+  message_id Int?
+  user_id    Int?
+  read_at    DateTime? @default(now()) @db.Timestamp(6)
+  messages   messages? @relation(fields: [message_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  users      users?    @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model reply_templates {
+  id            Int     @id @default(autoincrement())
+  trigger_text  String
+  template_text String
+  language      String? @default("en") @db.VarChar(10)
+}
+
+model sessions {
+  id          Int       @id @default(autoincrement())
+  user_id     Int?
+  device_info String?
+  last_login  DateTime? @default(now()) @db.Timestamp(6)
+  created_at  DateTime? @default(now()) @db.Timestamp(6)
+  users       users?    @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model user_settings {
+  id       Int     @id @default(autoincrement())
+  user_id  Int?
+  language String? @default("en") @db.VarChar(10)
+  theme    String? @default("light") @db.VarChar(10)
+  users    users?  @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model user_statuses {
+  id        Int       @id @default(autoincrement())
+  user_id   Int?      @unique(map: "unique_user_status_id")
+  online    Boolean?  @default(false)
+  last_seen DateTime? @db.Timestamp(6)
+  users     users?    @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model users {
+  id                  Int                   @id @default(autoincrement())
+  username            String                @unique @db.VarChar(50)
+  email               String                @unique @db.VarChar(100)
+  password_hash       String
+  avatar_url          String?
+  created_at          DateTime?             @default(now()) @db.Timestamp(6)
+  ai_analytics        ai_analytics[]
+  chat_members        chat_members[]
+  messages            messages[]
+  read_receipts       read_receipts[]
+  sessions            sessions[]
+  user_settings       user_settings[]
+  user_statuses       user_statuses?
+  verification_tokens verification_tokens[]
+}
+
+model verification_tokens {
+  id         Int       @id @default(autoincrement())
+  user_id    Int
+  token      String    @unique @db.VarChar(255)
+  type       String    @db.VarChar(50)
+  payload    String?   @db.VarChar(255)
+  expires_at DateTime  @db.Timestamp(6)
+  created_at DateTime? @default(now()) @db.Timestamp(6)
+  users      users     @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([token], map: "idx_verification_tokens_token")
+}
