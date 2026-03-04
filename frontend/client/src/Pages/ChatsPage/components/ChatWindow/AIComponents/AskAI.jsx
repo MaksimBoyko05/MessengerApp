@@ -2,15 +2,17 @@ import {useState} from "react";
 import {aiService} from "@/api/aiService.js";
 import {X} from 'lucide-react';
 import styles from "./AISuggestions.module.scss"
+import {Sparkles} from 'lucide-react';
 
 function AskAI({chatId, showPopup}) {
   const [query, setQuery] = useState("")
   const [isLoading, setIsLoading] = useState(false)
 
   const handleSend = async () => {
+    setIsLoading(true);
     try {
       await aiService.askAi(chatId, query)
-      setIsLoading(true);
+      setQuery("");
     } catch (err) {
       console.error("Error with asking AI", err)
     } finally {
@@ -41,6 +43,19 @@ function AskAI({chatId, showPopup}) {
             disabled={query.length < 1}
             onClick={handleSend}>Send request
           </button>
+          {isLoading && (
+            <>
+              <div className={styles.loadingelements}>
+                <Sparkles className={styles.sparkle}/>
+                <Sparkles className={styles.sparkle}/>
+                <Sparkles
+                  className={styles.sparkle}
+                  size={56}/>
+                <Sparkles className={styles.sparkle}/>
+                <Sparkles className={styles.sparkle}/>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </>

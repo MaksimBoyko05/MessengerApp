@@ -39,6 +39,11 @@ function ChatMessages({isGroup, msg}) {
               style={{color: getSenderColor(msg.sender_name)}}>{msg.sender_name}</p>
           )
         )}
+        {msg.is_ai && (
+          <p
+            className={styles.sendername}
+            style={{color: getSenderColor(msg.sender_name)}}>{msg.sender_name}</p>
+        )}
         <div className={styles.markdownContent}>
           <ReactMarkdown children={msg.text}/>
         </div>

@@ -62,7 +62,7 @@ function SendMessageComponent({chatId, receiverId, suggestions, onSetSuggestions
           <Send/>
         </button>
         <button
-          className={styles.sendbtn}
+          className={styles.askAibtn}
           onClick={() => setShowPopup(true)}><Sparkles/></button>
         {showPopup && (
           <AskAI
