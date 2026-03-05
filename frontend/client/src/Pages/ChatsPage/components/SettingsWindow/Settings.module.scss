@@ -42,6 +42,7 @@ $border-radius: 16px;
 $color-text-secondary: #666;
 $modal-search-radius: 12px;
 $color-primary-hover: #2471e7;
+$color-primary-disabled: #69a4f8;
 
 @mixin flex-center {
   display: flex;
@@ -80,6 +81,10 @@ $color-primary-hover: #2471e7;
   &:hover {
     transform: translateY(-2px);
     background: $color-primary-hover;
+  }
+  &:disabled {
+    background: $color-primary-disabled;
+    cursor: not-allowed;
   }
 }
 
@@ -222,6 +227,7 @@ body, button {
       align-items: center;
       gap: 10px;
 
+
       span {
         height: fit-content;
       }
@@ -231,6 +237,16 @@ body, button {
       display: flex;
       gap: 10px;
       align-items: center;
+    }
+
+    .inputerror {
+      border: 1px solid #dc2626;
+    }
+
+    .error {
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: #dc2626;
     }
 
     p {
@@ -266,6 +282,16 @@ body, button {
 
     input {
       @include input-style;
+    }
+
+    .inputerror {
+      border: 1px solid #dc2626;
+    }
+
+    .error {
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: #dc2626;
     }
 
     button {

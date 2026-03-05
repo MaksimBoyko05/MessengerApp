@@ -255,7 +255,7 @@ export const resetPassword = async (req: Request, res: Response) => {
 
         const saltRounds = 10;
         const hashedNewPassword = await bcrypt.hash(newPassword, saltRounds);
-        
+
         await UserRepository.update(userId, {password_hash: hashedNewPassword});
 
         await TokenRepository.deleteUserTokensByType(userId, 'PASSWORD_RESET');
@@ -263,6 +263,26 @@ export const resetPassword = async (req: Request, res: Response) => {
         res.json({message: "Password has been successfully reset"});
     } catch (err) {
         console.error("Error in resetPassword:", err);
+        res.status(500).json({error: "Server error"});
+    }
+};
+//==== Check Password Reset Token Validity ====
+export const verifyResetToken = async (req: Request, res: Response) => {
+    try {
+        const {token} = req.params;
+
+        if (!token) {
+            return res.status(400).json({error: "Token is required"});
+        }
+
+        const validToken = await TokenRepository.findValidToken(token, 'PASSWORD_RESET');
+
+        if (!validToken) {
+            return res.status(400).json({error: "Invalid or expired token"});
+        }
+        res.status(200).json({valid: true});
+    } catch (err) {
+        console.error("Error in verifyResetToken:", err);
         res.status(500).json({error: "Server error"});
     }
 };

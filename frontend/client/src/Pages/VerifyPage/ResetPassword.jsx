@@ -4,22 +4,29 @@ import {userService} from "@/api/userService.js";
 import styles from "./Verify.module.scss"
 
 function VerifyEmail() {
-  const [searchParams] = useSearchParams();
   const [newPassword, setNewPassword] = useState("");
-  const token = searchParams.get('token');
-  const navigate = useNavigate();
+  const [passwordError, setPasswordError] = useState("");
 
-
-  const [status, setStatus] = useState("loading")
   const [errorMessage, setErrorMessage] = useState("")
 
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const token = searchParams.get('token');
+  const [status, setStatus] = useState(!token ? "error" : "waiting");
+
   useEffect(() => {
-    if (!token) {
-      setStatus("error")
-      setErrorMessage("Link is not valid")
+    const verifyToken = async () => {
+      try {
+        await userService.verifyResetToken(token)
+      } catch (err) {
+        console.error(err.response?.data?.error)
+        setStatus("error");
+        setErrorMessage(err.response?.data?.error || "Invalid token")
+      }
     }
-    setStatus("waiting")
-  }, [token, navigate]);
+    verifyToken();
+  }, [token]);
+
 
   const handleSavePassword = async () => {
     try {
@@ -53,9 +60,21 @@ function VerifyEmail() {
             type={"password"}
             value={newPassword}
             placeholder={"New password"}
+            className={passwordError ? styles.inputerror : ""}
             onChange={(e) => setNewPassword(e.target.value)}
+            onBlur={() => {
+              if (newPassword.length < 8) {
+                setPasswordError("Пароль має бути від 8 символів");
+              } else {
+                setPasswordError("");
+              }
+            }}
           />
-          <button onClick={handleSavePassword}>Save</button>
+          <p className={styles.error}>{passwordError}</p>
+          <button
+            disabled={passwordError || newPassword.length < 1}
+            onClick={handleSavePassword}>Save
+          </button>
         </div>
       )}
       {status === "success" && (

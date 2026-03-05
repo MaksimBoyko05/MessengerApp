@@ -9,6 +9,7 @@ function ProfileSettings({user}) {
     username: "",
   })
   const [newEmail, setNewEmail] = useState("")
+  const [emailError, setEmailError] = useState("")
   const [preview, setPreview] = useState("");
   const [isChanged, setIsChanged] = useState(false);
   const [changeEmail, setChangeEmail] = useState(false);
@@ -108,19 +109,33 @@ function ProfileSettings({user}) {
             )}
           </div>
           {changeEmail && (
-            <div className={styles.newemailblock}>
-              <input
-                type={"email"}
-                placeholder={"New Email"}
-                value={newEmail}
-                onChange={(e) => setNewEmail(e.target.value)}
-              />
-              <button onClick={handleSendVerification}>Send</button>
-              <button
-                style={{background: "#FF2C2C"}}
-                onClick={onClose}>Cancel
-              </button>
-            </div>
+            <>
+              <div className={styles.newemailblock}>
+                <input
+                  type={"email"}
+                  placeholder={"New Email"}
+                  className={emailError ? styles.inputerror : ""}
+                  value={newEmail}
+                  onChange={(e) => setNewEmail(e.target.value)}
+                  onBlur={() => {
+                    if (newEmail && !newEmail.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+                      setEmailError("Невірний формат");
+                    } else {
+                      setEmailError("");
+                    }
+                  }}
+                />
+                <button
+                  disabled={emailError || newEmail.length < 1}
+                  onClick={handleSendVerification}>Send
+                </button>
+                <button
+                  style={{background: "#FF2C2C"}}
+                  onClick={onClose}>Cancel
+                </button>
+              </div>
+              <div><p className={styles.error}>{emailError}</p></div>
+            </>
           )}
         </div>
       </div>

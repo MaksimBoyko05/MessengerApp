@@ -16,6 +16,7 @@ $text-dark: #333;
 $error-red: #ff0000;
 $color-primary: #2B7FFF;
 $color-primary-hover: #2471e7;
+$color-primary-disabled: #69a4f8;
 *,
 *::before,
 *::after {
@@ -48,6 +49,10 @@ $color-primary-hover: #2471e7;
   &:hover {
     transform: translateY(-2px);
     background: $color-primary-hover;
+  }
+  &:disabled {
+    background: $color-primary-disabled;
+    cursor: not-allowed;
   }
 }
 
@@ -230,6 +235,7 @@ body {
 
   &:hover {
     color: #54575e;
+    cursor: pointer;
   }
 }
 
@@ -361,7 +367,7 @@ body {
   display: flex;
   margin-right: 20rem;
   cursor: pointer;
-  transition: all 0.3 ease;
+  transition: all 0.3s ease;
 
   &:hover {
     transform: translateY(-1px);
@@ -398,6 +404,10 @@ body {
       background-color: #f2f2f2;
       outline: none;
     }
+  }
+
+  .inputerror {
+    border: 1px solid #dc2626;
   }
 
   button {

@@ -5,12 +5,13 @@ import styles from "../Authpage.module.scss"
 
 function SendResetPassEmail({setStatus}) {
   const [email, setEmail] = useState("")
+  const [emailError, setEmailError] = useState("")
   const handleSendEmail = async () => {
     try {
       await userService.forgotPassword(email)
       console.log("Email was send")
     } catch (err) {
-      console.error("Error  with sending reset pass mail", err)
+      setEmailError(err.response?.data?.error || "Error")
     }
   }
   const handleCLose = () => {
@@ -27,8 +28,21 @@ function SendResetPassEmail({setStatus}) {
         <input
           type={"email"}
           value={email}
-          onChange={(e) => setEmail(e.target.value)}/>
-        <button onClick={handleSendEmail}>Send</button>
+          className={emailError ? styles.inputerror : ""}
+          onChange={(e) => setEmail(e.target.value)}
+          onBlur={() => {
+            if (email && !email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+              setEmailError("Невірний формат");
+            } else {
+              setEmailError("");
+            }
+          }}
+        />
+        <p className={styles.error}>{emailError}</p>
+        <button
+          disabled={emailError || email.length < 1}
+          onClick={handleSendEmail}>Send
+        </button>
       </div>
     </>
   )
