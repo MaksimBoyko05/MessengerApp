@@ -34,7 +34,7 @@ export class UserRepository {
         return result.rows;
     }
 
-    static async getRecentOnlineUsers(currentUserId: number, limit: number = 20): Promise<User[]> {
+    static async getRecentOnlineUsers(currentUserId: number, limit: number = 20): Promise<any[]> {
         const query = `
             SELECT u.id,
                    u.username,
@@ -44,6 +44,17 @@ export class UserRepository {
             FROM users u
                      LEFT JOIN user_statuses us ON u.id = us.user_id
             WHERE u.id != $1
+              AND EXISTS (
+            -- Шукаємо спільний приватний чат, де є повідомлення
+                SELECT 1
+                FROM chat_members cm1
+                JOIN chat_members cm2 ON cm1.chat_id = cm2.chat_id
+                JOIN chats c ON cm1.chat_id = c.id
+                JOIN messages m ON c.id = m.chat_id
+                WHERE cm1.user_id = u.id
+              AND cm2.user_id = $1
+              AND c.is_group = false
+                )
             ORDER BY
                 us.online DESC NULLS LAST,
                 us.last_seen DESC NULLS LAST
@@ -61,11 +72,28 @@ export class UserRepository {
                    u.email,
                    u.avatar_url,
                    us.last_seen,
-                   us.online as is_online
+                   us.online as is_online,
+                   CASE
+                       WHEN EXISTS (SELECT 1
+                                    FROM chat_members cm1
+                                             JOIN chat_members cm2 ON cm1.chat_id = cm2.chat_id
+                                             JOIN chats c ON cm1.chat_id = c.id
+                                    WHERE cm1.user_id = u.id
+                                      AND cm2.user_id = $2
+                                      AND c.is_group = false) THEN 1
+                       ELSE 0
+                       END   as search_weight
             FROM users u
                      LEFT JOIN user_statuses us ON u.id = us.user_id
+                     LEFT JOIN user_settings set
+            ON u.id = set.user_id
             WHERE u.username ILIKE $1
               AND u.id != $2
+              AND (set.is_private IS NULL
+               OR set.is_private = false)
+            ORDER BY
+                search_weight DESC,
+                u.username ASC
                 LIMIT 20
         `;
         const result = await pool.query(sql, [`%${query}%`, currentUserId]);
@@ -116,11 +144,21 @@ export class UserRepository {
         return result.rows[0] || null;
     }
 
+    static async updatePrivacySetting(userId: number, isPrivate: boolean): Promise<void> {
+        const sql = `
+            INSERT INTO user_settings (user_id, is_private)
+            VALUES ($1, $2) ON CONFLICT (user_id) 
+        DO
+            UPDATE SET is_private = EXCLUDED.is_private;
+        `;
+        await pool.query(sql, [userId, isPrivate]);
+    }
+
     static async updateEmailAndClearTokens(userId: number, newEmail: string, tokenType: string) {
         const client = await pool.connect();
         try {
             await client.query("BEGIN");
-            
+
             await client.query("UPDATE users SET email = $1 WHERE id = $2", [newEmail, userId]);
 
             await client.query(

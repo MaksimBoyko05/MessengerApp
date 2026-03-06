@@ -10,7 +10,8 @@ import {
     getRecentUsers,
     changePassword,
     requestEmailChange,
-    verifyEmailChange
+    verifyEmailChange,
+    toggleSearchPrivacy
 } from "../controllers/userController.js";
 
 const router = express.Router();
@@ -24,6 +25,9 @@ router.get("/:id", protect, getUserById);
 //POST /api/users
 router.post("/:id/request-email-change", protect, requestEmailChange);
 router.post("/verify-email", verifyEmailChange);
+
+//PATCH /api/users
+router.patch('/privacy', protect, toggleSearchPrivacy);
 
 // PUT /api/users
 router.put("/:id/password", protect, changePassword);

@@ -43,13 +43,17 @@ export const getUserById = async (req: Request, res: Response) => {
 };
 export const getRecentUsers = async (req: Request, res: Response) => {
     try {
-        const userId = req.user.id;
+        const userId = req.user?.id;
+
+        if (!userId) {
+            return res.status(401).json({message: "Неавторизований користувач"});
+        }
 
         const users = await UserRepository.getRecentOnlineUsers(userId);
 
         res.status(200).json(users);
     } catch (error) {
-        console.error("Error fetching recent online users:", error);
+        console.error("Error fetching recent users with messages:", error);
         res.status(500).json({message: "Internal server error"});
     }
 };
@@ -138,6 +142,30 @@ export const updateUser = async (req: Request, res: Response) => {
     } catch (err) {
         console.error("Error in updateUser:", err);
         res.status(500).json({error: "Database error"});
+    }
+};
+export const toggleSearchPrivacy = async (req: Request, res: Response) => {
+    try {
+        const userId = req.user?.id;
+        const {isPrivate} = req.body;
+
+        if (!userId) {
+            return res.status(401).json({message: "Неавторизований користувач"});
+        }
+
+        if (typeof isPrivate !== 'boolean') {
+            return res.status(400).json({message: "Очікується булеве значення isPrivate"});
+        }
+
+        await UserRepository.updatePrivacySetting(userId, isPrivate);
+
+        res.json({
+            message: "Налаштування приватності успішно оновлено",
+            isPrivate
+        });
+    } catch (error) {
+        console.error("Помилка оновлення приватності:", error);
+        res.status(500).json({message: "Помилка сервера"});
     }
 };
 //==== Email Change Request (token) ====

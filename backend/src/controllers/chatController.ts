@@ -85,6 +85,111 @@ export const createGroupChat = async (req: Request, res: Response) => {
         res.status(500).json({message: "Не вдалося створити групу"});
     }
 };
+export const addMembersToGroup = async (req: Request, res: Response) => {
+    try {
+        const chatId = parseInt(req.params.chatId);
+        const {memberIds} = req.body;
+        const currentUserId = req.user?.id;
+
+        if (!currentUserId) {
+            return res.status(401).json({message: "Неавторизований користувач"});
+        }
+
+        if (!chatId || isNaN(chatId)) {
+            return res.status(400).json({message: "Некоректний ID чату"});
+        }
+
+        if (!memberIds || !Array.isArray(memberIds) || memberIds.length === 0) {
+            return res.status(400).json({message: "Список учасників порожній або некоректний"});
+        }
+        await chatRepo.addMembersToGroupChat(chatId, currentUserId, memberIds);
+
+        res.json({message: "Учасників успішно додано до групи"});
+
+    } catch (error: any) {
+        console.error('Помилка в addMembersToGroup:', error);
+
+        if (error.message === "Access denied: only admins can add members") {
+            return res.status(403).json({message: "Тільки адміністратори можуть додавати нових учасників"});
+        }
+        if (error.message === "You are not a member of this chat") {
+            return res.status(403).json({message: "Ви не є учасником цього чату"});
+        }
+        if (error.message === "Chat not found or is not a group") {
+            return res.status(404).json({message: "Групу не знайдено"});
+        }
+
+        res.status(500).json({message: 'Не вдалося додати учасників'});
+    }
+};
+export const updateGroupAvatar = async (req: Request, res: Response) => {
+    try {
+        const chatId = parseInt(req.params.chatId);
+        const currentUserId = req.user?.id;
+
+        if (!currentUserId) {
+            return res.status(401).json({message: "Неавторизований користувач"});
+        }
+
+        if (!chatId || isNaN(chatId)) {
+            return res.status(400).json({message: "Некоректний ID чату"});
+        }
+
+        if (!req.file) {
+            return res.status(400).json({message: "Файл зображення не завантажено"});
+        }
+
+        const avatarUrl = `/avatars/${req.file.filename}`;
+
+        await chatRepo.updateGroupAvatar(chatId, currentUserId, avatarUrl);
+
+        res.json({
+            message: "Аватарку групи успішно оновлено",
+            avatar_url: avatarUrl
+        });
+
+    } catch (error: any) {
+        console.error('Помилка в updateGroupAvatar:', error);
+
+        if (error.message === "Access denied: only admins can change avatar") {
+            return res.status(403).json({message: "Тільки адміністратори можуть змінювати аватарку групи"});
+        }
+
+        res.status(500).json({message: 'Не вдалося оновити аватарку групи'});
+    }
+};
+export const promoteToAdmin = async (req: Request, res: Response) => {
+    try {
+        const chatId = parseInt(req.params.chatId);
+        const currentUserId = req.user?.id;
+        const {targetUserId} = req.body;
+
+        if (!currentUserId) {
+            return res.status(401).json({message: "Неавторизований користувач"});
+        }
+
+        if (!chatId || isNaN(chatId) || !targetUserId) {
+            return res.status(400).json({message: "Некоректні дані"});
+        }
+
+        await chatRepo.promoteToAdmin(chatId, currentUserId, targetUserId);
+
+        res.json({message: "Користувача успішно призначено адміністратором"});
+
+    } catch (error: any) {
+        console.error('Помилка в promoteToAdmin:', error);
+
+        if (error.message === "Access denied: only admins can promote members") {
+            return res.status(403).json({message: "Тільки адміністратори можуть призначати інших адмінів"});
+        }
+        if (error.message === "Target user is not a member of this chat") {
+            return res.status(404).json({message: "Цей користувач не є учасником групи"});
+        }
+
+        res.status(500).json({message: 'Не вдалося призначити адміністратора'});
+    }
+};
+
 export const deleteChat = async (req: Request, res: Response) => {
     try {
         const userId = req.user?.id;

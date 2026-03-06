@@ -47,7 +47,7 @@ export class ChatRepository {
                         JOIN users u ON cm2.user_id = u.id 
                         WHERE cm2.chat_id = c.id AND cm2.user_id != $1 LIMIT 1
             )
-            ELSE NULL
+            ELSE c.avatar_url
             END as avatar_url,
                 (SELECT text FROM messages WHERE chat_id = c.id ORDER BY created_at DESC LIMIT 1) as last_message,
                 (SELECT created_at FROM messages WHERE chat_id = c.id ORDER BY created_at DESC LIMIT 1) as last_message_time,
@@ -128,7 +128,7 @@ export class ChatRepository {
                     JOIN users u ON cm2.user_id = u.id 
                     WHERE cm2.chat_id = c.id AND cm2.user_id != $1 LIMIT 1
             )
-            ELSE NULL
+            ELSE c.avatar_url
             END as avatar_url,
             (SELECT text FROM messages WHERE chat_id = c.id ORDER BY created_at DESC LIMIT 1) as last_message,
             (SELECT created_at FROM messages WHERE chat_id = c.id ORDER BY created_at DESC LIMIT 1) as last_message_time,
@@ -244,7 +244,95 @@ export class ChatRepository {
             client.release();
         }
     }
+    async addMembersToGroupChat(chatId: number, currentUserId: number, memberIds: number[]): Promise<void> {
+        const client = await pool.connect();
 
+        try {
+            await client.query("BEGIN");
+
+            const roleRes = await client.query(
+                "SELECT role FROM chat_members WHERE chat_id = $1 AND user_id = $2",
+                [chatId, currentUserId]
+            );
+
+            if (roleRes.rowCount === 0) {
+                throw new Error("You are not a member of this chat");
+            }
+
+            if (roleRes.rows[0].role !== 'admin') {
+                throw new Error("Access denied: only admins can add members");
+            }
+
+            const chatRes = await client.query("SELECT is_group FROM chats WHERE id = $1", [chatId]);
+            if (chatRes.rowCount === 0 || !chatRes.rows[0].is_group) {
+                throw new Error("Chat not found or is not a group");
+            }
+
+            const existingMembersRes = await client.query("SELECT user_id FROM chat_members WHERE chat_id = $1", [chatId]);
+            const existingMemberIds = existingMembersRes.rows.map(row => row.user_id);
+
+            const newMembers = [...new Set(memberIds)].filter(id => !existingMemberIds.includes(id));
+
+            if (newMembers.length > 0) {
+                const insertPromises = newMembers.map(userId =>
+                    client.query(
+                        "INSERT INTO chat_members (chat_id, user_id, role) VALUES ($1, $2, 'member')",
+                        [chatId, userId]
+                    )
+                );
+                await Promise.all(insertPromises);
+            }
+
+            await client.query("COMMIT");
+        } catch (err) {
+            await client.query("ROLLBACK");
+            throw err;
+        } finally {
+            client.release();
+        }
+    }
+    async updateGroupAvatar(chatId: number, currentUserId: number, avatarUrl: string): Promise<void> {
+        const roleRes = await pool.query(
+            "SELECT role FROM chat_members WHERE chat_id = $1 AND user_id = $2",
+            [chatId, currentUserId]
+        );
+
+        if (roleRes.rowCount === 0) {
+            throw new Error("You are not a member of this chat");
+        }
+        if (roleRes.rows[0].role !== 'admin') {
+            throw new Error("Access denied: only admins can change avatar");
+        }
+        const result = await pool.query(
+            "UPDATE chats SET avatar_url = $1 WHERE id = $2 AND is_group = true RETURNING id",
+            [avatarUrl, chatId]
+        );
+
+        if (result.rowCount === 0) {
+            throw new Error("Group chat not found");
+        }
+    }
+    async promoteToAdmin(chatId: number, currentUserId: number, targetUserId: number): Promise<void> {
+        const roleRes = await pool.query(
+            "SELECT role FROM chat_members WHERE chat_id = $1 AND user_id = $2",
+            [chatId, currentUserId]
+        );
+
+        if (roleRes.rowCount === 0) {
+            throw new Error("You are not a member of this chat");
+        }
+        if (roleRes.rows[0].role !== 'admin') {
+            throw new Error("Access denied: only admins can promote members");
+        }
+        const updateRes = await pool.query(
+            "UPDATE chat_members SET role = 'admin' WHERE chat_id = $1 AND user_id = $2 RETURNING id",
+            [chatId, targetUserId]
+        );
+
+        if (updateRes.rowCount === 0) {
+            throw new Error("Target user is not a member of this chat");
+        }
+    }
     async findById(chatId: number): Promise<Chat | null> {
         const result = await pool.query("SELECT * FROM chats WHERE id = $1", [chatId]);
         return result.rows[0] || null;
@@ -270,7 +358,7 @@ export class ChatRepository {
     }
 
     async getChatDetails(chatId: number, userId: number): Promise<any> {
-        const chatRes = await pool.query("SELECT id, name, is_group FROM chats WHERE id = $1", [chatId]);
+        const chatRes = await pool.query("SELECT id, name, is_group, avatar_url FROM chats WHERE id = $1", [chatId]);
         const chat = chatRes.rows[0];
 
         if (!chat) return null;
@@ -293,6 +381,7 @@ export class ChatRepository {
                 id: chat.id,
                 is_group: true,
                 name: chat.name,
+                avatar_url: chat.avatar_url,
                 members: membersRes.rows
             };
         } else {

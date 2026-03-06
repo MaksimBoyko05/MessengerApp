@@ -70,15 +70,6 @@ app.get("/test-email", async (req, res) => {
 
 app.use("/api/auth", authRoutes);
 
-app.get("/users", async (req, res) => {
-    try {
-        const result = await pool.query("SELECT * FROM users");
-        res.json(result.rows);
-    } catch (err) {
-        console.error(err);
-        res.status(500).send("DB error");
-    }
-});
 
 const PORT = process.env.PORT || 5000;
 httpServer.listen(PORT, () => {
