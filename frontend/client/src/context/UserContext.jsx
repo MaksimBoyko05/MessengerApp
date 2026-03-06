@@ -16,7 +16,7 @@ export const UserProvider = ({children}) => {
         });
         setUser(res.data.user || res.data);
       } catch (error) {
-        console.error("Сесія застаріла");
+        console.error("Сесія застаріла", error);
         localStorage.removeItem("token");
         setUser(null);
       }

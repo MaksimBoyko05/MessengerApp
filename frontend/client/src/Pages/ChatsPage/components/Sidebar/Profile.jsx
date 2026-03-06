@@ -1,9 +1,11 @@
-import {useState, useEffect} from "react";
-import axios from "axios";
+import {useState, useEffect, useContext} from "react";
 import styles from "@/Pages/ChatsPage/Chats.module.scss";
 import {Settings} from 'lucide-react';
+import {LogOut} from 'lucide-react';
 import {userService} from "@/api/userService.js";
 import SettingsModal from "@/Pages/ChatsPage/components/SettingsWindow/SettingsModal.jsx";
+import {UserContext} from "@/context/UserContext.jsx"
+import {useNavigate} from "react-router";
 
 function Profile() {
   const [userId, setUserId] = useState("");
@@ -11,13 +13,20 @@ function Profile() {
   const [userimg, setUserimg] = useState("");
   const [open, setIsOpen] = useState(false);
 
+  const navigate = useNavigate();
   const API_URL = "http://localhost:5000";
+  const {setUser} = useContext(UserContext);
 
   const handleClose = () => {
     setIsOpen(false)
     console.log("clicked")
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    setUser(null)
+    navigate("/authorization");
+  }
   useEffect(() => {
     const fetchProfile = async () => {
       const token = localStorage.getItem("token");
@@ -46,6 +55,11 @@ function Profile() {
         <div className={styles.profiletitles}>
           <p className={styles.usertitle}>{username}</p>
           <p className={styles.userstatus}>online</p>
+        </div>
+        <div className={styles.logout}>
+          <LogOut
+            size={16}
+            onClick={() => handleLogout()}/>
         </div>
         <div className={styles.icons}>
           <Settings

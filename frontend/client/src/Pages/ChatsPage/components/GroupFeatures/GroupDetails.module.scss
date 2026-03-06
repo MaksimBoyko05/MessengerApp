@@ -1,0 +1,102 @@
+$color-content: #ffff;
+$modal-color-background: #f5f5f6;
+@mixin flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@mixin section-style {
+  border-radius: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06),
+  0 4px 12px rgba(0, 0, 0, 0.08),
+  inset 0 1px 0 rgba(255, 255, 255, 1);
+}
+
+.groupdetailswrapper {
+  @include flex-center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100vw;
+  height: 100vh;
+  z-index: 999;
+  backdrop-filter: blur(2px);
+
+  img {
+    margin-left: 0;
+  }
+
+  .detailscontainer {
+    border-radius: 12px;
+    @include flex-center;
+    position: relative;
+    flex-direction: column;
+    background: $modal-color-background;
+    width: 400px;
+    padding: 10px;
+    gap: 10px;
+
+    .closebtn {
+      background: #e7e7e7;
+      padding: 5px;
+      border-radius: 50%;
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      cursor: pointer;
+    }
+
+    div {
+      background: $color-content;
+      padding: 10px;
+    }
+
+    .groupinfo {
+      @include section-style;
+      margin-top: 25px;
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      width: 350px;
+    }
+
+    .groupmembers {
+      @include section-style;
+      width: 350px;
+
+
+      svg {
+        margin-left: 55%;
+      }
+
+      .innerDivider {
+        height: 1px;
+        background: #F1F1F3;
+        width: 100%;
+        padding: 0;
+      }
+    }
+
+    .memberslist {
+      display: flex;
+
+      &:hover {
+        background: #FAFAFA;
+        border-radius: 10px;
+      }
+
+      .usersrole {
+        font-size: 0.85rem;
+        align-self: flex-end;
+        margin-left: auto;
+        font-weight: 600;
+        background-color: rgba(49, 225, 93, 0.51);
+        color: #088022;
+        padding: 5px;
+        border-radius: 10px;
+      }
+    }
+  }
+}

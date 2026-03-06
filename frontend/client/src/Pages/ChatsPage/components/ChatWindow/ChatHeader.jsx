@@ -1,12 +1,17 @@
 import styles from "@/Pages/ChatsPage/Chats.module.scss";
 import UserStatus from "./UserStatus.jsx"
 import Avvvatars from "avvvatars-react";
+import {useState} from "react";
+import GroupDetails from "@/Pages/ChatsPage/components/GroupFeatures/GroupDetails.jsx";
 
 function ChatHeader({chatDetails, companion}) {
   const API_URL = "http://localhost:5000";
+  const [isOpen, setIsOpen] = useState(false)
   return (
     <>
-      <div className={styles.chatheaderwrapper}>
+      <div
+        onClick={() => setIsOpen(true)}
+        className={styles.chatheaderwrapper}>
         {chatDetails.is_group ? (
           <>
             <div className={styles.groupimage}><Avvvatars
@@ -29,6 +34,11 @@ function ChatHeader({chatDetails, companion}) {
                 lastSeen={companion?.last_seen}/>
             </div>
           </>
+        )}
+        {isOpen && (
+          <GroupDetails
+            setIsOpen={setIsOpen}
+            details={chatDetails}/>
         )}
       </div>
     </>

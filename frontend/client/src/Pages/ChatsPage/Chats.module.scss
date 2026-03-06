@@ -171,15 +171,18 @@ body {
     }
   }
 
+  .logout {
+    &:hover {
+      svg {
+        color: #7d7d7d;
+      }
+    }
+  }
+
   .icons {
     transform: translateX(7rem);
     transition: $transition-default;
 
-    svg {
-      width: 20px;
-      height: 20px;
-      color: #7d7d7d;
-    }
 
     &:hover {
       cursor: pointer;
