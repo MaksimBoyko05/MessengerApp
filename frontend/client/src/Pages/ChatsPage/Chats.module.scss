@@ -769,6 +769,15 @@ body {
     color: #f61e1e;
   }
 
+  .groupmenu {
+    display: flex;
+    flex-wrap: nowrap;
+
+    svg {
+      margin-left: 1px;
+    }
+  }
+
   svg {
     transform: translateY(2px);
   }

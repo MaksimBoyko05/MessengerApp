@@ -29,6 +29,12 @@ export const userService = {
     })
     return response.data;
   },
+  setIsPrivate: async (isPrivate) => {
+    const response = await api.patch(`/api/users/`, {
+      isPrivate
+    });
+    return response.data;
+  },
   changePassword: async (userId, oldPassword, newPassword) => {
     const response = await api.put(`/users/${userId}/password`, {
       oldPassword,

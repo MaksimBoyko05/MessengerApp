@@ -21,6 +21,7 @@ function ChatsList({onSelectedChat, selectedChatId, onFilterType, onSearchQuery}
     x: null,
     y: null,
     visible: false,
+    type: "",
   })
   const filteredChats = (() => {
     let baseChats = [];
@@ -55,6 +56,7 @@ function ChatsList({onSelectedChat, selectedChatId, onFilterType, onSearchQuery}
         x: null,
         y: null,
         visible: false,
+        type: "",
       });
     };
     window.addEventListener('click', handleClickOutside);
@@ -209,6 +211,7 @@ function ChatsList({onSelectedChat, selectedChatId, onFilterType, onSearchQuery}
         x: null,
         y: null,
         visible: false,
+        type: "",
       })
     }
   }
@@ -219,7 +222,8 @@ function ChatsList({onSelectedChat, selectedChatId, onFilterType, onSearchQuery}
       id: id,
       x: e.clientX,
       y: e.clientY,
-      visible: true
+      visible: true,
+      type: "chatList",
     })
   };
 
@@ -246,6 +250,7 @@ function ChatsList({onSelectedChat, selectedChatId, onFilterType, onSearchQuery}
             id={contextMenu.id}
             x={contextMenu.x}
             y={contextMenu.y}
+            type={contextMenu.type}
             handleDelete={handleDeleteChat}
           />
         </>

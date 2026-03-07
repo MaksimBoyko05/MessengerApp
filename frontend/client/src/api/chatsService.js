@@ -45,6 +45,22 @@ export const chatsService = {
     });
     return response.data;
   },
+  addGroupMember: async (chatId, memberIds) => {
+    const response = await api.post(`/chats/${chatId}/members`, {
+      memberIds
+    });
+    return response.data;
+  },
+  promoteAdmin: async (chatId, targetUserId) => {
+    const response = await api.patch(`/chats/${chatId}/members/promote`, {
+      targetUserId
+    });
+    return response.data;
+  },
+  uploadGroupImage: async (chatId, payload) => {
+    const response = await api.put(`/chats/${chatId}/avatar`, payload);
+    return response.data;
+  },
   deleteChat: async (chatId, forEveryone) => {
     const response = await api.delete(`/chats/${chatId}`, {
       data: {forEveryone}

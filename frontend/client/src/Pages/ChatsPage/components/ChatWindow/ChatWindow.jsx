@@ -8,6 +8,8 @@ import ChatHeader from "./ChatHeader.jsx";
 import NoChatSelected from "./NoChatSelected.jsx";
 import AIGenerateSuggestions from "@/Pages/ChatsPage/components/ChatWindow/AIComponents/AIGenerateSuggestions.jsx";
 import UserContext from "@/context/UserContext.jsx";
+import {ChatContext} from "@/context/ChatContext.jsx";
+import {ChatProvider} from "@/context/ChatContext.jsx";
 
 function ChatWindow({chatId}) {
   const [messages, setMessages] = useState([]);
@@ -105,9 +107,11 @@ function ChatWindow({chatId}) {
 
   return (
     <div className={styles.chatwindow}>
-      <ChatHeader
-        chatDetails={chatDetails}
-        companion={companion}/>
+      <ChatContext.Provider value={{chatDetails, setChatDetails}}>
+        <ChatHeader
+          chatDetails={chatDetails}
+          companion={companion}/>
+      </ChatContext.Provider>
       <div className={styles.messagesArea}>
         {messages.length > 0 ? (
           messages.map((msg, index) => (
