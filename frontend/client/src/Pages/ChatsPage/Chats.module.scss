@@ -788,6 +788,7 @@ body {
   .groupmenu {
     display: flex;
     flex-wrap: nowrap;
+    flex-direction: column;
 
     svg {
       margin-left: 1px;

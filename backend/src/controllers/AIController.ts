@@ -184,7 +184,7 @@ export const askAiInChat = async (req: Request, res: Response): Promise<void> =>
 
         const aiResponseText = result.response.text();
 
-        const savedMessage = await messageRepo.create(chatId, userId, aiResponseText, true);
+        const savedMessage = await messageRepo.createAiMessage(chatId, userId, aiResponseText);
         const io = getIO();
         io.to(`chat_${chatId}`).emit("receive_message", savedMessage);
 

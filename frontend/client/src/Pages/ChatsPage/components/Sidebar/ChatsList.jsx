@@ -59,10 +59,17 @@ function ChatsList({onSelectedChat, selectedChatId, onFilterType, onSearchQuery}
         type: "",
       });
     };
+    const handleForceOpenChat = (e) => {
+      const newChatData = e.detail;
+      handleChatCreated(newChatData);
+    };
+
     window.addEventListener('click', handleClickOutside);
+    window.addEventListener('forceOpenChat', handleForceOpenChat);
 
     return () => {
       window.removeEventListener('click', handleClickOutside);
+      window.removeEventListener('forceOpenChat', handleForceOpenChat);
     };
   }, []);
 

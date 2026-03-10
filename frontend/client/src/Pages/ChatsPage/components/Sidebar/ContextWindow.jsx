@@ -3,6 +3,7 @@ import {Trash, UserStar} from 'lucide-react';
 import {chatsService} from "@/api/chatsService.js";
 import {useContext} from "react";
 import {ChatContext} from "@/context/ChatContext.jsx";
+import UserContext from "@/context/UserContext.jsx";
 
 function ContextWindow({x, y, handleDelete, type, chatId, targetId}) {
   const menuHeight = 135;
@@ -12,7 +13,11 @@ function ContextWindow({x, y, handleDelete, type, chatId, targetId}) {
   const left = isOutSidebar ? x - menuWidth : x;
   const top = isOutBelow ? y - menuHeight : y;
 
-  const {chatDetails, setChatDetails} = useContext(ChatContext)
+  const {chatDetails, setChatDetails} = useContext(ChatContext) || {};
+  const {user} = useContext(UserContext) || {};
+
+  const currentUser = chatDetails?.members?.find(member => Number(member.id) === Number(user?.id));
+  console.log("Current User:", currentUser, "All members:", chatDetails?.members, "My ID:", user?.id);
 
   const handlePromote = async () => {
     console.log(chatId, targetId)
@@ -30,6 +35,17 @@ function ContextWindow({x, y, handleDelete, type, chatId, targetId}) {
       console.error("Error with promote to admin", err)
     }
   }
+
+  const handleOpenPrivateChat = async () => {
+    try {
+      const chatData = await chatsService.createOrOpenChat(targetId);
+      const event = new CustomEvent('forceOpenChat', {detail: chatData});
+      window.dispatchEvent(event);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
   return (
     <div
       style={{top: top + 'px', left: left + 'px', position: "fixed"}}>
@@ -48,9 +64,12 @@ function ContextWindow({x, y, handleDelete, type, chatId, targetId}) {
         )}
         {type === "group" && (
           <div className={styles.groupmenu}>
-            <p
-              className={styles.makeadmin}
-              onClick={handlePromote}>Promote as Admin <UserStar size={16}/></p>
+            <p onClick={handleOpenPrivateChat}>Direct Message</p>
+            {currentUser?.role === "admin" && (
+              <p
+                className={styles.makeadmin}
+                onClick={handlePromote}>Promote as Admin <UserStar size={16}/></p>
+            )}
           </div>
         )}
       </div>

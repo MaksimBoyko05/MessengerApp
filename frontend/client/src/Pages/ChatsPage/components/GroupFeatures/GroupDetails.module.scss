@@ -43,6 +43,7 @@ $color-primary-hover: #2471e7;
     width: 400px;
     padding: 10px;
     gap: 10px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
 
     .closebtn {
       background: #e7e7e7;
@@ -104,9 +105,9 @@ $color-primary-hover: #2471e7;
         align-self: flex-end;
         margin-left: auto;
         font-weight: 600;
-        background-color: rgba(225, 216, 49, 0.51);
-        color: #ee9f0c;
-        padding: 5px;
+        background-color: #fef3c7;
+        color: #b45309;
+        padding: 4px 10px;
         border-radius: 10px;
       }
 
@@ -115,9 +116,9 @@ $color-primary-hover: #2471e7;
         align-self: flex-end;
         margin-left: auto;
         font-weight: 600;
-        background-color: rgba(49, 90, 225, 0.26);
-        color: #0d35dc;
-        padding: 5px;
+        background-color: #ede9fe;
+        color: #7c3aed;
+        padding: 4px 10px;
         border-radius: 10px;
       }
     }
