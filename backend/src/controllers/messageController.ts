@@ -9,7 +9,7 @@ const chatRepo = new ChatRepository();
 // ==== Send a message ====
 export const sendMessage = async (req: Request, res: Response) => {
     try {
-        const {chatId, receiverId, text} = req.body;
+        const {chatId, receiverId, text, type = "text"} = req.body;
         const senderId = req.user?.id;
 
         if (!senderId || (!chatId && !receiverId) || !text) {
@@ -28,7 +28,7 @@ export const sendMessage = async (req: Request, res: Response) => {
         }
 
 
-        const newMessage = await messageRepo.create(finalChatId, senderId, text);
+        const newMessage = await messageRepo.create(finalChatId, senderId, text, type);
 
         const io = getIO();
         io.to(`chat_${finalChatId}`).emit("receive_message", newMessage);

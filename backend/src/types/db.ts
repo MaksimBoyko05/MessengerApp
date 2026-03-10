@@ -27,4 +27,5 @@ export interface Message {
     user_id: number,
     text: string | null,
     created_at: Date,
+    type: string
 }

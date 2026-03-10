@@ -244,7 +244,7 @@ export class ChatRepository {
             client.release();
         }
     }
-    async addMembersToGroupChat(chatId: number, currentUserId: number, memberIds: number[]): Promise<void> {
+    async addMembersToGroupChat(chatId: number, currentUserId: number, memberIds: number[]): Promise<number[]> {
         const client = await pool.connect();
 
         try {
@@ -284,12 +284,22 @@ export class ChatRepository {
             }
 
             await client.query("COMMIT");
+            return newMembers;
         } catch (err) {
             await client.query("ROLLBACK");
             throw err;
         } finally {
             client.release();
         }
+    }
+    async getUsernames(userIds: number[]): Promise<string[]> {
+        if (!userIds || userIds.length === 0) return [];
+
+        const result = await pool.query(
+            "SELECT username FROM users WHERE id = ANY($1)",
+            [userIds]
+        );
+        return result.rows.map(row => row.username);
     }
     async updateGroupAvatar(chatId: number, currentUserId: number, avatarUrl: string): Promise<void> {
         const roleRes = await pool.query(

@@ -1,7 +1,10 @@
 import {Request, Response} from 'express';
 import {ChatRepository} from '../repositories/ChatRepository.js';
+import {MessageRepository} from '../repositories/MessageRepository.js';
+import {getIO} from '../socket.js';
 
 const chatRepo = new ChatRepository();
+const messageRepo = new MessageRepository();
 
 export const getMyChats = async (req: Request, res: Response) => {
     try {
@@ -102,7 +105,15 @@ export const addMembersToGroup = async (req: Request, res: Response) => {
         if (!memberIds || !Array.isArray(memberIds) || memberIds.length === 0) {
             return res.status(400).json({message: "Список учасників порожній або некоректний"});
         }
+        const addedIds = await chatRepo.addMembersToGroupChat(chatId, currentUserId, memberIds);
         await chatRepo.addMembersToGroupChat(chatId, currentUserId, memberIds);
+        if (addedIds.length > 0) {
+            const addedUsernames = await chatRepo.getUsernames(addedIds);
+            const text = `Added to group: ${addedUsernames.join(', ')}`;
+            const systemMessage = await messageRepo.createSystemMessage(chatId, currentUserId, text);
+            const io = getIO();
+            io.to(`chat_${chatId}`).emit("receive_message", systemMessage);
+        }
 
         res.json({message: "Учасників успішно додано до групи"});
 

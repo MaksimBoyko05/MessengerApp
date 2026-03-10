@@ -2,11 +2,11 @@ import pool from "../db.js";
 import {Message} from "../types/db.js";
 
 export class MessageRepository {
-    async create(chatId: number, senderId: number, text: string, isAi: boolean = false): Promise<any> {
+    async create(chatId: number, senderId: number, text: string, type: string = "text"): Promise<any> {
         const query = `
             WITH inserted_msg AS (
             INSERT
-            INTO messages (chat_id, user_id, text, is_ai)
+            INTO messages (chat_id, user_id, text, type)
             VALUES ($1, $2, $3, $4)
                 RETURNING *
                 )
@@ -15,7 +15,7 @@ export class MessageRepository {
                      JOIN users u ON i.user_id = u.id;
         `;
 
-        const result = await pool.query(query, [chatId, senderId, text, isAi]);
+        const result = await pool.query(query, [chatId, senderId, text, type]);
         return result.rows[0];
     }
 
@@ -45,7 +45,11 @@ export class MessageRepository {
     }
 
     async createAiMessage(chatId: number, userId: number, text: string): Promise<any> {
-        return this.create(chatId, userId, text, true);
+        return this.create(chatId, userId, text, "ai");
+    }
+
+    async createSystemMessage(chatId: number, initiatorId: number, text: string): Promise<any> {
+        return this.create(chatId, initiatorId, text, "system");
     }
 
 

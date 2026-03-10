@@ -19,6 +19,16 @@ function ChatMessages({isGroup, msg}) {
     return SENDER_COLORS[hash % SENDER_COLORS.length];
   }
 
+  const getMessagesClass = (msg) => {
+    if (msg.type === "system") {
+      return styles.system
+    }
+    if (msg.type === "ai") {
+      return styles.isAi
+    }
+    return msg.user_id === user.id ? styles.mymsg : styles.msgbubble
+  }
+
   return (
     <>
       {msg.user_id !== user.id && (
@@ -29,9 +39,7 @@ function ChatMessages({isGroup, msg}) {
         </div>
       )}
 
-      <div
-        className={`${(msg.user_id === user.id && !msg.is_ai) ? styles.mymsg : styles.msgbubble} ${msg.is_ai ? styles.isAi : ''}`}
-      >
+      <div className={getMessagesClass(msg)}>
         {msg.user_id !== user.id && (
           isGroup && (
             <p
@@ -47,12 +55,16 @@ function ChatMessages({isGroup, msg}) {
         <div className={styles.markdownContent}>
           <ReactMarkdown children={msg.text}/>
         </div>
-        <div className={styles.readtime}> {formatter.format(new Date(msg.created_at))}</div>
-        {msg.user_id === user.id && (
-          msg.is_read ? (
-            <CheckCheck size={16}/>
-          ) : (
-            <Check size={16}/>
+        {msg.type !== "system" && (
+          <div className={styles.readtime}> {formatter.format(new Date(msg.created_at))}</div>)}
+        {msg.type !== "system" && (
+          msg.user_id === user.id && (
+
+            msg.is_read ? (
+              <CheckCheck size={16}/>
+            ) : (
+              <Check size={16}/>
+            )
           )
         )}
       </div>
