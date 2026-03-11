@@ -6,6 +6,9 @@ import {protect} from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
+
+// /api/
+
 // ==================== REGISTER ====================
 router.post("/register", createUser);
 

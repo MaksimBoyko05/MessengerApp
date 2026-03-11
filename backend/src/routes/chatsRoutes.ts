@@ -7,7 +7,10 @@ import {
     createGroupChat,
     addMembersToGroup,
     updateGroupAvatar,
-    promoteToAdmin
+    promoteToAdmin,
+    updateGroupName,
+    removeMember,
+    leaveGroup
 } from '../controllers/chatController.js';
 import {protect} from '../middleware/authMiddleware.js';
 import {upload} from "../middleware/upload.js";
@@ -28,7 +31,10 @@ router.patch('/:chatId/members/promote', protect, promoteToAdmin);
 
 //PUT /api/chats
 router.put('/:chatId/avatar', protect, upload.single('avatar'), updateGroupAvatar);
+router.put('/:chatId/name', protect, updateGroupName)
 
 // DELETE /api/chats/:chatId
 router.delete('/:chatId', protect, deleteChat);
+router.delete('/:chatId/members', protect, removeMember)
+router.delete('/:chatId/leave', protect, leaveGroup)
 export default router;

@@ -45,7 +45,14 @@ function ContextWindow({x, y, handleDelete, type, chatId, targetId}) {
       console.error(err);
     }
   }
-
+  const handleDeleteMember = async () => {
+    console.log(chatId, targetId)
+    try {
+      await chatsService.deleteMember(chatId, targetId)
+    } catch (err) {
+      console.error("Error when deleting user", err)
+    }
+  }
   return (
     <div
       style={{top: top + 'px', left: left + 'px', position: "fixed"}}>
@@ -66,9 +73,13 @@ function ContextWindow({x, y, handleDelete, type, chatId, targetId}) {
           <div className={styles.groupmenu}>
             <p onClick={handleOpenPrivateChat}>Direct Message</p>
             {currentUser?.role === "admin" && (
-              <p
-                className={styles.makeadmin}
-                onClick={handlePromote}>Promote as Admin <UserStar size={16}/></p>
+              <>
+                <p
+                  className={styles.makeadmin}
+                  onClick={handlePromote}>Promote as Admin <UserStar size={16}/>
+                </p>
+                <p onClick={handleDeleteMember}>Delete user</p>
+              </>
             )}
           </div>
         )}

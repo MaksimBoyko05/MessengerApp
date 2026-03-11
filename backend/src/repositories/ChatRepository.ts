@@ -322,6 +322,28 @@ export class ChatRepository {
             throw new Error("Group chat not found");
         }
     }
+    async updateGroupName(chatId: number, currentUserId: number, newName: string): Promise<void> {
+        const roleRes = await pool.query(
+            "SELECT role FROM chat_members WHERE chat_id = $1 AND user_id = $2",
+            [chatId, currentUserId]
+        );
+
+        if (roleRes.rowCount === 0) {
+            throw new Error("You are not a member of this chat");
+        }
+        if (roleRes.rows[0].role !== 'admin') {
+            throw new Error("Access denied: only admins can change name");
+        }
+
+        const result = await pool.query(
+            "UPDATE chats SET name = $1 WHERE id = $2 AND is_group = true RETURNING id",
+            [newName, chatId]
+        );
+
+        if (result.rowCount === 0) {
+            throw new Error("Group chat not found");
+        }
+    }
     async promoteToAdmin(chatId: number, currentUserId: number, targetUserId: number): Promise<void> {
         const roleRes = await pool.query(
             "SELECT role FROM chat_members WHERE chat_id = $1 AND user_id = $2",
@@ -343,6 +365,39 @@ export class ChatRepository {
             throw new Error("Target user is not a member of this chat");
         }
     }
+    async removeMemberFromGroup(chatId: number, currentUserId: number, targetUserId: number): Promise<void> {
+        const roleRes = await pool.query(
+            "SELECT role FROM chat_members WHERE chat_id = $1 AND user_id = $2",
+            [chatId, currentUserId]
+        );
+
+        if (roleRes.rowCount === 0) {
+            throw new Error("You are not a member of this chat");
+        }
+        if (roleRes.rows[0].role !== 'admin') {
+            throw new Error("Access denied: only admins can remove members");
+        }
+
+        const deleteRes = await pool.query(
+            "DELETE FROM chat_members WHERE chat_id = $1 AND user_id = $2 RETURNING id",
+            [chatId, targetUserId]
+        );
+
+        if (deleteRes.rowCount === 0) {
+            throw new Error("Target user is not a member of this chat");
+        }
+    }
+    async leaveGroupChat(chatId: number, currentUserId: number): Promise<void> {
+        const deleteRes = await pool.query(
+            "DELETE FROM chat_members WHERE chat_id = $1 AND user_id = $2 RETURNING id",
+            [chatId, currentUserId]
+        );
+
+        if (deleteRes.rowCount === 0) {
+            throw new Error("You are not a member of this chat");
+        }
+    }
+
     async findById(chatId: number): Promise<Chat | null> {
         const result = await pool.query("SELECT * FROM chats WHERE id = $1", [chatId]);
         return result.rows[0] || null;

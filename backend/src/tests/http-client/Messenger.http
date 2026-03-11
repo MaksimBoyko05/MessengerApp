@@ -1,0 +1,425 @@
+# Messenger
+
+###
+# group: AI
+# @name Send For Analytic
+POST {{base_url}}/api/ai/analytics
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJtYXhAdGVzdC5jb20iLCJpYXQiOjE3NzI1MzMwMjUsImV4cCI6MTc3MjUzNjYyNX0.3PuQnyb2C2brOoxql6Awg5DY4m8zXeaLPKoOOqjo5Xg
+Content-Type: application/json
+
+{
+  "suggestionId": 31
+}
+
+###
+# group: AI
+# @name New Request
+POST {{base_url}}/api/ai/ask
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJtYXhAdGVzdC5jb20iLCJpYXQiOjE3NzI0NTk0NzQsImV4cCI6MTc3MjQ2MzA3NH0.8_eUUY6Z5GHt_WTVI527eO6CzHA9u0bsWSe6qBBmdFo
+Content-Type: application/json
+
+{
+  "chatId": 67,
+  "query": "Скільки річок протікає в Україні і які найбільші?"
+}
+
+###
+# group: Group
+# @name Add Group members
+POST {{base_url}}/api/chats/56/members
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJtYXhAdGVzdC5jb20iLCJpYXQiOjE3NzI3OTc0NzYsImV4cCI6MTc3MjgwMTA3Nn0._1AVHo7T54nM1chzxuxqYeXOt7ebm3OX_TuCMrRmtMk
+Content-Type: text/plain
+
+{
+   "memberIds": "2"
+}
+
+###
+# group: Group
+# @name Make user admin
+PATCH {{base_url}}/api/chats/56/promote
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJtYXhAdGVzdC5jb20iLCJpYXQiOjE3NzI3OTg5NTcsImV4cCI6MTc3MjgwMjU1N30.PrzPow7_gE9VUPfJotKTMj22trX_BAo9hQUURwAMepA
+Content-Type: application/json
+
+{
+  "targetUserId": 2
+}
+
+###
+# group: Group
+# @name Update Group Name
+PUT {{base_url}}/api/chats/67/name
+
+###
+# group: Group
+# @name New Request
+GET
+
+###
+# group: Group
+# @name New Request
+GET
+
+###
+# @name Create Group
+# This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.
+# A successful POST request typically returns a `200 OK` or `201 Created` response code.
+POST {{base_url}}/api/chats
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTAsImVtYWlsIjoidXNlcjYzQGV4YW1wbGUuY29tIiwiaWF0IjoxNzY1ODE5NTcwLCJleHAiOjE3NjU4MjMxNzB9.5epsPfCv89vqsSO8vURk4Asj2xwE_IbeQQDwruoFPaY
+Content-Type: application/json
+
+{
+  "targetUserId": 2
+}
+
+> {%
+  // TODO: migrate to HTTP Client Response handler API
+  // pm.test("Successful POST request", function () {
+  //     pm.expect(pm.response.code).to.be.oneOf([200, 201]);
+  // });
+  //
+%}
+
+###
+# @name Get data
+# This is a GET request and it is used to "get" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).
+# A successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data.
+GET {{base_url}}/info?
+    id=1
+
+> {%
+  // TODO: migrate to HTTP Client Response handler API
+  // pm.test("Status code is 200", function () {
+  //     pm.response.to.have.status(200);
+  // });
+%}
+
+###
+# @name Get all users
+# This is a GET request and it is used to "get" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).
+# A successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data.
+GET {{base_url}}/info?
+    id=1
+
+> {%
+  // TODO: migrate to HTTP Client Response handler API
+  // pm.test("Status code is 200", function () {
+  //     pm.response.to.have.status(200);
+  // });
+%}
+
+###
+# @name Get user :id messages
+# This is a GET request and it is used to "get" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).
+# A successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data.
+GET {{base_url}}/api/messages/user/1
+
+> {%
+  // TODO: migrate to HTTP Client Response handler API
+  // pm.test("Status code is 200", function () {
+  //     pm.response.to.have.status(200);
+  // });
+%}
+
+###
+# @name Get messages from chat
+# This is a GET request and it is used to "get" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).
+# A successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data.
+GET {{base_url}}/api/messages/user/1
+
+> {%
+  // TODO: migrate to HTTP Client Response handler API
+  // pm.test("Status code is 200", function () {
+  //     pm.response.to.have.status(200);
+  // });
+%}
+
+###
+# @name Get user Chats
+# This is a GET request and it is used to "get" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).
+# A successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data.
+GET {{base_url}}/api/messages/user/1
+
+> {%
+  // TODO: migrate to HTTP Client Response handler API
+  // pm.test("Status code is 200", function () {
+  //     pm.response.to.have.status(200);
+  // });
+%}
+
+###
+# @name Search User for Chat
+# This is a GET request and it is used to "get" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).
+# A successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data.
+GET {{base_url}}/api/messages/user/1
+
+> {%
+  // TODO: migrate to HTTP Client Response handler API
+  // pm.test("Status code is 200", function () {
+  //     pm.response.to.have.status(200);
+  // });
+%}
+
+###
+# @name Users List by status
+# This is a GET request and it is used to "get" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).
+# A successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data.
+GET {{base_url}}/api/messages/user/1
+
+> {%
+  // TODO: migrate to HTTP Client Response handler API
+  // pm.test("Status code is 200", function () {
+  //     pm.response.to.have.status(200);
+  // });
+%}
+
+###
+# @name Register
+# This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.
+# A successful POST request typically returns a `200 OK` or `201 Created` response code.
+POST {{base_url}}/auth/register
+Content-Type: application/json
+
+{
+  "username": "maks4",
+  "email": "maks3@example.com",
+  "password": "12345"
+}
+
+> {%
+  // TODO: migrate to HTTP Client Response handler API
+  // pm.test("Successful POST request", function () {
+  //     pm.expect(pm.response.code).to.be.oneOf([200, 201]);
+  // });
+  //
+%}
+
+###
+# @name Login
+# This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.
+# A successful POST request typically returns a `200 OK` or `201 Created` response code.
+POST http://localhost:5000/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "max@test.com",
+  "password": "12345678"
+}
+
+
+> {%
+  // TODO: migrate to HTTP Client Response handler API
+  // pm.test("Successful POST request", function () {
+  //     pm.expect(pm.response.code).to.be.oneOf([200, 201]);
+  // });
+  //
+%}
+
+###
+# @name Send Password Reset Email
+# This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.
+# A successful POST request typically returns a `200 OK` or `201 Created` response code.
+POST {{base_url}}/api/users/12/request-email-change
+Content-Type: application/json
+
+{
+  "email": "user63@example.com",
+  "password": "1234578"
+}
+
+
+> {%
+  // TODO: migrate to HTTP Client Response handler API
+  // pm.test("Successful POST request", function () {
+  //     pm.expect(pm.response.code).to.be.oneOf([200, 201]);
+  // });
+  //
+%}
+
+###
+# @name Send Email Change
+# This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.
+# A successful POST request typically returns a `200 OK` or `201 Created` response code.
+POST {{base_url}}/api/users/12/request-email-change
+Content-Type: application/json
+
+{
+  "email": "user63@example.com",
+  "password": "1234578"
+}
+
+
+> {%
+  // TODO: migrate to HTTP Client Response handler API
+  // pm.test("Successful POST request", function () {
+  //     pm.expect(pm.response.code).to.be.oneOf([200, 201]);
+  // });
+  //
+%}
+
+###
+# @name Verify Email
+# This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.
+# A successful POST request typically returns a `200 OK` or `201 Created` response code.
+POST {{base_url}}/api/users/12/request-email-change
+Content-Type: application/json
+
+{
+  "email": "user63@example.com",
+  "password": "1234578"
+}
+
+
+> {%
+  // TODO: migrate to HTTP Client Response handler API
+  // pm.test("Successful POST request", function () {
+  //     pm.expect(pm.response.code).to.be.oneOf([200, 201]);
+  // });
+  //
+%}
+
+###
+# @name Create message
+# This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.
+# A successful POST request typically returns a `200 OK` or `201 Created` response code.
+POST {{base_url}}/api/messages
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTAsImVtYWlsIjoidXNlcjYzQGV4YW1wbGUuY29tIiwiaWF0IjoxNzY1ODE5NTcwLCJleHAiOjE3NjU4MjMxNzB9.5epsPfCv89vqsSO8vURk4Asj2xwE_IbeQQDwruoFPaY
+Content-Type: application/json
+
+{
+  "receiverId": 2,
+  "text": "Привіт! Це перше повідомлення через нову архітектуру."
+}
+
+> {%
+  // TODO: migrate to HTTP Client Response handler API
+  // pm.test("Successful POST request", function () {
+  //     pm.expect(pm.response.code).to.be.oneOf([200, 201]);
+  // });
+  //
+%}
+
+###
+# @name AI answer
+# This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.
+# A successful POST request typically returns a `200 OK` or `201 Created` response code.
+POST {{base_url}}/api/messages
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTAsImVtYWlsIjoidXNlcjYzQGV4YW1wbGUuY29tIiwiaWF0IjoxNzY1ODE5NTcwLCJleHAiOjE3NjU4MjMxNzB9.5epsPfCv89vqsSO8vURk4Asj2xwE_IbeQQDwruoFPaY
+Content-Type: application/json
+
+{
+  "receiverId": 2,
+  "text": "Привіт! Це перше повідомлення через нову архітектуру."
+}
+
+> {%
+  // TODO: migrate to HTTP Client Response handler API
+  // pm.test("Successful POST request", function () {
+  //     pm.expect(pm.response.code).to.be.oneOf([200, 201]);
+  // });
+  //
+%}
+
+###
+# @name Create Chat
+# This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.
+# A successful POST request typically returns a `200 OK` or `201 Created` response code.
+POST {{base_url}}/api/chats
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTAsImVtYWlsIjoidXNlcjYzQGV4YW1wbGUuY29tIiwiaWF0IjoxNzY1ODE5NTcwLCJleHAiOjE3NjU4MjMxNzB9.5epsPfCv89vqsSO8vURk4Asj2xwE_IbeQQDwruoFPaY
+Content-Type: application/json
+
+{
+  "targetUserId": 2
+}
+
+> {%
+  // TODO: migrate to HTTP Client Response handler API
+  // pm.test("Successful POST request", function () {
+  //     pm.expect(pm.response.code).to.be.oneOf([200, 201]);
+  // });
+  //
+%}
+
+###
+# @name Update data
+# This is a PUT request and it is used to overwrite an existing piece of data. For instance, after you create an entity with a POST request, you may want to modify that later. You can do that using a PUT request. You typically identify the entity being updated by including an identifier in the URL (eg. `id=1`).
+# A successful PUT request typically returns a `200 OK`, `201 Created`, or `204 No Content` response code.
+PUT {{base_url}}/info?
+    id=1
+Content-Type: application/json
+
+{
+  "name": "Add your name in the body"
+}
+
+> {%
+  // TODO: migrate to HTTP Client Response handler API
+  // pm.test("Successful PUT request", function () {
+  //     pm.expect(pm.response.code).to.be.oneOf([200, 201, 204]);
+  // });
+  //
+%}
+
+###
+# @name Update password
+# This is a PUT request and it is used to overwrite an existing piece of data. For instance, after you create an entity with a POST request, you may want to modify that later. You can do that using a PUT request. You typically identify the entity being updated by including an identifier in the URL (eg. `id=1`).
+# A successful PUT request typically returns a `200 OK`, `201 Created`, or `204 No Content` response code.
+PUT {{base_url}}/users/1/password
+Content-Type: application/json
+
+{
+  "name": "Add your name in the body"
+}
+
+> {%
+  // TODO: migrate to HTTP Client Response handler API
+  // pm.test("Successful PUT request", function () {
+  //     pm.expect(pm.response.code).to.be.oneOf([200, 201, 204]);
+  // });
+  //
+%}
+
+###
+# @name Delete data
+# This is a DELETE request, and it is used to delete data that was previously created via a POST request. You typically identify the entity being updated by including an identifier in the URL (eg. `id=1`).
+# A successful DELETE request typically returns a `200 OK`, `202 Accepted`, or `204 No Content` response code.
+DELETE {{base_url}}/info?
+    id=1
+
+> {%
+  // TODO: migrate to HTTP Client Response handler API
+  // pm.test("Successful DELETE request", function () {
+  //     pm.expect(pm.response.code).to.be.oneOf([200, 202, 204]);
+  // });
+  //
+%}
+
+###
+# @name Delete Chat
+# This is a DELETE request, and it is used to delete data that was previously created via a POST request. You typically identify the entity being updated by including an identifier in the URL (eg. `id=1`).
+# A successful DELETE request typically returns a `200 OK`, `202 Accepted`, or `204 No Content` response code.
+DELETE {{base_url}}/api/chats/64
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJtYXhAdGVzdC5jb20iLCJpYXQiOjE3NzA3MTkxMTYsImV4cCI6MTc3MDcyMjcxNn0.QttxecT2oDYVxnfpqAvITnm8VUCe_xyb9hS08VfLexE
+Content-Type: application/json
+
+{
+  "forEveryone": true
+}
+
+> {%
+  // TODO: migrate to HTTP Client Response handler API
+  // pm.test("Successful DELETE request", function () {
+  //     pm.expect(pm.response.code).to.be.oneOf([200, 202, 204]);
+  // });
+  //
+%}
+
+###
+# @name User Privacy
+PATCH {{base_url}}/api/users/privacy
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJtYXhAdGVzdC5jb20iLCJpYXQiOjE3NzI3OTg5NTcsImV4cCI6MTc3MjgwMjU1N30.PrzPow7_gE9VUPfJotKTMj22trX_BAo9hQUURwAMepA
+Content-Type: application/json
+
+{
+  "isPrivate": true
+}

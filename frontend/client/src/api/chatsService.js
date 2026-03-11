@@ -45,6 +45,12 @@ export const chatsService = {
     });
     return response.data;
   },
+  updateGroupName: async (chatId, newName) => {
+    const response = await api.put(`/chats/${chatId}/name`, {
+      newName
+    });
+    return response.data;
+  },
   addGroupMember: async (chatId, memberIds) => {
     const response = await api.post(`/chats/${chatId}/members`, {
       memberIds
@@ -55,6 +61,18 @@ export const chatsService = {
     const response = await api.patch(`/chats/${chatId}/members/promote`, {
       targetUserId
     });
+    return response.data;
+  },
+  deleteMember: async (chatId, targetUserId) => {
+    const response = await api.delete(`/chats/${chatId}/members`, {
+      data: {
+        targetUserId
+      }
+    });
+    return response.data;
+  },
+  leaveGroup: async (chatId) => {
+    const response = await api.delete(`/chats/${chatId}/leave`);
     return response.data;
   },
   uploadGroupImage: async (chatId, payload) => {

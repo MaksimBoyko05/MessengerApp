@@ -5,6 +5,9 @@ import {useEffect, useState, useContext} from "react";
 import AddMembers from "@/Pages/ChatsPage/components/GroupFeatures/AddMembers.jsx";
 import ContextWindow from "@/Pages/ChatsPage/components/Sidebar/ContextWindow.jsx";
 import {ChatContext} from "@/context/ChatContext.jsx";
+import {Pencil, LogOut} from 'lucide-react';
+import EditGroup from "@/Pages/ChatsPage/components/GroupFeatures/EditGroup.jsx";
+import {chatsService} from "@/api/chatsService.js";
 
 function GroupDetails({setIsOpen}) {
   const [isAddingMembers, setIsAddingMembers] = useState(false)
@@ -17,10 +20,10 @@ function GroupDetails({setIsOpen}) {
     chatId: null,
     targetId: null,
   })
-
+  const [isEditing, setIsEditing] = useState(false);
   const {chatDetails, setChatDetails} = useContext(ChatContext)
   const members = chatDetails.members;
-
+  const API_URL = "http://localhost:5000";
 
   useEffect(() => {
     const handleClickOutside = () => {
@@ -60,57 +63,76 @@ function GroupDetails({setIsOpen}) {
 
     })
   };
+  const handleLeave = async () => {
+    try {
+      await chatsService.leaveGroup(chatDetails.id)
+    } catch (err) {
+      console.error("Error with leave a group", err)
+    }
+  }
   return (
     <>
       <div className={styles.groupdetailswrapper}>
         <div className={styles.detailscontainer}>
+          {isEditing ? (
+            <EditGroup
+              setIsEditing={setIsEditing}
+              chatId={chatDetails.id}/>
+          ) : (
+            <>
+              {isAddingMembers ? (
+                <AddMembers
+                  chatId={chatDetails.id}
+                  setIsAddingMembers={setIsAddingMembers}/>
+              ) : (
+                <>
+                  <div className={styles.groupinfo}>
+                    <img
+                      alt={"groupimg"}
+                      src={`${API_URL}${chatDetails.avatar_url}`}/>
+                    <p>{chatDetails.name}</p>
+                    <p>{members.length} Members</p>
+                    <div className={styles.buttonblock}>
+                      <div onClick={() => setIsEditing(true)}><Pencil size={16}/></div>
+                      <div onClick={handleLeave}><LogOut size={16}/></div>
+                    </div>
+                  </div>
+                  <div className={styles.groupmembers}>
+                    <div onClick={() => setIsAddingMembers(true)}>Add members <UserRoundPlus
+                      className={styles.addusericon}
+                      size={16}/></div>
+                    <div className={styles.innerDivider}></div>
+                    {members.map(member => (
+                      <div
+                        className={styles.memberslist}
+                        key={member.id}
+                        onContextMenu={(e) => handleRightClick(e, member.id)}
+                      >
+                        <p className={styles.username}>{member.username}</p>
+                        <p className={member.role === "admin" ? styles.userAdmin : styles.userMember}>{member.role}</p>
+                      </div>
+                    ))}
+                    {contextMenu.visible && (
+                      <>
+                        <ContextWindow
+                          id={contextMenu.id}
+                          x={contextMenu.x}
+                          y={contextMenu.y}
+                          type={contextMenu.type}
+                          chatId={contextMenu.chatId}
+                          targetId={contextMenu.targetId}
+                        />
+                      </>
+                    )}
+                  </div>
+                </>
+              )}
+            </>
+          )}
           <X
             className={styles.closebtn}
             size={24}
             onClick={onClose}/>
-          {isAddingMembers ? (
-            <AddMembers
-              chatId={chatDetails.id}
-              setIsAddingMembers={setIsAddingMembers}/>
-          ) : (
-            <>
-              <div className={styles.groupinfo}>
-                <img
-                  alt={"groupimg"}
-                  src={"https://api.dicebear.com/9.x/glass/svg"}/>
-                <p>{chatDetails.name}</p>
-                <p>{members.length} Members</p>
-              </div>
-              <div className={styles.groupmembers}>
-                <div onClick={() => setIsAddingMembers(true)}>Add members <UserRoundPlus
-                  className={styles.addusericon}
-                  size={16}/></div>
-                <div className={styles.innerDivider}></div>
-                {members.map(member => (
-                  <div
-                    className={styles.memberslist}
-                    key={member.id}
-                    onContextMenu={(e) => handleRightClick(e, member.id)}
-                  >
-                    <p className={styles.username}>{member.username}</p>
-                    <p className={member.role === "admin" ? styles.userAdmin : styles.userMember}>{member.role}</p>
-                  </div>
-                ))}
-                {contextMenu.visible && (
-                  <>
-                    <ContextWindow
-                      id={contextMenu.id}
-                      x={contextMenu.x}
-                      y={contextMenu.y}
-                      type={contextMenu.type}
-                      chatId={contextMenu.chatId}
-                      targetId={contextMenu.targetId}
-                    />
-                  </>
-                )}
-              </div>
-            </>
-          )}
         </div>
       </div>
     </>

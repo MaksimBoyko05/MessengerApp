@@ -19,6 +19,13 @@ $color-primary-hover: #2471e7;
   inset 0 1px 0 rgba(255, 255, 255, 1);
 }
 
+@mixin section-buttons {
+  border-radius: 10px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06),
+  0 4px 6px rgba(0, 0, 0, 0.08),
+  inset 0 1px 0 rgba(255, 255, 255, 1);
+}
+
 .groupdetailswrapper {
   @include flex-center;
   position: absolute;
@@ -39,7 +46,7 @@ $color-primary-hover: #2471e7;
     @include flex-center;
     position: relative;
     flex-direction: column;
-    background: $modal-color-background;
+    background-color: $modal-color-background;
     width: 400px;
     padding: 10px;
     gap: 10px;
@@ -72,6 +79,22 @@ $color-primary-hover: #2471e7;
         font-size: 0.85rem;
         color: #666666;
         font-weight: 500;
+      }
+
+      .buttonblock {
+        @include flex-center;
+        gap: 10px;
+
+        div {
+          @include flex-center;
+          border-radius: 10px;
+          transition: all 0.3s ease;
+
+          :hover {
+            opacity: 0.7;
+            cursor: pointer;
+          }
+        }
       }
     }
 
@@ -283,6 +306,64 @@ $color-primary-hover: #2471e7;
 
       &:hover {
         background: $color-primary-hover;
+      }
+    }
+  }
+
+  .editcontainer {
+    @include flex-center;
+    flex-direction: column;
+    @include section-style;
+    background-color: $color-content;
+    margin-top: 20px;
+    width: 330px;
+    gap: 5px;
+    margin-bottom: 10px;
+
+    .infoblock {
+      @include flex-center;
+      gap: 10px;
+
+      input {
+        flex: 1;
+        margin-top: 10px;
+        height: 38px;
+        min-height: 38px;
+        padding: 5px 5px 1px 15px;
+        background: #FAFAFA;
+        border-radius: $modal-search-radius;
+        border: 1px solid rgba(120, 122, 133, 0.07);
+        transition: border-color 0.3s ease;
+
+        &:focus {
+          border-color: #2B7FFF;
+          background-color: $input-focus-bg;
+          outline: none;
+        }
+      }
+
+      svg {
+        margin-top: 10px;
+        transition: all 0.3s ease;
+
+        &:hover {
+          color: #4cd964;
+        }
+      }
+    }
+
+    .addphoto {
+      @include flex-center;
+      padding-bottom: 10px;
+      transform: translateY(-10px);
+      gap: 5px;
+
+      p {
+        font-size: 0.85rem;
+      }
+
+      &:hover {
+        color: $color-primary-hover;
       }
     }
   }

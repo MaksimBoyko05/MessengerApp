@@ -106,7 +106,6 @@ export const addMembersToGroup = async (req: Request, res: Response) => {
             return res.status(400).json({message: "Список учасників порожній або некоректний"});
         }
         const addedIds = await chatRepo.addMembersToGroupChat(chatId, currentUserId, memberIds);
-        await chatRepo.addMembersToGroupChat(chatId, currentUserId, memberIds);
         if (addedIds.length > 0) {
             const addedUsernames = await chatRepo.getUsernames(addedIds);
             const text = `Added to group: ${addedUsernames.join(', ')}`;
@@ -131,6 +130,74 @@ export const addMembersToGroup = async (req: Request, res: Response) => {
         }
 
         res.status(500).json({message: 'Не вдалося додати учасників'});
+    }
+};
+export const removeMember = async (req: Request, res: Response) => {
+    try {
+        const chatId = parseInt(req.params.chatId);
+        const currentUserId = req.user?.id;
+        const {targetUserId} = req.body;
+
+        if (!currentUserId) {
+            return res.status(401).json({message: "Неавторизований користувач"});
+        }
+        if (!chatId || isNaN(chatId) || !targetUserId) {
+            return res.status(400).json({message: "Некоректні дані"});
+        }
+
+        const [targetUsername] = await chatRepo.getUsernames([targetUserId]);
+
+        await chatRepo.removeMemberFromGroup(chatId, currentUserId, targetUserId);
+
+        const text = `Видалено: ${targetUsername || 'Користувача'}`;
+        const systemMessage = await messageRepo.createSystemMessage(chatId, currentUserId, text);
+
+        const io = getIO();
+        io.to(`chat_${chatId}`).emit("receive_message", systemMessage);
+
+        res.json({message: "Учасника успішно видалено"});
+
+    } catch (error: any) {
+        console.error('Помилка в removeMember:', error);
+        if (error.message === "Access denied: only admins can remove members") {
+            return res.status(403).json({message: "Тільки адміністратори можуть видаляти учасників"});
+        }
+        if (error.message === "Target user is not a member of this chat") {
+            return res.status(404).json({message: "Користувач не є учасником групи"});
+        }
+        res.status(500).json({message: 'Не вдалося видалити учасника'});
+    }
+};
+export const leaveGroup = async (req: Request, res: Response) => {
+    try {
+        const chatId = parseInt(req.params.chatId);
+        const currentUserId = req.user?.id;
+
+        if (!currentUserId) {
+            return res.status(401).json({message: "Неавторизований користувач"});
+        }
+        if (!chatId || isNaN(chatId)) {
+            return res.status(400).json({message: "Некоректний ID чату"});
+        }
+
+        const [username] = await chatRepo.getUsernames([currentUserId]);
+
+        await chatRepo.leaveGroupChat(chatId, currentUserId);
+
+        const text = `${username || 'Користувач'} покинув(ла) групу`;
+        const systemMessage = await messageRepo.createSystemMessage(chatId, currentUserId, text);
+
+        const io = getIO();
+        io.to(`chat_${chatId}`).emit("receive_message", systemMessage);
+
+        res.json({message: "Ви успішно покинули групу"});
+
+    } catch (error: any) {
+        console.error('Помилка в leaveGroup:', error);
+        if (error.message === "You are not a member of this chat") {
+            return res.status(404).json({message: "Ви не є учасником цієї групи"});
+        }
+        res.status(500).json({message: 'Не вдалося покинути групу'});
     }
 };
 export const updateGroupAvatar = async (req: Request, res: Response) => {
@@ -169,6 +236,37 @@ export const updateGroupAvatar = async (req: Request, res: Response) => {
         res.status(500).json({message: 'Не вдалося оновити аватарку групи'});
     }
 };
+export const updateGroupName = async (req: Request, res: Response) => {
+    try {
+        const chatId = parseInt(req.params.chatId);
+        const currentUserId = req.user?.id;
+        const {newName} = req.body;
+
+        if (!currentUserId) {
+            return res.status(401).json({message: "Неавторизований користувач"});
+        }
+        if (!chatId || isNaN(chatId) || !newName) {
+            return res.status(400).json({message: "Некоректні дані"});
+        }
+
+        await chatRepo.updateGroupName(chatId, currentUserId, newName);
+
+        const text = `Name of group changed to: "${newName}"`;
+        const systemMessage = await messageRepo.createSystemMessage(chatId, currentUserId, text);
+
+        const io = getIO();
+        io.to(`chat_${chatId}`).emit("receive_message", systemMessage);
+
+        res.json({message: "Назву групи успішно оновлено", newName});
+
+    } catch (error: any) {
+        console.error('Помилка в updateGroupName:', error);
+        if (error.message === "Access denied: only admins can change name") {
+            return res.status(403).json({message: "Тільки адміністратори можуть змінювати назву"});
+        }
+        res.status(500).json({message: 'Не вдалося змінити назву групи'});
+    }
+};
 export const promoteToAdmin = async (req: Request, res: Response) => {
     try {
         const chatId = parseInt(req.params.chatId);
@@ -200,6 +298,7 @@ export const promoteToAdmin = async (req: Request, res: Response) => {
         res.status(500).json({message: 'Не вдалося призначити адміністратора'});
     }
 };
+
 
 export const deleteChat = async (req: Request, res: Response) => {
     try {
