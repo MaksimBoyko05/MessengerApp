@@ -3,23 +3,27 @@ import {chatsService} from "@/api/chatsService.js";
 import styles from "./GroupDetails.module.scss"
 import Avvvatars from "avvvatars-react";
 import UserStatus from "@/Pages/ChatsPage/components/ChatWindow/UserStatus.jsx";
-import {ChevronLeft, X} from "lucide-react";
+import {ChevronLeft, X, LoaderCircle} from "lucide-react";
 
 function AddMembers({chatId, setIsAddingMembers, setIsOpen}) {
   const [defaultUsers, setDefaultUsers] = useState([]);
   const [users, setUsers] = useState([]);
   const [query, setQuery] = useState("");
   const [selectedUsers, setSelectedUsers] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const API_URL = "http://localhost:5000";
   useEffect(() => {
     const fetchDefaultUsers = async () => {
+      setIsLoading(true);
       try {
         const res = await chatsService.getRecentUsers();
         setDefaultUsers(res);
         console.log(res)
       } catch (err) {
         console.error("Error to fetch user list", err)
+      } finally {
+        setIsLoading(false);
       }
     }
     fetchDefaultUsers();
@@ -109,29 +113,35 @@ function AddMembers({chatId, setIsAddingMembers, setIsOpen}) {
         </div>
       </div>
       <div className={styles.searchusers}>
-        {users.map(user => (
-          <div
-            key={user.id}
-            className={styles.userblock}
-            onClick={() => handleUserClick(user)}
-          >
-            {user.avatar_url === null ? (
-              <Avvvatars value={user.name}/>
-            ) : (
-              <img
-                alt={user.username}
-                src={`${API_URL}${user.avatar_url}`}/>
+        {isLoading ? (
+          <div className={styles.loader}></div>
+        ) : (
+          <>
+            {users.map(user => (
+              <div
+                key={user.id}
+                className={styles.userblock}
+                onClick={() => handleUserClick(user)}
+              >
+                {user.avatar_url === null ? (
+                  <Avvvatars value={user.name}/>
+                ) : (
+                  <img
+                    alt={user.username}
+                    src={`${API_URL}${user.avatar_url}`}/>
+                )}
+                <div className={styles.userdata}>
+                  <span>{user.username}</span>
+                  <UserStatus
+                    isOnline={user.is_online}
+                    lastSeen={user.last_seen}/>
+                </div>
+              </div>
+            ))}
+            {users.length === 0 && query.length > 2 && (
+              <div className={styles.empty}>Нікого не знайдено</div>
             )}
-            <div className={styles.userdata}>
-              <span>{user.username}</span>
-              <UserStatus
-                isOnline={user.is_online}
-                lastSeen={user.last_seen}/>
-            </div>
-          </div>
-        ))}
-        {users.length === 0 && query.length > 2 && (
-          <div className={styles.empty}>Нікого не знайдено</div>
+          </>
         )}
       </div>
       <div className={styles.addbtnblock}>

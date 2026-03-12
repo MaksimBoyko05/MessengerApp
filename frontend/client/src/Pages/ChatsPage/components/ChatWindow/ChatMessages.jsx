@@ -32,19 +32,23 @@ function ChatMessages({isGroup, msg}) {
   return (
     <>
       {msg.user_id !== user.id && (
-        <div className={styles.senderimg}>
-          <img
-            alt="memberimg"
-            src={`${API_URL}${msg.sender_avatar}`}/>
-        </div>
+        msg.type !== "system" && msg.type !== "ai" && (
+          <div className={styles.senderimg}>
+            <img
+              alt="memberimg"
+              src={`${API_URL}${msg.sender_avatar}`}/>
+          </div>
+        )
       )}
 
       <div className={getMessagesClass(msg)}>
         {msg.user_id !== user.id && (
-          isGroup && (
+          isGroup && msg.type !== "system" ? (
             <p
               className={styles.sendername}
               style={{color: getSenderColor(msg.sender_name)}}>{msg.sender_name}</p>
+          ) : (
+            <></>
           )
         )}
         {msg.is_ai && (

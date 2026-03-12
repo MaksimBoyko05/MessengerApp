@@ -103,6 +103,12 @@ $color-primary-hover: #2471e7;
       background: $color-content;
       width: 350px;
 
+      .innerDivider {
+        height: 1px;
+        background: #F1F1F3;
+        width: 100%;
+        padding: 0;
+      }
 
       .addusericon {
         margin-left: 55%;
@@ -116,21 +122,24 @@ $color-primary-hover: #2471e7;
     }
 
     .memberslist {
-      display: flex;
+      @include flex-center;
 
       &:hover {
         background: #FAFAFA;
         border-radius: 10px;
       }
 
+      img {
+        width: 32px;
+        height: 32px;
+        object-fit: contain;
+      }
+
       .userstatus {
-        padding-top: 2px;
-        padding-left: 5px;
       }
 
       .userAdmin {
         font-size: 0.85rem;
-        align-self: flex-end;
         margin-left: auto;
         font-weight: 600;
         background-color: #fef3c7;
@@ -141,7 +150,6 @@ $color-primary-hover: #2471e7;
 
       .userMember {
         font-size: 0.85rem;
-        align-self: flex-end;
         margin-left: auto;
         font-weight: 600;
         background-color: #ede9fe;
@@ -240,11 +248,12 @@ $color-primary-hover: #2471e7;
   .searchusers {
     display: flex;
     background: none;
+    position: relative;
     flex-direction: column;
     flex: 1;
     width: 350px;
+    min-height: 470px;
     max-height: 470px;
-    height: auto;
     overflow-y: auto;
     background: #FFFFFF;
     border-radius: 20px;
@@ -253,6 +262,22 @@ $color-primary-hover: #2471e7;
     0 4px 12px rgba(0, 0, 0, 0.08),
     inset 0 1px 0 rgba(255, 255, 255, 1);
 
+    .loader {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 50px;
+      height: 50px;
+
+      border-radius: 50%;
+
+      border: 5px solid #f3f3f3;
+
+      border-top: 5px solid #3498db;
+
+      animation: spin 1s linear infinite;
+    }
 
     @media (max-width: 768px) {
       max-height: 500px;
@@ -371,5 +396,14 @@ $color-primary-hover: #2471e7;
         color: $color-primary-hover;
       }
     }
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
   }
 }

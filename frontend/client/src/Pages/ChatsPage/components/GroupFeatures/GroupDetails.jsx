@@ -9,6 +9,7 @@ import {Pencil, LogOut} from 'lucide-react';
 import EditGroup from "@/Pages/ChatsPage/components/GroupFeatures/EditGroup.jsx";
 import {chatsService} from "@/api/chatsService.js";
 import UserStatus from "@/Pages/ChatsPage/components/ChatWindow/UserStatus.jsx";
+import Avvvatars from "avvvatars-react";
 
 function GroupDetails({setIsOpen}) {
   const [isAddingMembers, setIsAddingMembers] = useState(false)
@@ -109,11 +110,18 @@ function GroupDetails({setIsOpen}) {
                         key={member.id}
                         onContextMenu={(e) => handleRightClick(e, member.id)}
                       >
-                        <p className={styles.username}>{member.username}</p>
-                        <span className={styles.userstatus}><UserStatus
-                          isOnline={member?.is_online}
-                          lastSeen={member?.last_seen}/>
-                        </span>
+                        {member.avatar_url === null ? (
+                          <Avvvatars value={member.name}/>
+                        ) : (
+                          <img
+                            alt={member.username}
+                            src={`${API_URL}${member.avatar_url}`}/>
+                        )}
+                        <div><p className={styles.username}>{member.username}</p>
+                          <span className={styles.userstatus}><UserStatus
+                            isOnline={member?.is_online}
+                            lastSeen={member?.last_seen}/>
+                        </span></div>
                         <p className={member.role === "admin" ? styles.userAdmin : styles.userMember}>{member.role}</p>
                       </div>
                     ))}

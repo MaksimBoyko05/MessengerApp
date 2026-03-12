@@ -27,6 +27,29 @@ body, button {
   justify-content: center;
 }
 
+@mixin button-style {
+  @include flex-center;
+  padding: 9px 14px;
+  border: none;
+  border-radius: 10px;
+  height: 38px;
+  width: 100px;
+  background: $create-button-color;
+  color: white;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  cursor: pointer;
+
+  &:hover {
+    transform: translateY(-2px);
+    background: $color-primary-hover;
+  }
+  &:disabled {
+    background: #69A4F8FF;
+    cursor: not-allowed;
+  }
+}
+
 .button {
   position: absolute;
   padding: 10px;
@@ -83,7 +106,11 @@ body, button {
       0 4px 12px rgba(0, 0, 0, 0.08),
       inset 0 1px 0 rgba(255, 255, 255, 1);
       margin-top: auto;
-      
+
+      button {
+        @include button-style;
+        flex: 1;
+      }
     }
 
     .modalheader {

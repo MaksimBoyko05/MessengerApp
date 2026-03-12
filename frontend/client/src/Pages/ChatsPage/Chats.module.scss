@@ -733,24 +733,41 @@ body {
   background: #FAFAFA;
   gap: 10px;
 
+
   img {
     @include avatar(50px);
     margin-left: 20px;
+
+    &:hover {
+      cursor: pointer;
+    }
   }
 
   .groupimage {
     padding: 10px;
     margin-left: 20px;
+
+    &:hover {
+      cursor: pointer;
+    }
   }
 
   .groupmembers {
     font-size: 0.85rem;
     color: #6b7280;
+
+    &:hover {
+      cursor: pointer;
+    }
   }
 
   .userstatus {
     font-size: 0.85rem;
     color: $color-status-online;
+
+    &:hover {
+      cursor: pointer;
+    }
   }
 
   .lastseen {
