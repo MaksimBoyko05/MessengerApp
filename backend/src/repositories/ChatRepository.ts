@@ -365,6 +365,27 @@ export class ChatRepository {
             throw new Error("Target user is not a member of this chat");
         }
     }
+    async promoteToMember(chatId: number, currentUserId: number, targetUserId: number): Promise<void> {
+        const roleRes = await pool.query(
+            "SELECT role FROM chat_members WHERE chat_id = $1 AND user_id = $2",
+            [chatId, currentUserId]
+        );
+
+        if (roleRes.rowCount === 0) {
+            throw new Error("You are not a member of this chat");
+        }
+        if (roleRes.rows[0].role !== 'admin') {
+            throw new Error("Access denied: only admins can promote members");
+        }
+        const updateRes = await pool.query(
+            "UPDATE chat_members SET role = 'member' WHERE chat_id = $1 AND user_id = $2 RETURNING id",
+            [chatId, targetUserId]
+        );
+
+        if (updateRes.rowCount === 0) {
+            throw new Error("Target user is not a member of this chat");
+        }
+    }
     async removeMemberFromGroup(chatId: number, currentUserId: number, targetUserId: number): Promise<void> {
         const roleRes = await pool.query(
             "SELECT role FROM chat_members WHERE chat_id = $1 AND user_id = $2",

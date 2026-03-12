@@ -1,5 +1,5 @@
 import styles from "@/Pages/ChatsPage/Chats.module.scss";
-import {Trash, UserStar} from 'lucide-react';
+import {Trash, UserStar, StarOff} from 'lucide-react';
 import {chatsService} from "@/api/chatsService.js";
 import {useContext} from "react";
 import {ChatContext} from "@/context/ChatContext.jsx";
@@ -17,7 +17,12 @@ function ContextWindow({x, y, handleDelete, type, chatId, targetId}) {
   const {user} = useContext(UserContext) || {};
 
   const currentUser = chatDetails?.members?.find(member => Number(member.id) === Number(user?.id));
-  console.log("Current User:", currentUser, "All members:", chatDetails?.members, "My ID:", user?.id);
+  const isUserAdmin = (targetId) => {
+    const targetUser = chatDetails?.members?.find(
+      (member) => Number(member.id) === Number(targetId)
+    );
+    return targetUser?.role === "admin";
+  };
 
   const handlePromote = async () => {
     console.log(chatId, targetId)
@@ -35,6 +40,23 @@ function ContextWindow({x, y, handleDelete, type, chatId, targetId}) {
       console.error("Error with promote to admin", err)
     }
   }
+  const handleUnPromote = async () => {
+    console.log(chatId, targetId)
+    try {
+      setChatDetails({
+        ...chatDetails,
+        members: chatDetails.members.map(member => {
+          return member.id === targetId
+            ? {...member, role: "member"}
+            : member
+        })
+      })
+      await chatsService.promoteMember(chatId, targetId)
+    } catch (err) {
+      console.error("Error with promote to admin", err)
+    }
+  }
+
 
   const handleOpenPrivateChat = async () => {
     try {
@@ -53,6 +75,7 @@ function ContextWindow({x, y, handleDelete, type, chatId, targetId}) {
       console.error("Error when deleting user", err)
     }
   }
+  const isTargetUserAdmin = isUserAdmin(targetId);
   return (
     <div
       style={{top: top + 'px', left: left + 'px', position: "fixed"}}>
@@ -74,11 +97,17 @@ function ContextWindow({x, y, handleDelete, type, chatId, targetId}) {
             <p onClick={handleOpenPrivateChat}>Direct Message</p>
             {currentUser?.role === "admin" && (
               <>
+                {isTargetUserAdmin ? (
+                  <p onClick={handleUnPromote}>Remove admin rules <StarOff size={16}/></p>
+                ) : (
+                  <p
+                    className={styles.makeadmin}
+                    onClick={handlePromote}>Promote as Admin <UserStar size={16}/>
+                  </p>
+                )}
                 <p
-                  className={styles.makeadmin}
-                  onClick={handlePromote}>Promote as Admin <UserStar size={16}/>
-                </p>
-                <p onClick={handleDeleteMember}>Delete user</p>
+                  style={{color: "#f61e1e"}}
+                  onClick={handleDeleteMember}>Delete user</p>
               </>
             )}
           </div>

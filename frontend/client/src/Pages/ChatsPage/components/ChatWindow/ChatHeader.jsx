@@ -4,7 +4,7 @@ import Avvvatars from "avvvatars-react";
 import {useState} from "react";
 import GroupDetails from "@/Pages/ChatsPage/components/GroupFeatures/GroupDetails.jsx";
 
-function ChatHeader({chatDetails, companion, openDetails}) {
+function ChatHeader({chatDetails, companion}) {
   const API_URL = "http://localhost:5000";
   const [isOpen, setIsOpen] = useState(false)
   return (

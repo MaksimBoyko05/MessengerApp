@@ -63,6 +63,12 @@ export const chatsService = {
     });
     return response.data;
   },
+  promoteMember: async (chatId, targetUserId) => {
+    const response = await api.patch(`/chats/${chatId}/members/unpromote`, {
+      targetUserId
+    });
+    return response.data;
+  },
   deleteMember: async (chatId, targetUserId) => {
     const response = await api.delete(`/chats/${chatId}/members`, {
       data: {

@@ -85,15 +85,95 @@ function ChatWindow({chatId}) {
         }
         return prevCompanion;
       })
+      setChatDetails(prevDetails => {
+        if (!prevDetails.members) return prevDetails
+        return {
+          ...prevDetails,
+          members: prevDetails.members.map(member => {
+            if (member.id === statusData.userId) {
+              return {
+                ...member,
+                is_online: statusData.online,
+                last_seen: statusData.lastSeen
+              };
+            }
+            return member;
+          })
+        }
+      })
     }
+
+    const handleGroupUpdate = async (payload) => {
+      console.log("Catched group update", payload);
+
+      setChatDetails(prevDetails => {
+        if (!prevDetails || prevDetails.id !== payload.chatId) {
+          return prevDetails
+        }
+        switch (payload.action) {
+          case "update_name" :
+            return {
+              ...prevDetails, name: payload.newName
+            }
+          case "update_avatar":
+            return {
+              ...prevDetails, avatar_url: payload.newAvatarUrl
+            }
+          case "remove_member" :
+            return {
+              ...prevDetails,
+              members: prevDetails.members.filter((member => member.id !== payload.userId))
+            }
+          case "promote_admin":
+            return {
+              ...prevDetails,
+              members: prevDetails.members.map(member => {
+                if (member.id === payload.userId) {
+                  return {
+                    ...member,
+                    role: "admin"
+                  };
+                }
+                return member;
+              })
+            }
+          case "promote_member":
+            return {
+              ...prevDetails,
+              members: prevDetails.members.map(member => {
+                if (member.id === payload.userId) {
+                  return {
+                    ...member,
+                    role: "member"
+                  };
+                }
+                return member;
+              })
+            }
+          default:
+            return prevDetails;
+        }
+      });
+      if (payload.action === "add_members") {
+        try {
+          const data = await chatsService.getMessages(chatId);
+          setChatDetails(data.chatDetails)
+        } catch (err) {
+          console.log("Error with updating details after add_members", err)
+        }
+      }
+    }
+
 
     socket.on("message_read", handleMessageRead)
     socket.on("receive_message", handleReceiveMessage);
     socket.on("user_status_change", handleStatusChange);
+    socket.on("group_updated", handleGroupUpdate);
     return () => {
       socket.off("receive_message", handleReceiveMessage);
       socket.off("message_read", handleMessageRead);
       socket.off("user_status_change", handleStatusChange);
+      socket.off("group_updated", handleGroupUpdate);
     };
   }, [socket, chatId, user]);
   useEffect(() => {

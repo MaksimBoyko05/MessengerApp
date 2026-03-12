@@ -8,6 +8,7 @@ import {
     addMembersToGroup,
     updateGroupAvatar,
     promoteToAdmin,
+    promoteToMember,
     updateGroupName,
     removeMember,
     leaveGroup
@@ -28,6 +29,7 @@ router.post('/:chatId/members', protect, addMembersToGroup);
 
 //PATCH /api/chats
 router.patch('/:chatId/members/promote', protect, promoteToAdmin);
+router.patch('/:chatId/members/unpromote', protect, promoteToMember);
 
 //PUT /api/chats
 router.put('/:chatId/avatar', protect, upload.single('avatar'), updateGroupAvatar);

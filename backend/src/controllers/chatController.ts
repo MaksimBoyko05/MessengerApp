@@ -112,6 +112,12 @@ export const addMembersToGroup = async (req: Request, res: Response) => {
             const systemMessage = await messageRepo.createSystemMessage(chatId, currentUserId, text);
             const io = getIO();
             io.to(`chat_${chatId}`).emit("receive_message", systemMessage);
+
+            io.to(`chat_${chatId}`).emit("group_updated", {
+                action: "add_members",
+                chatId: chatId,
+                addedIds: addedIds
+            });
         }
 
         res.json({message: "Учасників успішно додано до групи"});
@@ -155,6 +161,12 @@ export const removeMember = async (req: Request, res: Response) => {
         const io = getIO();
         io.to(`chat_${chatId}`).emit("receive_message", systemMessage);
 
+        io.to(`chat_${chatId}`).emit("group_updated", {
+            action: "remove_member",
+            chatId: chatId,
+            userId: targetUserId
+        });
+
         res.json({message: "Учасника успішно видалено"});
 
     } catch (error: any) {
@@ -190,6 +202,14 @@ export const leaveGroup = async (req: Request, res: Response) => {
         const io = getIO();
         io.to(`chat_${chatId}`).emit("receive_message", systemMessage);
 
+        io.to(`chat_${chatId}`).emit("group_updated", {
+            action: "remove_member",
+            chatId: chatId,
+            userId: currentUserId
+        });
+
+        res.json({message: "Ви успішно покинули групу"});
+
         res.json({message: "Ви успішно покинули групу"});
 
     } catch (error: any) {
@@ -220,6 +240,13 @@ export const updateGroupAvatar = async (req: Request, res: Response) => {
         const avatarUrl = `/avatars/${req.file.filename}`;
 
         await chatRepo.updateGroupAvatar(chatId, currentUserId, avatarUrl);
+
+        const io = getIO();
+        io.to(`chat_${chatId}`).emit("group_updated", {
+            action: "update_avatar",
+            chatId: chatId,
+            newAvatarUrl: avatarUrl
+        });
 
         res.json({
             message: "Аватарку групи успішно оновлено",
@@ -257,6 +284,12 @@ export const updateGroupName = async (req: Request, res: Response) => {
         const io = getIO();
         io.to(`chat_${chatId}`).emit("receive_message", systemMessage);
 
+        io.to(`chat_${chatId}`).emit("group_updated", {
+            action: "update_name",
+            chatId: chatId,
+            newName: newName
+        });
+
         res.json({message: "Назву групи успішно оновлено", newName});
 
     } catch (error: any) {
@@ -282,6 +315,14 @@ export const promoteToAdmin = async (req: Request, res: Response) => {
         }
 
         await chatRepo.promoteToAdmin(chatId, currentUserId, targetUserId);
+        const io = getIO();
+
+        io.to(`chat_${chatId}`).emit("group_updated", {
+            action: "promote_admin",
+            chatId: chatId,
+            userId: targetUserId
+        });
+
 
         res.json({message: "Користувача успішно призначено адміністратором"});
 
@@ -298,7 +339,45 @@ export const promoteToAdmin = async (req: Request, res: Response) => {
         res.status(500).json({message: 'Не вдалося призначити адміністратора'});
     }
 };
+export const promoteToMember = async (req: Request, res: Response) => {
+    try {
+        const chatId = parseInt(req.params.chatId);
+        const currentUserId = req.user?.id;
+        const {targetUserId} = req.body;
 
+        if (!currentUserId) {
+            return res.status(401).json({message: "Неавторизований користувач"});
+        }
+
+        if (!chatId || isNaN(chatId) || !targetUserId) {
+            return res.status(400).json({message: "Некоректні дані"});
+        }
+
+        await chatRepo.promoteToAdmin(chatId, currentUserId, targetUserId);
+        const io = getIO();
+
+        io.to(`chat_${chatId}`).emit("group_updated", {
+            action: "promote_member",
+            chatId: chatId,
+            userId: targetUserId
+        });
+
+
+        res.json({message: "З користувача знято адмін прва"});
+
+    } catch (error: any) {
+        console.error('Помилка в promoteToMember:', error);
+
+        if (error.message === "Access denied: only admins can promote members") {
+            return res.status(403).json({message: "Тільки адміністратори можуть призначати інших адмінів"});
+        }
+        if (error.message === "Target user is not a member of this chat") {
+            return res.status(404).json({message: "Цей користувач не є учасником групи"});
+        }
+
+        res.status(500).json({message: 'Не вдалося призначити адміністратора'});
+    }
+};
 
 export const deleteChat = async (req: Request, res: Response) => {
     try {
