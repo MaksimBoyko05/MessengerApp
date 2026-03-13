@@ -17,10 +17,21 @@ function ChatWindow({chatId}) {
   const [suggestions, setSuggestions] = useState([]);
   const [companion, setCompanion] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+
   const {socket} = useSocket();
   const {user} = useContext(UserContext);
 
   const messagesEndRef = useRef();
+  const messagesContainerRef = useRef();
+  const lastMessageIdRef = useRef(null);
+
+
+  useEffect(() => {
+    lastMessageIdRef.current = null;
+  }, [chatId]);
+
   useEffect(() => {
     if (!chatId || isNaN(chatId)) return;
 
@@ -31,6 +42,8 @@ function ChatWindow({chatId}) {
 
       try {
         const data = await chatsService.getMessages(chatId);
+        const fetchedMessages = data.messages || [];
+        setHasMore(fetchedMessages.length >= 30);
         setMessages(data.messages || []);
         setCompanion(data.chatDetails.companion || null);
         setChatDetails(data.chatDetails)
@@ -176,14 +189,65 @@ function ChatWindow({chatId}) {
       socket.off("group_updated", handleGroupUpdate);
     };
   }, [socket, chatId, user]);
+
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({behavior: "smooth", block: "end"})
-  }, [messages]);
+    if (loading) return;
+
+    const currentLastMessageId = messages?.at(-1)?.id;
+
+    if (currentLastMessageId && currentLastMessageId !== lastMessageIdRef.current) {
+      const scrollBehavior = lastMessageIdRef.current === null ? "auto" : "smooth";
+
+      setTimeout(() => {
+        messagesEndRef.current?.scrollIntoView({
+          behavior: scrollBehavior,
+          block: "end"
+        });
+      }, 50);
+    }
+
+    lastMessageIdRef.current = currentLastMessageId;
+  }, [messages, loading]);
+
+  const loadMoreMessages = async (cursor) => {
+    setIsLoadingMore(true);
+    const previousScrollHeight = messagesContainerRef.current.scrollHeight;
+    try {
+      const data = await chatsService.getMessages(chatId, cursor)
+      const newlyFetchedMessages = data.messages || [];
+      if (newlyFetchedMessages.length < 30) {
+        setHasMore(false)
+      }
+      setMessages(prev => [...newlyFetchedMessages, ...prev]);
+
+      setTimeout(() => {
+        if (messagesContainerRef.current) {
+          const newScrollHeight = messagesContainerRef.current.scrollHeight;
+          messagesContainerRef.current.scrollTop = newScrollHeight - previousScrollHeight;
+        }
+      }, 0);
+
+    } catch (err) {
+      console.error("Error fetching history", err)
+    } finally {
+      setIsLoadingMore(false);
+    }
+  }
+  const handleScroll = (e) => {
+    const scrollTop = e.currentTarget.scrollTop;
+    if (scrollTop < 50 && !isLoadingMore && hasMore) {
+      const cursor = messages[0]?.created_at;
+      if (cursor) {
+        loadMoreMessages(cursor)
+      }
+    }
+  }
 
   if (!chatId) {
     return <NoChatSelected/>;
   }
   if (loading) return <div className={styles.loading}>Завантаження...</div>;
+
 
   return (
     <div className={styles.chatwindow}>
@@ -192,7 +256,10 @@ function ChatWindow({chatId}) {
           chatDetails={chatDetails}
           companion={companion}/>
       </ChatContext.Provider>
-      <div className={styles.messagesArea}>
+      <div
+        onScroll={handleScroll}
+        ref={messagesContainerRef}
+        className={styles.messagesArea}>
         {messages.length > 0 ? (
           messages.map((msg, index) => (
             <div

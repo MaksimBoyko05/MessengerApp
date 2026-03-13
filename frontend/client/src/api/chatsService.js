@@ -9,8 +9,10 @@ export const chatsService = {
     const response = await api.get(`/chats/${chatId}`);
     return response.data;
   },
-  getMessages: async (chatId) => {
-    const response = await api.get(`/messages/${chatId}`);
+  getMessages: async (chatId, cursor) => {
+    const response = await api.get(`/messages/${chatId}`, {
+      params: cursor ? {cursor} : {}
+    });
     return response.data;
   },
   sendMessage: async (payload) => {

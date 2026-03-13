@@ -19,8 +19,8 @@ export class MessageRepository {
         return result.rows[0];
     }
 
-    async findByChat(chatId: number, userId: number): Promise<any[]> {
-        const query = `
+    async findByChat(chatId: number, userId: number, limit: number = 30, cursor?: string): Promise<any[]> {
+        let query = `
             SELECT m.*,
                    u.username                             as sender_name,
                    u.avatar_url                           as sender_avatar,
@@ -37,11 +37,20 @@ export class MessageRepository {
                 cm.cleared_history_at IS NULL
                     OR m.created_at > cm.cleared_history_at
                 )
-            ORDER BY m.created_at ASC;
         `;
+        
+        const params: any[] = [chatId, userId, limit];
 
-        const result = await pool.query(query, [chatId, userId]);
-        return result.rows;
+        if (cursor) {
+            query += ` AND m.created_at < $4`;
+            params.push(cursor);
+        }
+
+        query += ` ORDER BY m.created_at DESC LIMIT $3;`;
+
+        const result = await pool.query(query, params);
+
+        return result.rows.reverse();
     }
 
     async createAiMessage(chatId: number, userId: number, text: string): Promise<any> {

@@ -301,6 +301,13 @@ export class ChatRepository {
         );
         return result.rows.map(row => row.username);
     }
+    async getChatMemberIds(chatId: number): Promise<number[]> {
+        const result = await pool.query(
+            "SELECT user_id FROM chat_members WHERE chat_id = $1",
+            [chatId]
+        );
+        return result.rows.map(row => row.user_id);
+    }
     async updateGroupAvatar(chatId: number, currentUserId: number, avatarUrl: string): Promise<void> {
         const roleRes = await pool.query(
             "SELECT role FROM chat_members WHERE chat_id = $1 AND user_id = $2",
