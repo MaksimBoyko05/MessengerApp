@@ -104,20 +104,20 @@ function ContextWindow({x, y, handleDelete, type, chatId, targetId, containerHei
         )}
         {type === "group" && (
           <div className={styles.groupmenu}>
-            <p onClick={handleOpenPrivateChat}>Direct Message</p>
+            <p onClick={handleOpenPrivateChat}>Написати в ПП</p>
             {currentUser?.role === "admin" && (
               <>
                 {isTargetUserAdmin ? (
-                  <p onClick={handleUnPromote}>Remove admin rules <StarOff size={16}/></p>
+                  <p onClick={handleUnPromote}>Зняти адмін права <StarOff size={16}/></p>
                 ) : (
                   <p
                     className={styles.makeadmin}
-                    onClick={handlePromote}>Promote as Admin <UserStar size={16}/>
+                    onClick={handlePromote}>Зробити Адміном <UserStar size={16}/>
                   </p>
                 )}
                 <p
                   style={{color: "#f61e1e"}}
-                  onClick={handleDeleteMember}>Delete user</p>
+                  onClick={handleDeleteMember}>Видалити користувача</p>
               </>
             )}
           </div>

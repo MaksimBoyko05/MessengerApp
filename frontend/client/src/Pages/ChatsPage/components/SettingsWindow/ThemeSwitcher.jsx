@@ -1,11 +1,17 @@
 import React, {useState} from 'react';
 import styles from './Settings.module.scss';
+import {userService} from "@/api/userService.js";
 
 const ThemeSwitcher = () => {
   const [activeTheme, setActiveTheme] = useState('light');
 
-  const handleThemeClick = (theme) => {
+  const handleThemeClick = async (theme) => {
     setActiveTheme(theme);
+    try {
+      await userService.updateTheme(theme)
+    } catch (err) {
+      console.error("Error with changing theme", err)
+    }
   };
 
   return (

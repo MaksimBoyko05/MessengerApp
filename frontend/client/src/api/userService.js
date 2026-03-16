@@ -30,8 +30,14 @@ export const userService = {
     return response.data;
   },
   setIsPrivate: async (isPrivate) => {
-    const response = await api.patch(`/api/users/`, {
+    const response = await api.patch(`/users/privacy`, {
       isPrivate
+    });
+    return response.data;
+  },
+  updateTheme: async (theme) => {
+    const response = await api.put(`/users/theme`, {
+      theme
     });
     return response.data;
   },

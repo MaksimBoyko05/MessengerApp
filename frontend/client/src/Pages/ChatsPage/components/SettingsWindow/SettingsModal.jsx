@@ -1,7 +1,7 @@
 import ThemeSwitcher from "@/Pages/ChatsPage/components/SettingsWindow/ThemeSwitcher.jsx";
 import styles from "./Settings.module.scss"
 import {X} from "lucide-react";
-import LanguageSwitcher from "@/Pages/ChatsPage/components/SettingsWindow/LanguageSwitcher.jsx";
+import PrivacySwitcher from "@/Pages/ChatsPage/components/SettingsWindow/PrivacySwitcher.jsx";
 import {useEffect, useState} from "react";
 import {userService} from "@/api/userService.js";
 import ProfileSettings from "@/Pages/ChatsPage/components/SettingsWindow/ProfileSettings.jsx";
@@ -32,7 +32,7 @@ function SettingsModal({onClose}) {
           <h2>Settings</h2>
           <ProfileSettings user={userData}/>
           <SecuritySettings user={userData}/>
-          <LanguageSwitcher/>
+          <PrivacySwitcher/>
           <ThemeSwitcher/>
         </div>
       </div>

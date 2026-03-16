@@ -168,6 +168,31 @@ export const toggleSearchPrivacy = async (req: Request, res: Response) => {
         res.status(500).json({message: "Помилка сервера"});
     }
 };
+// ==== Update User Theme ====
+export const updateTheme = async (req: Request, res: Response) => {
+    try {
+        const userId = req.user?.id;
+        const {theme} = req.body;
+
+        if (!userId) {
+            return res.status(401).json({message: "Неавторизований користувач"});
+        }
+
+        if (typeof theme !== 'string' || theme.trim() === '') {
+            return res.status(400).json({message: "Очікується рядкове значення theme (наприклад, 'light' або 'dark')"});
+        }
+
+        await UserRepository.updateThemeSetting(userId, theme);
+
+        res.json({
+            message: "Тему успішно оновлено",
+            theme
+        });
+    } catch (error) {
+        console.error("Помилка оновлення теми:", error);
+        res.status(500).json({message: "Помилка сервера"});
+    }
+};
 //==== Email Change Request (token) ====
 export const requestEmailChange = async (req: Request, res: Response) => {
     try {

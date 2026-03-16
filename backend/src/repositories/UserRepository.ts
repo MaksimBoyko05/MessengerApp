@@ -19,11 +19,14 @@ export class UserRepository {
         return result.rows[0];
     }
 
-    static async findById(id: number): Promise<User | null> {
-        const query = `SELECT *
-                       FROM users
-                       WHERE id = $1`;
-        const result = await pool.query<User>(query, [id]);
+    static async findById(id: number): Promise<any | null> {
+        const query = `
+            SELECT u.*, s.theme, s.is_private
+            FROM users u
+                     LEFT JOIN user_settings s ON u.id = s.user_id
+            WHERE u.id = $1
+        `;
+        const result = await pool.query(query, [id]);
         return result.rows[0] || null;
     }
 
@@ -152,6 +155,16 @@ export class UserRepository {
             UPDATE SET is_private = EXCLUDED.is_private;
         `;
         await pool.query(sql, [userId, isPrivate]);
+    }
+
+    static async updateThemeSetting(userId: number, theme: string): Promise<void> {
+        const sql = `
+            INSERT INTO user_settings (user_id, theme)
+            VALUES ($1, $2) ON CONFLICT (user_id) 
+            DO
+            UPDATE SET theme = EXCLUDED.theme;
+        `;
+        await pool.query(sql, [userId, theme]);
     }
 
     static async updateEmailAndClearTokens(userId: number, newEmail: string, tokenType: string) {

@@ -11,7 +11,8 @@ import {
     changePassword,
     requestEmailChange,
     verifyEmailChange,
-    toggleSearchPrivacy
+    toggleSearchPrivacy,
+    updateTheme
 } from "../controllers/userController.js";
 
 const router = express.Router();
@@ -30,6 +31,7 @@ router.post("/verify-email", verifyEmailChange);
 router.patch('/privacy', protect, toggleSearchPrivacy);
 
 // PUT /api/users
+router.put("/theme", protect, updateTheme);
 router.put("/:id/password", protect, changePassword);
 router.put("/:id", protect, upload.single("avatar"), updateUser);
 
