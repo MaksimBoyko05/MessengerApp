@@ -38,7 +38,7 @@ export class MessageRepository {
                     OR m.created_at > cm.cleared_history_at
                 )
         `;
-        
+
         const params: any[] = [chatId, userId, limit];
 
         if (cursor) {
@@ -62,12 +62,16 @@ export class MessageRepository {
     }
 
 
-    async delete(messageId: number): Promise<number> {
-        const result = await pool.query(
-            "DELETE FROM messages WHERE id=$1 RETURNING id",
-            [messageId]
-        );
-        return result.rowCount || 0;
+    async delete(messageId: number, userId: number): Promise<any> {
+        const query = `
+            UPDATE messages
+            SET is_deleted = true
+            WHERE id = $1
+              AND user_id = $2 RETURNING *;
+        `;
+
+        const result = await pool.query(query, [messageId, userId]);
+        return result.rows[0];
     }
 
     async findAll(): Promise<Message[]> {

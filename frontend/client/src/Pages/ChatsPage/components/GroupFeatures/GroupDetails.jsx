@@ -1,7 +1,7 @@
 import styles from "./GroupDetails.module.scss"
 import {UserRoundPlus, X} from 'lucide-react';
 import {ChevronLeft} from 'lucide-react';
-import {useEffect, useState, useContext} from "react";
+import {useEffect, useState, useContext, useRef} from "react";
 import AddMembers from "@/Pages/ChatsPage/components/GroupFeatures/AddMembers.jsx";
 import ContextWindow from "@/Pages/ChatsPage/components/Sidebar/ContextWindow.jsx";
 import {ChatContext} from "@/context/ChatContext.jsx";
@@ -26,6 +26,8 @@ function GroupDetails({setIsOpen}) {
   const {chatDetails, setChatDetails} = useContext(ChatContext)
   const members = chatDetails.members;
   const API_URL = "http://localhost:5000";
+
+  const chatWindowRef = useRef(null);
 
   useEffect(() => {
     const handleClickOutside = () => {
@@ -53,11 +55,19 @@ function GroupDetails({setIsOpen}) {
   }
   const handleRightClick = (e, id) => {
     e.preventDefault()
+    if (!chatWindowRef.current) return;
+    const rect = chatWindowRef.current.getBoundingClientRect();
+
+    const relativeX = e.clientX - rect.left;
+    const relativeY = e.clientY - rect.top;
+
     setContextMenu({
       ...contextMenu,
       id: id,
-      x: e.clientX,
-      y: e.clientY,
+      x: relativeX,
+      y: relativeY,
+      containerWidth: rect.width,
+      containerHeight: rect.height,
       visible: true,
       type: "group",
       chatId: chatDetails.id,
@@ -75,7 +85,9 @@ function GroupDetails({setIsOpen}) {
   return (
     <>
       <div className={styles.groupdetailswrapper}>
-        <div className={styles.detailscontainer}>
+        <div
+          className={styles.detailscontainer}
+          ref={chatWindowRef}>
           {isEditing ? (
             <EditGroup
               setIsEditing={setIsEditing}
@@ -125,18 +137,6 @@ function GroupDetails({setIsOpen}) {
                         <p className={member.role === "admin" ? styles.userAdmin : styles.userMember}>{member.role}</p>
                       </div>
                     ))}
-                    {contextMenu.visible && (
-                      <>
-                        <ContextWindow
-                          id={contextMenu.id}
-                          x={contextMenu.x}
-                          y={contextMenu.y}
-                          type={contextMenu.type}
-                          chatId={contextMenu.chatId}
-                          targetId={contextMenu.targetId}
-                        />
-                      </>
-                    )}
                   </div>
                 </>
               )}
@@ -146,6 +146,20 @@ function GroupDetails({setIsOpen}) {
             className={styles.closebtn}
             size={24}
             onClick={onClose}/>
+          {contextMenu.visible && (
+            <>
+              <ContextWindow
+                id={contextMenu.id}
+                x={contextMenu.x}
+                y={contextMenu.y}
+                containerWidth={contextMenu.containerWidth}
+                containerHeight={contextMenu.containerHeight}
+                type={contextMenu.type}
+                chatId={contextMenu.chatId}
+                targetId={contextMenu.targetId}
+              />
+            </>
+          )}
         </div>
       </div>
     </>

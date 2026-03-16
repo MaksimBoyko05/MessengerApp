@@ -10,6 +10,7 @@ import AIGenerateSuggestions from "@/Pages/ChatsPage/components/ChatWindow/AICom
 import UserContext from "@/context/UserContext.jsx";
 import {ChatContext} from "@/context/ChatContext.jsx";
 import {ChatProvider} from "@/context/ChatContext.jsx";
+import ContextWindow from "@/Pages/ChatsPage/components/Sidebar/ContextWindow.jsx";
 
 function ChatWindow({chatId}) {
   const [messages, setMessages] = useState([]);
@@ -19,6 +20,16 @@ function ChatWindow({chatId}) {
   const [loading, setLoading] = useState(false);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [hasMore, setHasMore] = useState(true);
+  const [contextMenu, setContextMenu] = useState({
+    id: null,
+    x: null,
+    y: null,
+    visible: false,
+    type: "",
+    chatId: null,
+    targetId: null,
+  })
+
 
   const {socket} = useSocket();
   const {user} = useContext(UserContext);
@@ -26,7 +37,7 @@ function ChatWindow({chatId}) {
   const messagesEndRef = useRef();
   const messagesContainerRef = useRef();
   const lastMessageIdRef = useRef(null);
-
+  const chatWindowRef = useRef(null);
 
   useEffect(() => {
     lastMessageIdRef.current = null;
@@ -75,6 +86,11 @@ function ChatWindow({chatId}) {
         }
       }
     };
+    const handleMessageDeleted = ({messageId, chatId: deletedChatId}) => {
+      if (Number(deletedChatId) === Number(chatId)) {
+        setMessages((prev) => prev.map((msg) => msg.id === messageId ? {...msg, is_deleted: true} : msg))
+      }
+    }
     const handleMessageRead = ({chat_id, user_id}) => {
       if (Number(chat_id) === Number(chatId)) {
         setMessages(prev =>
@@ -182,11 +198,13 @@ function ChatWindow({chatId}) {
     socket.on("receive_message", handleReceiveMessage);
     socket.on("user_status_change", handleStatusChange);
     socket.on("group_updated", handleGroupUpdate);
+    socket.on("message_deleted", handleMessageDeleted);
     return () => {
       socket.off("receive_message", handleReceiveMessage);
       socket.off("message_read", handleMessageRead);
       socket.off("user_status_change", handleStatusChange);
       socket.off("group_updated", handleGroupUpdate);
+      socket.off("message_deleted", handleMessageDeleted);
     };
   }, [socket, chatId, user]);
 
@@ -243,6 +261,51 @@ function ChatWindow({chatId}) {
     }
   }
 
+  const handleRightClick = (e, id) => {
+    e.preventDefault()
+
+    if (!chatWindowRef.current) return;
+    const rect = chatWindowRef.current.getBoundingClientRect();
+
+    const relativeX = e.clientX - rect.left;
+    const relativeY = e.clientY - rect.top;
+    setContextMenu({
+      ...contextMenu,
+      id: id,
+      x: relativeX,
+      y: relativeY,
+      containerWidth: rect.width,
+      containerHeight: rect.height,
+      visible: true,
+      type: "message",
+      chatId: chatDetails.id,
+      targetId: id,
+
+    })
+  };
+
+  useEffect(() => {
+    const handleClickOutside = () => {
+      setContextMenu({
+        id: null,
+        x: null,
+        y: null,
+        visible: false,
+        type: "",
+        chatId: null,
+        targetId: null,
+      });
+    };
+    window.addEventListener('click', handleClickOutside);
+
+    return () => {
+      window.removeEventListener('click', handleClickOutside);
+    };
+  }, []);
+
+  const closeContextMenu = () => {
+    setContextMenu(prev => ({...prev, visible: false}));
+  };
   if (!chatId) {
     return <NoChatSelected/>;
   }
@@ -250,7 +313,9 @@ function ChatWindow({chatId}) {
 
 
   return (
-    <div className={styles.chatwindow}>
+    <div
+      className={styles.chatwindow}
+      ref={chatWindowRef}>
       <ChatContext.Provider value={{chatDetails, setChatDetails}}>
         <ChatHeader
           chatDetails={chatDetails}
@@ -266,6 +331,7 @@ function ChatWindow({chatId}) {
               key={index}
               className={styles.messageRow}>
               <ChatMessages
+                onContextMenu={(e) => handleRightClick(e, msg.id)}
                 key={msg.id}
                 isGroup={chatDetails.is_group}
                 msg={msg}/>
@@ -290,6 +356,21 @@ function ChatWindow({chatId}) {
         suggestions={suggestions}
         onSetSuggestions={setSuggestions}
       />
+      {contextMenu.visible && (
+        <>
+          <ContextWindow
+            id={contextMenu.id}
+            x={contextMenu.x}
+            y={contextMenu.y}
+            containerWidth={contextMenu.containerWidth}
+            containerHeight={contextMenu.containerHeight}
+            type={contextMenu.type}
+            chatId={contextMenu.chatId}
+            targetId={contextMenu.targetId}
+            closeMenu={closeContextMenu}
+          />
+        </>
+      )}
     </div>
   );
 }

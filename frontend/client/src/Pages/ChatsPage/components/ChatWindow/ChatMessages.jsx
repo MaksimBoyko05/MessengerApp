@@ -3,21 +3,22 @@ import {useContext} from "react";
 import {CheckCheck, Check} from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import styles from "@/Pages/ChatsPage/Chats.module.scss";
+import {ChatContext} from "@/context/ChatContext.jsx";
 
+const formatter = new Intl.DateTimeFormat('uk-UA', {
+  hour: 'numeric',
+  minute: 'numeric'
+});
+const API_URL = "http://localhost:5000";
+const SENDER_COLORS = ['#7c3aed', '#db2777', '#059669', '#d97706'];
 
-function ChatMessages({isGroup, msg}) {
+function getSenderColor(name) {
+  const hash = [...name].reduce((acc, char) => acc + char.charCodeAt(0), 0);
+  return SENDER_COLORS[hash % SENDER_COLORS.length];
+}
+
+function ChatMessages({isGroup, msg, onContextMenu}) {
   const {user} = useContext(UserContext);
-  const formatter = new Intl.DateTimeFormat('uk-UA', {
-    hour: 'numeric',
-    minute: 'numeric'
-  });
-  const API_URL = "http://localhost:5000";
-  const SENDER_COLORS = ['#7c3aed', '#db2777', '#059669', '#d97706'];
-
-  function getSenderColor(name) {
-    const hash = [...name].reduce((acc, char) => acc + char.charCodeAt(0), 0);
-    return SENDER_COLORS[hash % SENDER_COLORS.length];
-  }
 
   const getMessagesClass = (msg) => {
     if (msg.type === "system") {
@@ -28,11 +29,16 @@ function ChatMessages({isGroup, msg}) {
     }
     return msg.user_id === user.id ? styles.mymsg : styles.msgbubble
   }
-
+  if (msg.is_deleted) {
+    return null;
+  }
+  const isMine = msg.user_id === user.id;
+  const isSystem = msg.type === "system";
+  const isAi = msg.type === "ai";
   return (
     <>
-      {msg.user_id !== user.id && (
-        msg.type !== "system" && msg.type !== "ai" && (
+      {!isMine && (
+        !isSystem && !isAi && (
           <div className={styles.senderimg}>
             <img
               alt="memberimg"
@@ -41,9 +47,11 @@ function ChatMessages({isGroup, msg}) {
         )
       )}
 
-      <div className={getMessagesClass(msg)}>
+      <div
+        className={getMessagesClass(msg)}
+        onContextMenu={onContextMenu}>
         {msg.user_id !== user.id && (
-          isGroup && msg.type !== "system" ? (
+          isGroup && !isSystem ? (
             <p
               className={styles.sendername}
               style={{color: getSenderColor(msg.sender_name)}}>{msg.sender_name}</p>
@@ -51,7 +59,7 @@ function ChatMessages({isGroup, msg}) {
             <></>
           )
         )}
-        {msg.is_ai && (
+        {isAi && (
           <p
             className={styles.sendername}
             style={{color: getSenderColor(msg.sender_name)}}>{msg.sender_name}</p>
@@ -59,10 +67,10 @@ function ChatMessages({isGroup, msg}) {
         <div className={styles.markdownContent}>
           <ReactMarkdown children={msg.text}/>
         </div>
-        {msg.type !== "system" && (
+        {!isSystem && (
           <div className={styles.readtime}> {formatter.format(new Date(msg.created_at))}</div>)}
-        {msg.type !== "system" && (
-          msg.user_id === user.id && (
+        {!isSystem && (
+          isMine && (
 
             msg.is_read ? (
               <CheckCheck size={16}/>

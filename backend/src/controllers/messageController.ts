@@ -112,15 +112,41 @@ export const getMessagesByChat = async (req: Request, res: Response) => {
 export const deleteMessage = async (req: Request, res: Response) => {
     try {
         const messageId = parseInt(req.params.id);
-        const deletedCount = await messageRepo.delete(messageId);
+        const userId = req.user?.id;
 
-        if (deletedCount === 0) {
-            return res.status(404).json({error: "Message not found"});
+        if (!userId) {
+            return res.status(401).json({error: "Неавторизований"});
         }
 
-        res.json({message: "Message deleted"});
+        const deletedMessage = await messageRepo.delete(messageId, userId);
+
+        if (!deletedMessage) {
+            return res.status(404).json({error: "Повідомлення не знайдено або у вас немає прав"});
+        }
+
+        const chatId = deletedMessage.chat_id;
+        const io = getIO();
+
+        io.to(`chat_${chatId}`).emit("message_deleted", {
+            messageId,
+            chatId,
+            is_deleted: true
+        });
+        try {
+            const memberIds = await chatRepo.getChatMemberIds(chatId);
+            const cacheKeysToDelete = memberIds.map(
+                (id) => `chat:${chatId}:user:${id}:messages`
+            );
+            if (cacheKeysToDelete.length > 0) {
+                await redisClient.del(...cacheKeysToDelete);
+            }
+        } catch (redisErr) {
+            console.error("Помилка Redis при видаленні:", redisErr);
+        }
+
+        res.json({message: "Повідомлення видалено", messageId});
     } catch (err) {
-        console.error(err);
-        res.status(500).json({error: "Database error"});
+        console.error("Error in deleteMessage:", err);
+        res.status(500).json({error: "Помилка бази даних"});
     }
 };

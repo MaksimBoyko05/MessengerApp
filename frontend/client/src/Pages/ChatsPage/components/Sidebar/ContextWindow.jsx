@@ -5,12 +5,12 @@ import {useContext} from "react";
 import {ChatContext} from "@/context/ChatContext.jsx";
 import UserContext from "@/context/UserContext.jsx";
 
-function ContextWindow({x, y, handleDelete, type, chatId, targetId}) {
+function ContextWindow({x, y, handleDelete, type, chatId, targetId, containerHeight, containerWidth, closeMenu}) {
   const menuHeight = 135;
   const menuWidth = 150;
-  const isOutBelow = y + menuHeight > window.innerHeight;
-  const isOutSidebar = x + menuWidth > 340;
-  const left = isOutSidebar ? x - menuWidth : x;
+  const isOutBelow = y + menuHeight > containerHeight;
+  const isOutRight = x + menuWidth > containerWidth;
+  const left = isOutRight ? x - menuWidth : x;
   const top = isOutBelow ? y - menuHeight : y;
 
   const {chatDetails, setChatDetails} = useContext(ChatContext) || {};
@@ -75,10 +75,20 @@ function ContextWindow({x, y, handleDelete, type, chatId, targetId}) {
       console.error("Error when deleting user", err)
     }
   }
+  const handleDeleteMessage = async () => {
+    console.log("Click delete")
+    try {
+      await chatsService.deleteMessage(targetId)
+      closeMenu();
+    } catch (err) {
+      console.error("Error with deleting msg", err)
+    }
+  }
   const isTargetUserAdmin = isUserAdmin(targetId);
   return (
     <div
-      style={{top: top + 'px', left: left + 'px', position: "fixed"}}>
+      style={{top: top + 'px', left: left + 'px', position: "absolute", zIndex: 100}}
+      onClick={(e) => e.stopPropagation()}>
       <div className={styles.contextmenu}>
         {type === "chatList" && (
           <>
@@ -110,6 +120,11 @@ function ContextWindow({x, y, handleDelete, type, chatId, targetId}) {
                   onClick={handleDeleteMember}>Delete user</p>
               </>
             )}
+          </div>
+        )}
+        {type === "message" && (
+          <div>
+            <p onClick={handleDeleteMessage}>Видалити повідомлення</p>
           </div>
         )}
       </div>

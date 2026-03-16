@@ -19,6 +19,10 @@ export const chatsService = {
     const response = await api.post('/messages', payload);
     return response.data;
   },
+  deleteMessage: async (messageId) => {
+    const response = await api.delete(`/messages/${messageId}`);
+    return response.data;
+  },
   generateSmartReply: async (chatId, messageId) => {
     const response = await api.post('/ai/smart-reply', {
       chatId,
