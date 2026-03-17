@@ -225,15 +225,34 @@ body, button {
   .selecteduserscontainer {
     display: flex;
     gap: 5px;
+    margin-top: 10px;
+    padding: 1px;
+    border-top: 1px solid var(--color-border-divider);
+    flex-wrap: wrap;
 
     .selecteduser {
       display: flex;
       justify-content: center;
       align-items: center;
+      margin-top: 3px;
       padding: 0px 10px 0px 5px;
-      background: var(--color-bg-white);
+      background: var(--color-bg-hover);
       width: fit-content;
       border-radius: 18px;
+      color: var(--color-text-primary);
+
+      .removeuser {
+        padding-left: 2px;
+        display: none;
+        cursor: pointer;
+        color: var(--color-text-secondary);
+      }
+
+      &:hover {
+        .removeuser {
+          display: block;
+        }
+      }
 
       img {
         width: 32px;

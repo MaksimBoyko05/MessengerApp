@@ -1,7 +1,7 @@
 import styles from "./CreateChat.module.scss"
 import {useEffect, useState} from "react";
 import {chatsService} from "@/api/chatsService.js";
-import {ChevronLeft} from 'lucide-react';
+import {ChevronLeft, X} from 'lucide-react';
 import Avvvatars from "avvvatars-react";
 import UserStatus from "@/Pages/ChatsPage/components/ChatWindow/UserStatus.jsx";
 
@@ -43,7 +43,11 @@ function CreateGroup({onClose, defaultUsers}) {
       console.error("Error:", err)
     }
   }
-
+  const handleRemoveUser = (userIdToRemove) => {
+    setSelectedUsers((prevSelected) =>
+      prevSelected.filter((user) => user.id !== userIdToRemove)
+    );
+  }
   const handleClose = () => {
     setSelectedUsers([])
     onClose(false)
@@ -76,6 +80,10 @@ function CreateGroup({onClose, defaultUsers}) {
                 src={`${API_URL}${user.avatar_url}`}/>
             )}
             <span>{user.username}</span>
+            <X
+              className={styles.removeuser}
+              size={12}
+              onClick={() => handleRemoveUser(user.id)}/>
           </div>
         ))}
       </div>

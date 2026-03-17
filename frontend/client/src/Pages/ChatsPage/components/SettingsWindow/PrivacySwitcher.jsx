@@ -1,12 +1,13 @@
 import styles from "./Settings.module.scss"
-import {useState} from "react";
+import {useContext, useState} from "react";
 import {userService} from "@/api/userService.js";
+import UserContext from "@/context/UserContext.jsx";
 
 function PrivacySwitcher() {
-  const [activeLanguage, setActiveLanguage] = useState()
-
+  const {user, setUser} = useContext(UserContext);
+  const activePrivacy = user?.is_private || false
   const handlePrivacyClick = async (leng, isPrivate) => {
-    setActiveLanguage(leng);
+    setUser(prev => ({...prev, is_private: isPrivate}));
     try {
       await userService.setIsPrivate(isPrivate)
     } catch (err) {
@@ -20,11 +21,11 @@ function PrivacySwitcher() {
         <div className={styles.languagecontainer}>
           <div
             onClick={() => handlePrivacyClick('ua', true)}
-            className={`${styles.lenguageButton} ${activeLanguage === 'ua' ? styles.active : ''}`}>Приватний
+            className={`${styles.lenguageButton} ${activePrivacy === true ? styles.active : ''}`}>Приватний
           </div>
           <div
             onClick={() => handlePrivacyClick('en', false)}
-            className={`${styles.lenguageButton} ${activeLanguage === 'en' ? styles.active : ''}`}>Відкритий
+            className={`${styles.lenguageButton} ${activePrivacy === false ? styles.active : ''}`}>Відкритий
           </div>
         </div>
       </div>

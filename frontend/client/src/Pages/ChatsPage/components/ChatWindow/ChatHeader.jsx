@@ -10,7 +10,7 @@ function ChatHeader({chatDetails, companion}) {
   return (
     <>
       <div
-        onClick={() => setIsOpen(true)}
+        onClick={() => chatDetails.is_group ? setIsOpen(true) : null}
         className={styles.chatheaderwrapper}>
         {chatDetails.is_group ? (
           <>
