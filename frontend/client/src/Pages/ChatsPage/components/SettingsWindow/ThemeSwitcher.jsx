@@ -1,12 +1,14 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import styles from './Settings.module.scss';
 import {userService} from "@/api/userService.js";
+import UserContext from "@/context/UserContext.jsx";
 
 const ThemeSwitcher = () => {
-  const [activeTheme, setActiveTheme] = useState('light');
+  const {user, setUser} = useContext(UserContext);
+  const activeTheme = user?.theme || 'glass';
 
   const handleThemeClick = async (theme) => {
-    setActiveTheme(theme);
+    setUser(prev => ({...prev, theme: theme}));
     try {
       await userService.updateTheme(theme)
     } catch (err) {

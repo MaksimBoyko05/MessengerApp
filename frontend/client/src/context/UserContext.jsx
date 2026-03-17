@@ -29,7 +29,13 @@ export const UserProvider = ({children}) => {
   useEffect(() => {
     checkAuth();
   }, []);
-
+  useEffect(() => {
+    if (user?.theme) {
+      document.documentElement.setAttribute("data-theme", user.theme);
+    } else {
+      document.documentElement.setAttribute("data-theme", "glass");
+    }
+  }, [user?.theme]);
   return (
     <UserContext.Provider value={{user, setUser, loading, checkAuth}}>
       {children}

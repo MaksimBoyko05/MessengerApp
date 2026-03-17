@@ -1,5 +1,5 @@
 import ThemeSwitcher from "@/Pages/ChatsPage/components/SettingsWindow/ThemeSwitcher.jsx";
-import styles from "./Settings.module.scss"
+import styles from "./Settings.module.scss";
 import {X} from "lucide-react";
 import PrivacySwitcher from "@/Pages/ChatsPage/components/SettingsWindow/PrivacySwitcher.jsx";
 import {useEffect, useState} from "react";
@@ -8,36 +8,41 @@ import ProfileSettings from "@/Pages/ChatsPage/components/SettingsWindow/Profile
 import SecuritySettings from "@/Pages/ChatsPage/components/SettingsWindow/SecuritySettings.jsx";
 
 function SettingsModal({onClose}) {
-  const [userData, setUserData] = useState({})
+  const [userData, setUserData] = useState({});
+
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const res = await userService.getUserData()
+        const res = await userService.getUserData();
         setUserData(res);
-        console.log(res);
       } catch (err) {
-        console.error("Error fetching user", err)
+        console.error("Error fetching user", err);
       }
-    }
+    };
     fetchUserData();
   }, []);
+
   return (
-    <>
-      <div className={styles.modalwrapper}>
-        <div className={styles.modalcontainer}>
+    <div className={styles.modalwrapper}>
+      <div className={styles.modalcontainer}>
+        <div className={styles.modalheader}>
+          <h2 className={styles.modaltitle}>Settings</h2>
           <X
             className={styles.closebtn}
             size={24}
-            onClick={onClose}/>
-          <h2>Settings</h2>
+            onClick={onClose}
+          />
+        </div>
+        <div className={styles.modalcontent}>
           <ProfileSettings user={userData}/>
           <SecuritySettings user={userData}/>
           <PrivacySwitcher/>
           <ThemeSwitcher/>
         </div>
+
       </div>
-    </>
-  )
+    </div>
+  );
 }
 
 export default SettingsModal;

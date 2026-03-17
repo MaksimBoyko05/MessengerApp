@@ -1,48 +1,29 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 $font-main: 'Inter', sans-serif;
-$color-main: #ffff;
-$modal-color-main: #f5f5f6;
-$modal-element-shadow: 0 1px 3px rgba(0, 0, 0, 0.06),
-0 4px 12px rgba(0, 0, 0, 0.08),
-inset 0 1px 0 rgba(255, 255, 255, 1);
 $modal-element-radius: 20px;
+$border-radius: 16px;
+$modal-search-radius: 12px;
 
-
-// Shared colors
-$color-primary: #2B7FFF;
 $color-gradient-start: #2B7FFF;
 $color-gradient-end: #7E57FF;
 
-// Light theme
 $light-bg-main: #F9FAFB;
 $light-bg-white: #FFFFFF;
 $light-border: #E5E7EB;
 $light-border-input: #D1D5DB;
 
-// Dark theme
 $dark-bg-main: #0a0a0a;
 $dark-bg-secondary: #1a1a1a;
 $dark-bg-tertiary: #2a2a2a;
 $dark-border: #3a3a3a;
 $dark-border-input: #4a4a4a;
 
-// Glass theme
 $glass-bg-base: rgba(255, 255, 255, 0.4);
 $glass-bg-gradient: rgba(200, 180, 255, 0.3);
 $glass-element-bg: rgba(255, 255, 255, 0.6);
 $glass-border: rgba(255, 255, 255, 0.4);
 
-// Text
-$text-primary: #1a1a1a;
-$text-secondary: #4b5563;
-
-$input-focus-bg: #f2f2f2;
-$border-radius: 16px;
-$color-text-secondary: #666;
-$modal-search-radius: 12px;
-$color-primary-hover: #2471e7;
-$color-primary-disabled: #69a4f8;
 
 @mixin flex-center {
   display: flex;
@@ -53,14 +34,15 @@ $color-primary-disabled: #69a4f8;
 @mixin input-style {
   height: 38px;
   padding: 5px 5px 1px 15px;
-  background: #FAFAFA;
+  background: var(--color-bg-input);
+  color: var(--color-text-primary);
   border-radius: $modal-search-radius;
-  border: 1px solid rgba(120, 122, 133, 0.07);
-  transition: border-color 0.3s ease;
+  border: 1px solid var(--color-border-input);
+  transition: border-color 0.3s ease, background-color 0.3s ease;
 
   &:focus {
-    border-color: #2B7FFF;
-    background-color: $input-focus-bg;
+    border-color: var(--color-primary);
+    background-color: var(--color-bg-input-focus);
     outline: none;
   }
 }
@@ -72,18 +54,18 @@ $color-primary-disabled: #69a4f8;
   border-radius: 10px;
   height: 38px;
   width: 100px;
-  background: $color-primary;
-  color: white;
+  background: var(--color-primary-blue);
+  color: var(--color-text-inverse);
   font-weight: 600;
   transition: all 0.3s ease;
   cursor: pointer;
 
   &:hover {
     transform: translateY(-2px);
-    background: $color-primary-hover;
+    background: var(--color-primary-hover);
   }
   &:disabled {
-    background: $color-primary-disabled;
+    background: var(--color-primary-disabled);
     cursor: not-allowed;
   }
 }
@@ -115,7 +97,8 @@ body, button {
   .modalcontainer {
     @include hide-scrollbar;
     display: flex;
-    background-color: $modal-color-main;
+    background-color: var(--color-bg-modal-main);
+    color: var(--color-text-primary);
     border-radius: 12px;
     position: relative;
     flex-direction: column;
@@ -124,28 +107,61 @@ body, button {
     max-height: 650px;
     padding: 24px;
     gap: 10px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
-    overflow-y: auto;
+    box-shadow: var(--shadow-modal-container);
+    overflow: hidden;
 
-    .closebtn {
-      background: #e7e7e7;
-      padding: 5px;
-      border-radius: 50%;
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      cursor: pointer;
+
+    .modalheader {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-shrink: 0;
+
+      .modaltitle {
+        margin: 0;
+        font-size: 1.5rem;
+      }
+
+      .closebtn {
+        background: var(--color-bg-btn-secondary);
+        color: var(--color-text-primary);
+        padding: 5px;
+        border-radius: 50%;
+        cursor: pointer;
+        transition: all 0.2s ease;
+
+        &:hover {
+          background: var(--color-bg-menu-hover);
+        }
+      }
+    }
+
+    .modalcontent {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      overflow-y: auto;
+      flex: 1;
+      padding-right: 5px;
+      @include hide-scrollbar;
     }
   }
+}
+
+.profilesettingscontainer,
+.changepassblock,
+.languageblock,
+.themeSwitcher {
+  background: var(--color-bg-white);
+  padding: 10px 20px;
+  box-shadow: var(--shadow-card-inset);
+  border-radius: $modal-element-radius;
+  color: var(--color-text-primary);
 }
 
 .profilesettingscontainer {
   display: flex;
   flex-direction: column;
-  background: $color-main;
-  padding: 10px 20px;
-  box-shadow: $modal-element-shadow;
-  border-radius: $modal-element-radius;
 
   .profiletop {
     display: flex;
@@ -158,7 +174,7 @@ body, button {
     width: 90px;
     height: 90px;
     border-radius: 50%;
-    border: 1px solid $light-border;
+    border: 1px solid var(--color-border-main);
     place-items: center;
     overflow: hidden;
 
@@ -173,15 +189,14 @@ body, button {
       grid-area: 1/1;
       width: 80px;
       display: none;
-      background: rgba(0, 0, 0, 0.29);
+      background: rgba(0, 0, 0, 0.4);
+      color: #fff;
       transition: all 0.3s ease;
     }
 
-    &:hover {
-      .editimg {
-        @include flex-center;
-        margin-top: auto;
-      }
+    &:hover .editimg {
+      @include flex-center;
+      margin-top: auto;
     }
   }
 
@@ -194,7 +209,7 @@ body, button {
       font-size: 0.75rem;
       font-weight: 500;
       margin-bottom: 4px;
-      color: $color-text-secondary;
+      color: var(--color-text-secondary);
     }
 
     .editnameblock {
@@ -203,7 +218,7 @@ body, button {
     }
 
     input {
-      @include input-style
+      @include input-style;
     }
 
     .savenamebtn {
@@ -213,8 +228,9 @@ body, button {
 
   .innerDivider {
     height: 1px;
-    background: #F1F1F3;
+    background: var(--color-border-divider);
     width: 100%;
+    margin: 10px 0;
   }
 
   .emailcontainer {
@@ -222,38 +238,27 @@ body, button {
     flex-direction: column;
     gap: 10px;
 
-    .emailblock {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-
-
-      span {
-        height: fit-content;
-      }
-    }
-
-    .newemailblock {
+    .emailblock, .newemailblock {
       display: flex;
       gap: 10px;
       align-items: center;
     }
 
     .inputerror {
-      border: 1px solid #dc2626;
+      border: 1px solid var(--color-danger);
     }
 
     .error {
       font-size: 0.75rem;
       font-weight: 500;
-      color: #dc2626;
+      color: var(--color-danger);
     }
 
     p {
       font-size: 0.75rem;
       font-weight: 500;
-      padding: 2px 0px;
-      color: $color-text-secondary;
+      padding: 2px 0;
+      color: var(--color-text-secondary);
     }
 
     button {
@@ -270,10 +275,6 @@ body, button {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  background: $color-main;
-  padding: 10px 20px;
-  box-shadow: $modal-element-shadow;
-  border-radius: $modal-element-radius;
 
   .passinputcontainer {
     display: flex;
@@ -285,13 +286,13 @@ body, button {
     }
 
     .inputerror {
-      border: 1px solid #dc2626;
+      border: 1px solid var(--color-danger);
     }
 
     .error {
       font-size: 0.75rem;
       font-weight: 500;
-      color: #dc2626;
+      color: var(--color-danger);
     }
 
     button {
@@ -305,11 +306,7 @@ body, button {
   display: flex;
   width: 100%;
   flex-direction: column;
-  padding: 10px 20px;
   gap: 10px;
-  background: $color-main;
-  box-shadow: $modal-element-shadow;
-  border-radius: $modal-element-radius;
 
   .languagecontainer {
     display: flex;
@@ -317,37 +314,33 @@ body, button {
     gap: 10px;
   }
 
-
   .lenguageButton {
     display: flex;
     justify-content: center;
     padding: 4px;
-    width: 85px;
+    width: fit-content;
     border-radius: 12px;
-    background-color: #f8f9fa;
-    border: 1px solid #e5e7eb;
-    color: #6b7280;
+    background-color: var(--color-bg-input);
+    border: 1px solid var(--color-border-main);
+    color: var(--color-text-muted);
     cursor: pointer;
     transition: all 0.3s ease;
 
     &:hover {
       transform: translateY(-2px);
-      background-color: #ffffff;
-      border-color: #d1d5db;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.04);
+      background-color: var(--color-bg-hover);
+      border-color: var(--color-border-light);
     }
 
     &:active {
       transform: translateY(0) scale(0.97);
-      box-shadow: none;
     }
 
     &.active {
-      background-color: #FFFFFF;
-      border-color: $color-primary;
-      color: $color-primary;
-      box-shadow: 0 0 0 1px rgba(43, 127, 255, 0.1),
-      0 6px 16px rgba(43, 127, 255, 0.15);
+      background-color: var(--color-bg-white);
+      border-color: var(--color-primary);
+      color: var(--color-primary);
+      box-shadow: 0 0 0 1px rgba(43, 127, 255, 0.1), 0 6px 16px rgba(43, 127, 255, 0.15);
     }
   }
 }
@@ -356,19 +349,14 @@ body, button {
   padding: 32px 40px;
   max-width: 500px;
   width: 100%;
-  background: $color-main;
-  box-shadow: $modal-element-shadow;
-  border-radius: $modal-element-radius;
 }
 
 .title {
   font-size: 20px;
   font-weight: 600;
-  color: $text-primary;
+  color: var(--color-text-primary);
   margin-bottom: 28px;
-  font-family: 'Inter', sans-serif;
 }
-
 
 .themesContainer {
   display: flex;
@@ -407,11 +395,10 @@ body, button {
   transition: all 0.3s ease;
 
   .themeCard.active & {
-    border-color: $color-primary;
-    box-shadow: 0 8px 24px rgba(43, 127, 255, 0.25);
+    border-color: var(--color-primary);
+    box-shadow: var(--shadow-btn-primary);
   }
 }
-
 
 .previewHeader {
   height: 14px;
@@ -452,7 +439,7 @@ body, button {
     transform: translateY(-50%);
     width: 6px;
     height: 6px;
-    background: $color-primary;
+    background: var(--color-primary);
     border-radius: 50%;
   }
 }
@@ -461,12 +448,7 @@ body, button {
 .lightPreview {
   background: $light-bg-main;
 
-  .previewHeader {
-    background: $light-bg-white;
-    border: 1px solid $light-border;
-  }
-
-  .messageLeft {
+  .previewHeader, .messageLeft {
     background: $light-bg-white;
     border: 1px solid $light-border;
   }
@@ -477,17 +459,11 @@ body, button {
   }
 }
 
-
 .darkPreview {
   background: $dark-bg-main;
 
-  .previewHeader {
+  .previewHeader, .messageLeft {
     background: $dark-bg-secondary;
-    border: 1px solid $dark-border;
-  }
-
-  .messageLeft {
-    background: $dark-bg-tertiary;
     border: 1px solid $dark-border;
   }
 
@@ -496,7 +472,6 @@ body, button {
     border: 1px solid $dark-border-input;
   }
 }
-
 
 .glassPreview {
   background: linear-gradient(135deg, $glass-bg-base 0%, $glass-bg-gradient 100%);
@@ -513,9 +488,7 @@ body, button {
     z-index: 0;
   }
 
-  .previewHeader,
-  .previewMessages,
-  .previewInput {
+  .previewHeader, .previewMessages, .previewInput {
     position: relative;
     z-index: 1;
   }
@@ -543,17 +516,15 @@ body, button {
   }
 }
 
-
 .themeLabel {
   margin-top: 12px;
   font-size: 14px;
   font-weight: 500;
-  color: $text-secondary;
+  color: var(--color-text-secondary);
   transition: color 0.2s ease;
-  font-family: 'Inter', sans-serif;
 
   .themeCard.active & {
-    color: $color-primary;
+    color: var(--color-primary);
     font-weight: 600;
   }
 }
@@ -563,24 +534,22 @@ body, button {
   height: 8px;
   border-radius: 50%;
   background: transparent;
-  border: 2px solid #d1d5db;
+  border: 2px solid var(--color-border-light);
   margin-top: 8px;
   transition: all 0.3s ease;
 
   .themeCard.active & {
-    background: $color-primary;
-    border-color: $color-primary;
+    background: var(--color-primary);
+    border-color: var(--color-primary);
     box-shadow: 0 0 0 4px rgba(43, 127, 255, 0.2);
   }
 }
-
 
 @media (max-width: 480px) {
   .themesContainer {
     flex-direction: column;
     align-items: center;
   }
-
   .themePreview {
     width: 140px;
     height: 160px;

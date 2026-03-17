@@ -1,24 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 $font-main: 'Inter', sans-serif;
-$color-main: #ffff;
-$modal-color-main: #f5f5f6;
-$modal-element-shadow: 0 1px 3px rgba(0, 0, 0, 0.06),
-0 4px 12px rgba(0, 0, 0, 0.08),
-inset 0 1px 0 rgba(255, 255, 255, 1);
 $modal-element-radius: 20px;
-
-$primary-blue: #1f5aee;
-$color-primary: #2B7FFF;
-$color-primary-hover: #2471e7;
-$chip-shadow-color: 0 4px 6px rgba(58, 91, 196, 0.2);
-$chip-background: #ffffff;
-$sparks-bg-gradient: linear-gradient(180deg, #9EB5FF 0%, #5C7CFA 50%, #364FC7 100%);
-$input-focus-bg: #f2f2f2;
 $modal-search-radius: 12px;
-$modal-element-shadow: 0 1px 3px rgba(0, 0, 0, 0.06),
-0 4px 12px rgba(0, 0, 0, 0.08),
-inset 0 1px 0 rgba(255, 255, 255, 1);
+
 @mixin flex-center {
   display: flex;
   justify-content: center;
@@ -28,15 +13,16 @@ inset 0 1px 0 rgba(255, 255, 255, 1);
 @mixin input-style {
   height: 138px;
   padding: 5px 5px 1px 15px;
-  background: #FAFAFA;
+  background: var(--color-bg-input);
+  color: var(--color-text-primary);
   border-radius: $modal-search-radius;
-  border: 1px solid rgba(120, 122, 133, 0.07);
-  transition: border-color 0.3s ease;
-  box-shadow: $modal-element-shadow;
+  border: 1px solid var(--color-border-input);
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+  box-shadow: var(--shadow-card-inset);
 
   &:focus {
-    border-color: #2B7FFF;
-    background-color: $input-focus-bg;
+    border-color: var(--color-primary);
+    background-color: var(--color-bg-input-focus);
     outline: none;
   }
 }
@@ -48,19 +34,19 @@ inset 0 1px 0 rgba(255, 255, 255, 1);
   border-radius: 10px;
   height: 38px;
   width: 100px;
-  background: $color-primary;
-  color: white;
+  background: var(--color-primary);
+  color: var(--color-text-inverse);
   font-weight: 600;
   letter-spacing: 0.3px;
   transition: all 0.3s ease;
   cursor: pointer;
-  box-shadow: 0 2px 8px rgba($color-primary, 0.35);
+  box-shadow: var(--shadow-btn-primary);
   user-select: none;
   white-space: nowrap;
 
   &:hover {
     transform: translateY(-2px);
-    background: $color-primary-hover;
+    background: var(--color-primary-hover);
   }
   &:disabled {
     opacity: 0.5;
@@ -69,7 +55,6 @@ inset 0 1px 0 rgba(255, 255, 255, 1);
     box-shadow: none;
   }
 }
-
 
 body {
   font-family: $font-main;
@@ -81,7 +66,7 @@ body {
   background: none;
   border: none;
   cursor: pointer;
-  color: $sparks-bg-gradient;
+  color: var(--ai-spark-color);
   padding: 10px;
   margin-bottom: 3px;
   margin-left: 1rem;
@@ -90,13 +75,13 @@ body {
   font-weight: 700;
 
   svg {
-    filter: drop-shadow(0px 4px 8px rgba(54, 79, 199, 0.5));
+    filter: var(--shadow-ai-spark-svg);
   }
 
   &:hover {
     opacity: 1;
     transform: scale(1.1);
-    color: #9b59b6;
+    color: var(--ai-spark-hover);
   }
 }
 
@@ -119,33 +104,32 @@ body {
   gap: 10px;
 
   .suggestionchip {
-    background: $chip-background;
-    border: 1px solid #ddd;
+    background: var(--color-bg-white);
+    color: var(--color-text-primary);
+    border: 1px solid var(--color-border-main);
     border-radius: 16px;
     padding: 6px 12px;
     font-size: 0.9rem;
     cursor: pointer;
     transition: all 0.2s;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    box-shadow: var(--shadow-msg-bubble);
 
     &:hover {
-      background: #fff;
-      border-color: $primary-blue;
-      color: $primary-blue;
+      background: var(--color-bg-hover);
+      border-color: var(--color-primary-blue);
+      color: var(--color-primary-blue);
       transform: translateY(-1px);
-      box-shadow: $chip-shadow-color;
+      box-shadow: var(--shadow-chip);
     }
   }
 }
 
 .askAipopupwrapper {
   position: absolute;
-  //backdrop-filter: blur(2px);
   width: 100vw;
   height: 100vh;
   display: grid;
   place-items: center;
-
 
   .popupcontent {
     display: flex;
@@ -155,8 +139,8 @@ body {
     width: 400px;
     height: fit-content;
     border-radius: 20px;
-    background: $modal-color-main;
-    box-shadow: $modal-element-shadow;
+    background: var(--color-bg-modal-main);
+    box-shadow: var(--shadow-modal-container);
     margin-bottom: 20%;
     animation: slideInFromBottom 0.5s ease-out forwards;
     will-change: transform;
@@ -166,10 +150,12 @@ body {
       margin-left: 20px;
       margin-top: 10px;
       font-size: 1.25rem;
+      color: var(--color-text-primary);
     }
 
     .closebutton {
-      background: #e7e7e7;
+      background: var(--color-bg-btn-secondary);
+      color: var(--color-text-primary);
       padding: 5px;
       border-radius: 50%;
       position: absolute;
@@ -178,6 +164,11 @@ body {
       cursor: pointer;
       border: none;
       z-index: 12;
+      transition: all 0.2s;
+
+      &:hover {
+        background: var(--color-bg-menu-hover);
+      }
     }
 
     input {
@@ -198,12 +189,7 @@ body {
       left: 0;
       top: 0;
       border-radius: 20px;
-      background: linear-gradient(
-                      135deg,
-                      rgba(139, 92, 246, 0.15) 0%,
-                      rgba(59, 130, 246, 0.2) 50%,
-                      rgba(236, 72, 153, 0.15) 100%
-      );
+      background: var(--ai-loading-bg);
       backdrop-filter: blur(4px);
       z-index: 10;
       overflow: hidden;
@@ -212,9 +198,9 @@ body {
         position: absolute;
         animation: wave 1.8s ease-in-out infinite;
         opacity: 0.7;
-        filter: drop-shadow(0 0 6px rgba(139, 92, 246, 0.8));
-        color: #a78bfa;
-        background: linear-gradient(135deg, #a78bfa, #60a5fa, #f472b6);
+        filter: drop-shadow(0 0 6px var(--ai-glow));
+        color: var(--ai-glow);
+        background: linear-gradient(135deg, var(--ai-glow), var(--ai-accent), #f472b6);
         -webkit-background-clip: text;
 
         &:nth-child(3) {
@@ -223,7 +209,7 @@ body {
           transform: translate(-50%, -50%);
           opacity: 1;
           animation: wavecenter 1.8s ease-in-out infinite;
-          filter: drop-shadow(0 0 12px rgba(139, 92, 246, 1));
+          filter: drop-shadow(0 0 12px var(--ai-secondary));
         }
 
         &:nth-child(1) {

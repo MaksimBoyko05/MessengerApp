@@ -1,25 +1,16 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
 
-
 $font-main: 'Inter', sans-serif;
-$color-main: #ffff;
-$modal-color-main: #f5f5f6;
-$input-focus-bg: #f2f2f2;
 $border-radius: 16px;
 $modal-border-radius: 24px;
 $modal-search-radius: 16px;
 $modal-list-hover-radius: 12px;
-$color-text-secondary: #666;
-$create-button-color: #1f5aee;
-$color-primary-hover: #2471e7;
-
 
 body, button {
   font-family: $font-main;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-
 
 @mixin flex-center {
   display: flex;
@@ -34,18 +25,18 @@ body, button {
   border-radius: 10px;
   height: 38px;
   width: 100px;
-  background: $create-button-color;
-  color: white;
+  background: var(--color-primary-blue);
+  color: var(--color-text-inverse);
   font-weight: 600;
   transition: all 0.3s ease;
   cursor: pointer;
 
   &:hover {
     transform: translateY(-2px);
-    background: $color-primary-hover;
+    background: var(--color-primary-hover);
   }
   &:disabled {
-    background: #69A4F8FF;
+    background: var(--color-primary-disabled);
     cursor: not-allowed;
   }
 }
@@ -57,7 +48,7 @@ body, button {
   left: 12%;
   bottom: 30px;
   transform: translate(00px);
-  background-color: $color-main;
+  background-color: var(--color-bg-white);
   border: none;
   border-radius: $border-radius;
   cursor: pointer;
@@ -79,32 +70,36 @@ body, button {
     display: flex;
     position: relative;
     flex-direction: column;
-    background-color: $modal-color-main;
+    background-color: var(--color-bg-modal-main);
     width: 400px;
     height: clamp(500px, 100vh, 800px);
     padding: 24px;
     border-radius: $modal-border-radius;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+    box-shadow: var(--shadow-modal-container);
     gap: 10px;
 
     .closebtn {
-      background: #e7e7e7;
+      background: var(--color-bg-btn-secondary);
+      color: var(--color-text-primary);
       padding: 5px;
       border-radius: 50%;
       position: absolute;
       top: 10px;
       right: 10px;
       cursor: pointer;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background: var(--color-bg-menu-hover);
+      }
     }
 
     .creategroupblock {
       @include flex-center;
-      background: $color-main;
+      background: var(--color-bg-white);
       padding: 14px;
       border-radius: 20px;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06),
-      0 4px 12px rgba(0, 0, 0, 0.08),
-      inset 0 1px 0 rgba(255, 255, 255, 1);
+      box-shadow: var(--shadow-card-inset);
       margin-top: auto;
 
       button {
@@ -115,12 +110,10 @@ body, button {
 
     .modalheader {
       margin-top: 20px;
-      background: $color-main;
+      background: var(--color-bg-white);
       border-radius: 20px;
       padding: 14px 16px;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06),
-      0 4px 12px rgba(0, 0, 0, 0.08),
-      inset 0 1px 0 rgba(255, 255, 255, 1);
+      box-shadow: var(--shadow-card-inset);
 
       input {
         margin-top: 5px;
@@ -130,11 +123,12 @@ body, button {
 
       h4 {
         font-size: 1rem;
+        color: var(--color-text-primary);
       }
 
       span {
         font-size: 0.85rem;
-        color: $color-text-secondary;
+        color: var(--color-text-secondary);
       }
     }
 
@@ -142,14 +136,15 @@ body, button {
       height: 38px;
       min-height: 38px;
       padding: 5px 5px 1px 15px;
-      background: #FAFAFA;
+      background: var(--color-bg-input);
+      color: var(--color-text-primary);
       border-radius: $modal-search-radius;
-      border: 1px solid rgba(120, 122, 133, 0.07);
-      transition: border-color 0.3s ease;
+      border: 1px solid var(--color-border-input);
+      transition: border-color 0.3s ease, background-color 0.3s ease;
 
       &:focus {
-        border-color: #2B7FFF;
-        background-color: $input-focus-bg;
+        border-color: var(--color-primary);
+        background-color: var(--color-bg-input-focus);
         outline: none;
       }
     }
@@ -161,12 +156,10 @@ body, button {
       max-height: 470px;
       height: auto;
       overflow-y: auto;
-      background: #FFFFFF;
+      background: var(--color-bg-white);
       border-radius: 20px;
       padding: 10px;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06),
-      0 4px 12px rgba(0, 0, 0, 0.08),
-      inset 0 1px 0 rgba(255, 255, 255, 1);
+      box-shadow: var(--shadow-card-inset);
 
       @media (max-width: 768px) {
         max-height: 500px;
@@ -179,7 +172,7 @@ body, button {
       .userblock {
         display: flex;
         flex: 1;
-        background: #FFFFFF;
+        background: var(--color-bg-white);
         margin-top: 10px;
         margin-bottom: 10px;
         align-items: center;
@@ -187,12 +180,11 @@ body, button {
         height: 45px;
         max-height: 45px;
         transition: all 0.3s;
-        border: 1px solid #FFFF;
+        border: 1px solid transparent;
 
         &:hover {
-          background: #fafafa;
+          background: var(--color-bg-hover);
         }
-
 
         img {
           width: 32px;
@@ -204,27 +196,26 @@ body, button {
         .userdata {
           p {
             font-size: 0.85rem;
-            color: #6b7280;
+            color: var(--color-text-muted);
           }
         }
       }
     }
   }
 
-
   .empty {
     @include flex-center;
     margin-top: 10px;
     font-size: 14px;
-    color: #6b7280;
+    color: var(--color-text-muted);
   }
-
 
   .backbtn {
     align-self: flex-start;
     position: absolute;
     top: 10px;
     cursor: pointer;
+    color: var(--color-text-primary);
 
     &:hover {
       opacity: 0.7;
@@ -240,7 +231,7 @@ body, button {
       justify-content: center;
       align-items: center;
       padding: 0px 10px 0px 5px;
-      background: #FFFFFF;
+      background: var(--color-bg-white);
       width: fit-content;
       border-radius: 18px;
 

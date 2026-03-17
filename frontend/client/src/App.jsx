@@ -8,6 +8,7 @@ import {UserProvider} from "./context/UserContext.jsx";
 import {SocketProvider} from "./context/SocketContext.jsx";
 import VerifyEmail from "@/Pages/VerifyPage/VerifyEmail.jsx";
 import ResetPassword from "@/Pages/VerifyPage/ResetPassword.jsx";
+import "@/assets/styles/_themes.scss";
 
 function App() {
   return (

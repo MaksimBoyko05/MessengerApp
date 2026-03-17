@@ -8,45 +8,12 @@
 }
 
 $font-main: 'Inter', sans-serif;
-$color-primary: #2B7FFF;
-$primary-blue: #1f5aee;
-$color-primary-hover: #2471e7;
-$color-gradient-start: #2B7FFF;
-$color-gradient-end: #7E57FF;
-$color-status-online: #22c55e;
-$color-text-primary: #1a1a1a;
-$color-text-secondary: #666;
-$color-text-tertiary: #999;
-$color-text-muted: #6b7280;
-$color-border: rgba(0, 0, 0, 0.05);
-$color-border-light: rgba(147, 145, 145, 0.29);
-$color-bg-white: #ffffff;
-$color-bg-light: rgba(250, 250, 250, 0.53);
-$color-bg-lighter: rgba(255, 255, 255, 0.68);
-$color-bg-active: rgba(255, 255, 255, 0.78);
-$color-bg-overlay: rgba(238, 238, 238, 0.4);
-
 $border-radius-sm: 12px;
 $border-radius-md: 14px;
 $border-radius-lg: 16px;
 $border-radius-xl: 18px;
-
 $transition-default: all 0.3s ease;
 $transition-fast: all 0.2s ease;
-
-//======AI STYLES=======
-$ai-gradient-start: rgba(240, 244, 255, 0.85);
-$ai-gradient-end: rgba(246, 240, 255, 0.85);
-$ai-border-color: rgba(162, 136, 255, 0.4);
-$ai-glow-color: rgba(162, 136, 255, 0.15);
-$ai-accent-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%, #a855f7 100%);
-
-$ai-primary: #6366f1;
-$ai-secondary: #8b5cf6;
-$ai-glow: #a78bfa;
-$ai-accent: #06b6d4;
-
-//=================
 
 @mixin flex-center {
   display: flex;
@@ -96,7 +63,7 @@ $ai-accent: #06b6d4;
 }
 
 @mixin glassmorphism($blur: 10px, $opacity: 0.78) {
-  background: rgba(255, 255, 255, $opacity);
+  background: var(--color-bg-active);
   backdrop-filter: blur($blur);
   -webkit-backdrop-filter: blur($blur);
 }
@@ -114,7 +81,7 @@ body {
   width: 100%;
   height: 100vh;
   overflow: hidden;
-  background-color: $color-bg-overlay;
+  background-color: var(--color-bg-overlay);
   background-blend-mode: overlay;
 
   &::before {
@@ -149,6 +116,7 @@ body {
   height: 80px;
   border-radius: $border-radius-lg;
   transition: $transition-default;
+  color: var(--color-text-primary);
 
   .avatarImg {
     @include avatar(52px);
@@ -167,14 +135,14 @@ body {
     .userstatus {
       font-size: 14px;
       font-weight: 500;
-      color: $color-status-online;
+      color: var(--color-status-online);
     }
   }
 
   .logout {
     &:hover {
       svg {
-        color: #7d7d7d;
+        color: var(--color-icon-logout);
       }
     }
   }
@@ -183,17 +151,12 @@ body {
     transform: translateX(7rem);
     transition: $transition-default;
 
-
     &:hover {
       cursor: pointer;
 
       svg {
-        color: #333232;
+        color: var(--color-icon-hover);
         animation: spin 1s linear;
-      }
-
-      svg {
-        color: #333232;
       }
     }
   }
@@ -222,9 +185,9 @@ body {
   align-items: center;
   gap: 12px;
   padding: 10px 15px;
-  background: $color-bg-light;
+  background: var(--color-bg-light);
   border-radius: $border-radius-sm;
-  border-bottom: 1px solid #e4e4e4;
+  border-bottom: 1px solid var(--color-border-divider);
   transition: background 0.2s;
 
   &::before {
@@ -233,7 +196,7 @@ body {
     left: 0;
     width: 4px;
     height: 60%;
-    background: $color-primary;
+    background: var(--color-primary);
     border-radius: 0 4px 4px 0;
     opacity: 0;
     transform: translateY(-50%) scaleY(0);
@@ -241,7 +204,7 @@ body {
   }
 
   &:hover:not([data-active="true"]) {
-    background: $color-bg-lighter;
+    background: var(--color-bg-lighter);
 
     &::before {
       opacity: 0.7;
@@ -268,28 +231,24 @@ body {
     .online {
       width: 12px;
       height: 12px;
-      background-color: #4cd964;
+      background-color: var(--color-status-online);
       border-radius: 50%;
-
       position: absolute;
       bottom: 2px;
       right: 2px;
-
-      border: 2px solid white;
+      border: 2px solid var(--color-border-avatar);
       box-sizing: content-box;
     }
 
     .offline {
       width: 12px;
       height: 12px;
-      background-color: #dcdcdc;
+      background-color: var(--color-status-offline);
       border-radius: 50%;
-
       position: absolute;
       bottom: 2px;
       right: 2px;
-
-      border: 2px solid white;
+      border: 2px solid var(--color-border-avatar);
       box-sizing: content-box;
     }
   }
@@ -306,12 +265,13 @@ body {
       margin: 0;
       font-size: 16px;
       font-weight: 500;
+      color: var(--color-text-primary);
     }
 
     p {
       margin: 0;
       font-size: 14px;
-      color: $color-text-secondary;
+      color: var(--color-text-secondary);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -327,8 +287,8 @@ body {
     height: 22px;
     padding: 0;
     margin: 0;
-    background: #5B81E2;
-    color: white;
+    background: var(--color-unread-bg);
+    color: var(--color-unread-text);
     font-size: 12px;
     font-weight: bold;
     line-height: 0;
@@ -340,7 +300,7 @@ body {
     top: 70%;
     right: 12px;
     font-size: 0.8rem;
-    color: $color-text-muted;
+    color: var(--color-text-muted);
   }
 }
 
@@ -348,6 +308,7 @@ body {
   @include flex-center;
   width: 100%;
   text-align: center;
+  color: var(--color-text-primary);
 
   .content {
     padding: 16px;
@@ -371,17 +332,17 @@ body {
   gap: 10px;
   width: 80%;
   height: 97%;
-  margin-top: 10px;
-  margin-right: 20px;
+  margin-top: 15px;
+  margin-right: 10px;
   margin-bottom: 30px;
   overflow: hidden;
-  background: rgba(248, 248, 248, 0.77);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: var(--color-bg-chat-window);
+  border: 1px solid var(--color-border-chat);
   border-radius: $border-radius-lg;
   backdrop-filter: blur(70px) saturate(150%);
   -webkit-backdrop-filter: blur(18px);
   background-clip: padding-box;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-chat-window);
   outline: 1px solid transparent;
   transform: translateZ(0);
   will-change: transform;
@@ -441,33 +402,31 @@ body {
 
     &:has(.system) {
       justify-content: center;
-
     }
 
     .mymsg {
       position: relative;
       @include message-bubble('right');
-      background: linear-gradient(135deg, $color-gradient-start 0%, $color-gradient-end 100%);
-      color: #fff;
+      background: linear-gradient(135deg, var(--color-gradient-start) 0%, var(--color-gradient-end) 100%);
+      color: var(--color-text-inverse);
       font-weight: 400;
       border-radius: $border-radius-xl $border-radius-xl 4px $border-radius-xl;
-      box-shadow: 0 4px 12px rgba(43, 127, 255, 0.25);
+      box-shadow: var(--shadow-msg-mymsg);
 
       .readtime {
         @extend %time-styles;
-        color: rgba(255, 255, 255, 0.8);
+        color: var(--color-text-inverse);
       }
     }
 
     .msgbubble {
       @include message-bubble('left');
       flex-direction: column;
-      background: $color-bg-white;
-      color: $color-text-primary;
-      border: 1px solid rgba(0, 0, 0, 0.03);
+      background: var(--color-bg-white);
+      color: var(--color-text-primary);
+      border: 1px solid var(--color-border-main);
       border-radius: $border-radius-xl $border-radius-xl $border-radius-xl 4px;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
-
+      box-shadow: var(--shadow-msg-bubble);
 
       .sendername {
         align-self: flex-start;
@@ -478,14 +437,14 @@ body {
 
       .readtime {
         @extend %time-styles;
-        color: $color-text-tertiary;
+        color: var(--color-text-tertiary);
       }
     }
 
     .system {
       border-radius: 20px;
-      background: rgba(0, 0, 0, 0.6);
-      color: white;
+      background: var(--color-bg-system-msg);
+      color: var(--color-text-inverse);
       padding: 4px 14px;
       font-weight: 500;
     }
@@ -495,11 +454,12 @@ body {
       border-radius: 20px;
       max-width: 55%;
       position: relative;
-      background: linear-gradient(135deg, $ai-gradient-start 0%, $ai-gradient-end 100%);
+      background: linear-gradient(135deg, var(--ai-gradient-start) 0%, var(--ai-gradient-end) 100%);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
-      border: 1px solid $ai-border-color;
-      box-shadow: 0 8px 24px $ai-glow-color, inset 0 1px 0 rgba(255, 255, 255, 0.6);
+      border: 1px solid var(--ai-border-color);
+      box-shadow: 0 8px 24px var(--ai-glow-color), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+      color: var(--color-text-primary);
 
       .sendername {
         align-self: flex-end;
@@ -517,19 +477,20 @@ body {
         align-items: center;
         justify-content: center;
         font-size: 12px;
-        color: white;
+        color: var(--color-text-inverse);
         z-index: 2;
       }
 
       pre {
-        background: rgba(0, 0, 0, 0.05);
+        background: var(--ai-code-bg);
         border-radius: 8px;
         padding: 12px;
-        border: 1px solid rgba(162, 136, 255, 0.2);
+        border: 1px solid var(--ai-border-color);
       }
 
       .readtime {
-        color: rgba(0, 0, 0, 0.5);
+        @extend %time-styles;
+        color: var(--color-text-secondary);
       }
     }
 
@@ -549,20 +510,22 @@ body {
   gap: 10px;
   width: 100%;
   padding: 10px 15px;
-  border-top: 1px solid rgba(112, 111, 111, 0.07);
+  border-top: 1px solid var(--color-border-input);
 
   .textfield {
     width: 90%;
     height: 40px;
     padding: 10px;
     font-size: 16px;
-    border: 1px solid $color-border-light;
+    color: var(--color-text-primary);
+    background: var(--color-bg-white);
+    border: 1px solid var(--color-border-light);
     border-radius: $border-radius-md;
     transition: border-color 0.3s ease;
 
     &:focus {
-      border: 1px solid $primary-blue;
-      box-shadow: 0 0 0 3px rgba(31, 90, 238, 0.08);
+      border: 1px solid var(--color-primary-blue);
+      box-shadow: var(--shadow-focus-ring);
       outline: none;
     }
   }
@@ -573,21 +536,21 @@ body {
     width: 34px;
     height: 34px;
     padding: 5px 5px 3px 3px;
-    background: $color-primary;
+    background: var(--color-primary);
     border: none;
     border-radius: 100%;
     transition: $transition-default;
 
     &:hover {
-      background: $color-primary-hover;
+      background: var(--color-primary-hover);
 
       svg {
-        fill: #fff;
+        fill: var(--color-text-inverse);
       }
     }
 
     svg {
-      color: #ffffff;
+      color: var(--color-text-inverse);
     }
   }
 
@@ -598,7 +561,7 @@ body {
     width: 36px;
     height: 36px;
     padding: 0;
-    background: $color-primary;
+    background: var(--color-primary);
     border: none;
     border-radius: 50%;
     cursor: pointer;
@@ -609,7 +572,7 @@ body {
       position: absolute;
       inset: -2px;
       border-radius: 50%;
-      background: linear-gradient(135deg, $ai-primary, $ai-accent, $ai-secondary);
+      background: linear-gradient(135deg, var(--ai-primary), var(--ai-accent), var(--ai-secondary));
       opacity: 0;
       z-index: -1;
       transition: opacity 0.3s ease;
@@ -621,7 +584,7 @@ body {
       position: absolute;
       inset: -4px;
       border-radius: 50%;
-      border: 1.5px solid rgba($ai-glow, 0.35);
+      border: 1.5px solid rgba(167, 139, 250, 0.35); /* ai-glow з альфою */
       opacity: 0;
       transform: scale(0.85);
       transition: opacity 0.3s ease, transform 0.3s ease;
@@ -630,7 +593,7 @@ body {
     svg {
       width: 16px;
       height: 16px;
-      color: #ffffff;
+      color: var(--color-text-inverse);
       position: relative;
       z-index: 1;
       transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -638,8 +601,8 @@ body {
 
     &:hover {
       transform: scale(1.08);
-      box-shadow: 0 0 0 3px rgba($ai-primary, 0.18),
-      0 4px 16px rgba($ai-secondary, 0.45),
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.18),
+      0 4px 16px rgba(139, 92, 246, 0.45),
       0 2px 6px rgba(0, 0, 0, 0.2);
 
       &::before {
@@ -658,7 +621,7 @@ body {
 
     &:active {
       transform: scale(0.95);
-      box-shadow: 0 2px 8px rgba($ai-secondary, 0.3);
+      box-shadow: 0 2px 8px rgba(139, 92, 246, 0.3);
     }
   }
 }
@@ -674,24 +637,24 @@ body {
     svg {
       position: absolute;
       left: 280px;
-      color: $color-text-primary;
+      color: var(--color-text-primary);
     }
 
     input {
       width: 320px;
       height: 40px;
       background: none;
-      border: 1px solid rgb(253, 253, 253);
+      border: 1px solid var(--color-border-search);
       border-radius: $border-radius-sm;
-      color: $color-text-primary;
+      color: var(--color-text-primary);
       padding-left: 10px;
       transition: border-color 0.3s ease;
 
       &:focus {
-        border: 1px solid $primary-blue;
+        border: 1px solid var(--color-primary-blue);
         outline: none;
         border-radius: $border-radius-sm;
-        box-shadow: 0 0 0 3px rgba(31, 90, 238, 0.08);
+        box-shadow: var(--shadow-focus-ring);
       }
     }
   }
@@ -707,19 +670,20 @@ body {
   div {
     width: 80%;
     padding: 5px;
-    background-color: rgba(253, 253, 253, 0.3);
-    border: 1px solid rgb(253, 253, 253);
+    background-color: var(--color-bg-filter);
+    border: 1px solid var(--color-border-search);
+    color: var(--color-text-primary);
     border-radius: $border-radius-lg;
     transition: all 0.2s ease;
 
     &:hover {
       cursor: pointer;
-      background-color: rgba(253, 253, 253, 0.5);
+      background-color: var(--color-bg-filter-hover);
     }
 
     &[data-active="true"] {
-      background-color: rgb(253, 253, 253);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      background-color: var(--color-bg-filter-active);
+      box-shadow: var(--shadow-filter);
     }
   }
 }
@@ -730,9 +694,16 @@ body {
   width: 100%;
   height: 70px;
   padding: 15px;
-  background: #FAFAFA;
+  background: var(--color-bg-header);
   gap: 10px;
+  color: var(--color-text-primary);
 
+  .headertext {
+    p:first-child {
+      font-weight: 600;
+      font-size: 1rem;
+    }
+  }
 
   img {
     @include avatar(50px);
@@ -754,7 +725,7 @@ body {
 
   .groupmembers {
     font-size: 0.85rem;
-    color: #6b7280;
+    color: var(--color-text-muted);
 
     &:hover {
       cursor: pointer;
@@ -763,7 +734,7 @@ body {
 
   .userstatus {
     font-size: 0.85rem;
-    color: $color-status-online;
+    color: var(--color-status-online);
 
     &:hover {
       cursor: pointer;
@@ -772,7 +743,7 @@ body {
 
   .lastseen {
     font-size: 0.85rem;
-    color: #6b7280;
+    color: var(--color-text-muted);
   }
 }
 
@@ -784,22 +755,24 @@ body {
   z-index: 200;
   border-radius: 12px;
   padding: .45rem 0;
-  background: var(--color-background-compact-menu);
+  background: var(--color-bg-context-menu);
+  color: var(--color-text-primary);
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   font-size: 0.85rem;
+  box-shadow: var(--shadow-chat-window);
 
   p {
     padding: 5px;
 
     &:hover {
-      background: rgba(150, 138, 138, 0.09);
+      background: var(--color-bg-menu-hover);
       border-radius: 8px;
     }
   }
 
   .delete {
-    color: #f61e1e;
+    color: var(--color-danger);
   }
 
   .groupmenu {
