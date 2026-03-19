@@ -1,7 +1,7 @@
 import {useState} from "react";
 import styles from "../Authpage.module.scss";
 
-function AuthTabs ({activeButton, setActiveButton}) {
+function AuthTabs({activeButton, setActiveButton}) {
   return (
     <>
       <div
@@ -15,7 +15,7 @@ function AuthTabs ({activeButton, setActiveButton}) {
           }
           onClick={() => setActiveButton("signin")}
         >
-          <p>Sign In</p>
+          <p>Вхід</p>
         </div>
         <div
           className={
@@ -23,10 +23,11 @@ function AuthTabs ({activeButton, setActiveButton}) {
           }
           onClick={() => setActiveButton("signup")}
         >
-          <p>Sign Up</p>
+          <p>Реєстрація</p>
         </div>
       </div>
     </>
   )
 }
+
 export default AuthTabs;

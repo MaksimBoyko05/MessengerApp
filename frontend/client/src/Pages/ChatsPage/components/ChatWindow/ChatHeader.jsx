@@ -19,7 +19,8 @@ function ChatHeader({chatDetails, companion}) {
               value={chatDetails.name}/></div>
             <div className={styles.headertext}>
               <p>{chatDetails.name}</p>
-              <p className={styles.groupmembers}>Members: {chatDetails.members.length}, {chatDetails.members?.filter(members => members.is_online).length} online</p>
+              <p className={styles.groupmembers}>Учасники: {chatDetails.members.length}, {chatDetails.members?.filter(members => members.is_online).length} в
+                мережі</p>
             </div>
           </>
         ) : (

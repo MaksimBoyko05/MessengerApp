@@ -26,7 +26,7 @@ function SettingsModal({onClose}) {
     <div className={styles.modalwrapper}>
       <div className={styles.modalcontainer}>
         <div className={styles.modalheader}>
-          <h2 className={styles.modaltitle}>Settings</h2>
+          <h2 className={styles.modaltitle}>Налаштування</h2>
           <X
             className={styles.closebtn}
             size={24}

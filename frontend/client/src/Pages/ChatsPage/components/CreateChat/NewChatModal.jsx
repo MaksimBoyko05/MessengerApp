@@ -64,11 +64,11 @@ function CreateChatModal({setIsOpen, onChatCreated}) {
           />
           {!isCreateGroup && (
             <div className={styles.modalheader}>
-              <h4>New Chat</h4>
-              <span>Choose someone to message</span>
+              <h4>Новий чат</h4>
+              <span>Розпочніть спілкування</span>
               <input
                 type="text"
-                placeholder="Search users..."
+                placeholder="Шукати користувачів..."
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 autoFocus
@@ -110,7 +110,7 @@ function CreateChatModal({setIsOpen, onChatCreated}) {
                 )}
               </div>
               <div className={styles.creategroupblock}>
-                <button onClick={() => setIsCreateGroup(true)}>Create group</button>
+                <button onClick={() => setIsCreateGroup(true)}>Нова група</button>
               </div>
             </>
           )}

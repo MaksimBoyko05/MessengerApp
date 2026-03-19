@@ -28,20 +28,21 @@ function AskAI({chatId, showPopup}) {
     <>
       <div className={styles.askAipopupwrapper}>
         <div className={styles.popupcontent}>
-          <h4>Ask AI </h4>
+          <h4>Запитайте AI </h4>
           <button
             className={styles.closebutton}
             onClick={onClose}><X size={14}/></button>
           <input
             type={"text"}
-            placeholder={"How can I help you?"}
+            placeholder={"Чим вам допомогти?"}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
           />
           <button
             className={styles.sendbutton}
             disabled={query.length < 1}
-            onClick={handleSend}>Send request
+            onClick={handleSend}>
+            Запитати
           </button>
           {isLoading && (
             <>

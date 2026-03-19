@@ -12,17 +12,17 @@ function Filter({onSetFilterType}) {
       <div
         onClick={() => handleClick('all')}
         data-active={isActive === 'all'}>
-        All
+        Всі
       </div>
       <div
         onClick={() => handleClick('unread')}
         data-active={isActive === 'unread'}>
-        Unread
+        Непрочитані
       </div>
       <div
         onClick={() => handleClick('group')}
         data-active={isActive === 'group'}>
-        Groups
+        Групи
       </div>
     </>
   )

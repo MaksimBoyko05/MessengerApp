@@ -105,16 +105,18 @@ function GroupDetails({setIsOpen}) {
                       alt={"groupimg"}
                       src={`${API_URL}${chatDetails.avatar_url}`}/>
                     <p>{chatDetails.name}</p>
-                    <p>{members.length} Members</p>
+                    <p>{members.length} учасники</p>
                     <div className={styles.buttonblock}>
                       <div onClick={() => setIsEditing(true)}><Pencil size={16}/></div>
                       <div onClick={handleLeave}><LogOut size={16}/></div>
                     </div>
                   </div>
                   <div className={styles.groupmembers}>
-                    <div onClick={() => setIsAddingMembers(true)}>Add members <UserRoundPlus
-                      className={styles.addusericon}
-                      size={16}/></div>
+                    <div onClick={() => setIsAddingMembers(true)}>Додати в групу
+                      <UserRoundPlus
+                        className={styles.addusericon}
+                        size={16}/>
+                    </div>
                     <div className={styles.innerDivider}></div>
                     {members.map(member => (
                       <div

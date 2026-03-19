@@ -98,7 +98,7 @@ function EditGroup({chatId, setIsEditing}) {
         <div
           onClick={handleImageClick}
           className={styles.addphoto}><SwitchCamera/>
-          <p>Add new photo</p>
+          <p>Змінити світлину</p>
           <input
             type={"file"}
             ref={filePickerRef}

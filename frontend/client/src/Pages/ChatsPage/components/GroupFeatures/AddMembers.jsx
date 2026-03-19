@@ -82,11 +82,11 @@ function AddMembers({chatId, setIsAddingMembers, setIsOpen}) {
         onClick={handleBack}
         className={styles.backbtn}/>
       <div className={styles.addusersheader}>
-        <h4 className={styles.creategrouptitle}>Add members</h4>
+        <h4 className={styles.creategrouptitle}>Додати в групу</h4>
         <input
           type="text"
           name={"userSearch"}
-          placeholder="Search users..."
+          placeholder="Шукати користувачів..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           autoFocus
@@ -148,7 +148,7 @@ function AddMembers({chatId, setIsAddingMembers, setIsOpen}) {
         <button
           onClick={handleAddUsers}
           className={styles.addmembers}>
-          Add
+          Додати
         </button>
       </div>
     </>

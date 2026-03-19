@@ -22,13 +22,13 @@ function SecuritySettings({user}) {
     <>
       <div className={styles.changepassblock}>
         <div className={styles.changepasstitle}>
-          <p onClick={() => setIsChangingPassword(true)}>Change Password?</p>
+          <p onClick={() => setIsChangingPassword(true)}>Змінити пароль?</p>
         </div>
         {isChangingPassword && (
           <div className={styles.passinputcontainer}>
             <input
               type={"password"}
-              placeholder={"Current password"}
+              placeholder={"Поточний пароль"}
               value={newPassword.oldPassword}
               className={passwordError ? styles.inputerror : ""}
               onChange={(e) => setNewPassword({...newPassword, oldPassword: e.target.value})}
@@ -42,7 +42,7 @@ function SecuritySettings({user}) {
             />
             <input
               type={"password"}
-              placeholder={"New password"}
+              placeholder={"Новий пароль"}
               value={newPassword.newPassword}
               className={newPasswordError ? styles.inputerror : ""}
               onChange={(e) => setNewPassword({...newPassword, newPassword: e.target.value})}

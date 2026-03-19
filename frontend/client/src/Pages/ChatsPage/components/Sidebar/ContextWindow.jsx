@@ -92,8 +92,6 @@ function ContextWindow({x, y, handleDelete, type, chatId, targetId, containerHei
       <div className={styles.contextmenu}>
         {type === "chatList" && (
           <>
-            <p>Placeholder1</p>
-            <p>Placeholder2</p>
             <p
               className={styles.delete}
               onClick={() => handleDelete(false)}><Trash size={16}/>Видалити у мене</p>

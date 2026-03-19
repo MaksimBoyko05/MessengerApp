@@ -100,7 +100,6 @@ body, button {
       padding: 14px;
       border-radius: 20px;
       box-shadow: var(--shadow-card-inset);
-      margin-top: auto;
 
       button {
         @include button-style;
@@ -181,6 +180,7 @@ body, button {
         max-height: 45px;
         transition: all 0.3s;
         border: 1px solid transparent;
+        gap: 5px;
 
         &:hover {
           background: var(--color-bg-hover);
@@ -190,7 +190,7 @@ body, button {
           width: 32px;
           height: 32px;
           border-radius: 50%;
-          object-fit: contain;
+          object-fit: cover;
         }
 
         .userdata {
@@ -240,6 +240,7 @@ body, button {
       width: fit-content;
       border-radius: 18px;
       color: var(--color-text-primary);
+      gap: 5px;
 
       .removeuser {
         padding-left: 2px;
@@ -258,7 +259,7 @@ body, button {
         width: 32px;
         height: 32px;
         border-radius: 50%;
-        object-fit: contain;
+        object-fit: cover;
       }
     }
   }

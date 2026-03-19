@@ -235,22 +235,24 @@ function ChatsList({onSelectedChat, selectedChatId, onFilterType, onSearchQuery}
   };
 
   if (loading) return <div>Завантаження...</div>;
-  if (!loading && chats.length === 0) {
-    return <div>У вас ще немає активних чатів</div>;
-  }
+
   return (
     <div className={styles.chatsList}>
-      {filteredChats.map(chat => (
-        <div
-          key={chat.id}
-          onContextMenu={(e) => handleRightClick(e, chat.id)}>
-          <ChatBlock
-            chat={chat}
-            onClick={handleChatClick}
-            isActive={chat.id === selectedChatId}
-          />
-        </div>
-      ))}
+      {!loading && chats.length > 0 ? (
+        filteredChats.map(chat => (
+          <div
+            key={chat.id}
+            onContextMenu={(e) => handleRightClick(e, chat.id)}>
+            <ChatBlock
+              chat={chat}
+              onClick={handleChatClick}
+              isActive={chat.id === selectedChatId}
+            />
+          </div>
+        ))
+      ) : (
+        <div className={styles.chatsListNoMessages}>У вас ще немає активних чатів</div>
+      )}
       {contextMenu.visible && (
         <>
           <ContextWindow

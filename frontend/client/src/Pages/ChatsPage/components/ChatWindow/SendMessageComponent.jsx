@@ -1,4 +1,4 @@
-import {useState, useEffect} from "react";
+import {useState} from "react";
 import {chatsService} from '@/api/chatsService.js';
 import styles from "@/Pages/ChatsPage/Chats.module.scss";
 import {Send} from 'lucide-react';
@@ -51,7 +51,7 @@ function SendMessageComponent({chatId, receiverId, suggestions, onSetSuggestions
       <div className={styles.sendcomponent}>
         <input
           name="text"
-          placeholder="Type a message..."
+          placeholder="Повідомлення..."
           value={messageData.text}
           onChange={handleChange}
           className={styles.textfield}

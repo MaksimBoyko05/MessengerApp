@@ -276,6 +276,15 @@ body, button {
   flex-direction: column;
   gap: 10px;
 
+  .changepasstitle {
+    font-weight: 500;
+
+    &:hover {
+      font-weight: 600;
+      cursor: pointer;
+    }
+  }
+
   .passinputcontainer {
     display: flex;
     flex-direction: column;

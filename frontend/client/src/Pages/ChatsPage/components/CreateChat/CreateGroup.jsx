@@ -59,38 +59,38 @@ function CreateGroup({onClose, defaultUsers}) {
         onClick={handleClose}
         className={styles.backbtn}/>
       <div className={styles.modalheader}>
-        <h4 className={styles.creategrouptitle}>New Group</h4>
-        <span>Create a new group</span>
+        <h4 className={styles.creategrouptitle}>Нова група</h4>
+        <span>Створити групу</span>
         <input
           type={"text"}
-          placeholder={"Name the group"}
+          placeholder={"Назва групи"}
           value={groupName}
           onChange={(e) => setGroupName(e.target.value)}/>
-      </div>
-      <div className={styles.selecteduserscontainer}>
-        {selectedUsers.map(user => (
-          <div
-            key={user.id}
-            className={styles.selecteduser}>
-            {user.avatar_url === null ? (
-              <Avvvatars value={user.name}/>
-            ) : (
-              <img
-                alt={user.username}
-                src={`${API_URL}${user.avatar_url}`}/>
-            )}
-            <span>{user.username}</span>
-            <X
-              className={styles.removeuser}
-              size={12}
-              onClick={() => handleRemoveUser(user.id)}/>
-          </div>
-        ))}
+        <div className={styles.selecteduserscontainer}>
+          {selectedUsers.map(user => (
+            <div
+              key={user.id}
+              className={styles.selecteduser}>
+              {user.avatar_url === null ? (
+                <Avvvatars value={user.name}/>
+              ) : (
+                <img
+                  alt={user.username}
+                  src={`${API_URL}${user.avatar_url}`}/>
+              )}
+              <span>{user.username}</span>
+              <X
+                className={styles.removeuser}
+                size={12}
+                onClick={() => handleRemoveUser(user.id)}/>
+            </div>
+          ))}
+        </div>
       </div>
       <div className={styles.searchusers}>
         <input
           type="text"
-          placeholder="Search users..."
+          placeholder="Шукати користувачів..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           autoFocus
@@ -123,7 +123,7 @@ function CreateGroup({onClose, defaultUsers}) {
       <div className={styles.creategroupblock}>
         <button
           className={styles.createGroup}
-          onClick={handleCreateGroup}>Create
+          onClick={handleCreateGroup}>Створити
         </button>
       </div>
     </>

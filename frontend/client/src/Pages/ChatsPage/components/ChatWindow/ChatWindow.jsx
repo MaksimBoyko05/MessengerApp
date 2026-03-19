@@ -309,7 +309,7 @@ function ChatWindow({chatId}) {
   if (!chatId) {
     return <NoChatSelected/>;
   }
-  if (loading) return <div className={styles.loading}>Завантаження...</div>;
+  if (loading) return <div className={styles.loading}></div>;
 
 
   return (
@@ -344,7 +344,10 @@ function ChatWindow({chatId}) {
             </div>
           ))
         ) : (
-          <div className={styles.noMessages}>У вас ще немає повідомлень у цьому чаті</div>
+          <div className={styles.noMessages}>
+            <p> У вас ще немає повідомлень</p>
+            <p>Розпочніть спілкування прямо зараз!</p>
+          </div>
         )}
         <div
           className={styles.msganchor}

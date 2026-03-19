@@ -83,7 +83,7 @@ function ProfileSettings({user}) {
           </div>
           <div className={styles.nameblock}>
             <div className={styles.namelabel}>
-              <label>Display name</label>
+              <label>Ім'я</label>
             </div>
             <div className={styles.editnameblock}>
               <input
@@ -93,7 +93,8 @@ function ProfileSettings({user}) {
               {isChanged && (
                 <button
                   className={styles.savenamebtn}
-                  onClick={handleSave}>Save
+                  onClick={handleSave}>
+                  Зберегти
                 </button>
               )}
             </div>
@@ -105,7 +106,7 @@ function ProfileSettings({user}) {
           <div className={styles.emailblock}>
             <span>{user.email}</span>
             {!changeEmail && (
-              <button onClick={() => setChangeEmail(true)}>Change</button>
+              <button onClick={() => setChangeEmail(true)}>Змінити</button>
             )}
           </div>
           {changeEmail && (
@@ -113,7 +114,7 @@ function ProfileSettings({user}) {
               <div className={styles.newemailblock}>
                 <input
                   type={"email"}
-                  placeholder={"New Email"}
+                  placeholder={"Новий email"}
                   className={emailError ? styles.inputerror : ""}
                   value={newEmail}
                   onChange={(e) => setNewEmail(e.target.value)}
@@ -127,11 +128,11 @@ function ProfileSettings({user}) {
                 />
                 <button
                   disabled={emailError || newEmail.length < 1}
-                  onClick={handleSendVerification}>Send
+                  onClick={handleSendVerification}>Віправити
                 </button>
                 <button
                   style={{background: "#FF2C2C"}}
-                  onClick={onClose}>Cancel
+                  onClick={onClose}>Відміна
                 </button>
               </div>
               <div><p className={styles.error}>{emailError}</p></div>

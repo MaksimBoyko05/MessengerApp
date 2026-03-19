@@ -24,7 +24,7 @@ function SendResetPassEmail({setStatus}) {
         <ChevronLeft onClick={handleCLose}/>
       </div>
       <div className={styles.sendmailcontainer}>
-        <label>Your account email:</label>
+        <label>Ваш email:</label>
         <input
           type={"email"}
           value={email}
@@ -41,7 +41,7 @@ function SendResetPassEmail({setStatus}) {
         <p className={styles.error}>{emailError}</p>
         <button
           disabled={emailError || email.length < 1}
-          onClick={handleSendEmail}>Send
+          onClick={handleSendEmail}>Надіслати
         </button>
       </div>
     </>

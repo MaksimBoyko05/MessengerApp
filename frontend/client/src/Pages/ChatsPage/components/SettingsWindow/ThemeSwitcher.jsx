@@ -18,7 +18,7 @@ const ThemeSwitcher = () => {
 
   return (
     <div className={styles.themeSwitcher}>
-      <h2 className={styles.title}>Switch theme</h2>
+      <h2 className={styles.title}>Змінити тему</h2>
       <div className={styles.themesContainer}>
         <div
           className={`${styles.themeCard} ${activeTheme === 'light' ? styles.active : ''}`}

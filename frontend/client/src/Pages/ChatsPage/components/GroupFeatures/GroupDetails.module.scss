@@ -200,6 +200,7 @@ $modal-search-radius: 16px;
         width: fit-content;
         border-radius: 18px;
         color: var(--color-text-primary);
+        gap: 5px;
 
         .removeuser {
           padding-left: 2px;
@@ -215,10 +216,10 @@ $modal-search-radius: 16px;
         }
 
         img {
-          width: 32px;
-          height: 32px;
+          width: 26px;
+          height: 26px;
           border-radius: 50%;
-          object-fit: contain;
+          object-fit: cover;
         }
       }
     }
@@ -298,6 +299,7 @@ $modal-search-radius: 16px;
       max-height: 45px;
       transition: all 0.3s;
       border: 1px solid transparent;
+      gap: 5px;
 
       &:hover {
         background: var(--color-bg-hover);
@@ -307,7 +309,7 @@ $modal-search-radius: 16px;
         width: 32px;
         height: 32px;
         border-radius: 50%;
-        object-fit: contain;
+        object-fit: cover;
       }
 
       .userdata {

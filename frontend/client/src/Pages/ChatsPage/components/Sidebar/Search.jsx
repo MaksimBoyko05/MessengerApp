@@ -10,7 +10,7 @@ function SearchBlock({onSearchQuery, onSetSearchQuery}) {
           color={"#666"}/>
         <input
           type="search"
-          placeholder="Search chats.."
+          placeholder="Шукати чати..."
           value={onSearchQuery}
           onChange={(e) => onSetSearchQuery(e.target.value)}
         />

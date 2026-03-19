@@ -54,7 +54,7 @@ function Profile() {
           alt="avatar"/>
         <div className={styles.profiletitles}>
           <p className={styles.usertitle}>{username}</p>
-          <p className={styles.userstatus}>online</p>
+          <p className={styles.userstatus}>в мережі</p>
         </div>
         <div className={styles.logout}>
           <LogOut

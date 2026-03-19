@@ -3,7 +3,7 @@ import styles from "@/Pages/ChatsPage/Chats.module.scss";
 function UserStatus({isOnline, lastSeen}) {
 
   if (isOnline) {
-    return <p className={styles.userstatus}>Online</p>;
+    return <p className={styles.userstatus}>В мережі</p>;
   }
 
   const lastSeenStr = lastSeen;

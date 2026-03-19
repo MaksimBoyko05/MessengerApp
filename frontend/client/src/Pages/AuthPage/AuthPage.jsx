@@ -137,7 +137,7 @@ function AuthPage() {
                     password || isFocused.password ? "active" : ""
                   }`}
                 >
-                  <label className={styles.labelPass}>Password</label>
+                  <label className={styles.labelPass}>Пароль</label>
                   <input
                     className={`formInput ${
                       !isFocused.password && passwordError ? "input-error" : ""
@@ -181,7 +181,7 @@ function AuthPage() {
                       confirmPassword || isFocused.confirmPassword ? "active" : ""
                     }`}
                   >
-                    <label className={styles.labelConfirmPass}>Confirm Password</label>
+                    <label className={styles.labelConfirmPass}>Підтвердіть пароль</label>
                     <input
                       className={`formInput ${
                         !isFocused.confirmPassword && confirmPasswordError ? "input-error" : ""
@@ -215,12 +215,14 @@ function AuthPage() {
                   </div>
                 )}
                 <p className={styles.error}>{confirmPasswordError}</p>
-                <p
-                  className={styles.forgotpass}
-                  onClick={() => setStatus("ForgotPass")}
-                >
-                  Forgot Password?
-                </p>
+                {activeButton === "signin" && (
+                  <p
+                    className={styles.forgotpass}
+                    onClick={() => setStatus("ForgotPass")}
+                  >
+                    Забули пароль?
+                  </p>
+                )}
                 <div className={styles.buttoncontainer}>
                   <button
                     className={styles.sbmbutton}
@@ -234,7 +236,7 @@ function AuthPage() {
                       (activeButton === "signup" && !confirmPassword)
                     }
                   >
-                    {isLoading ? "Завантаження" : activeButton === "signin" ? "Sign In" : "Sign Up"}
+                    {isLoading ? "Завантаження" : activeButton === "signin" ? "Увійти" : "Зареєструватися"}
                   </button>
                 </div>
                 {message && <p>{message}</p>}
