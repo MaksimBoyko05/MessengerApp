@@ -126,6 +126,9 @@
   --color-bg-hover: #f5f5f5;
   --color-primary-disabled: #93bcfa;
 
+  --toastify-color-light: var(--color-bg-white);
+  --toastify-text-color-light: var(--color-text-primary);
+
   --color-badge-admin-bg: #fef3c7;
   --color-badge-admin-text: #b45309;
   --color-badge-member-bg: #ede9fe;
@@ -202,6 +205,9 @@
   --color-bg-btn-secondary: #333333;
   --color-bg-hover: #2a2a2a;
   --color-primary-disabled: #3a5b8c;
+
+  --toastify-color-light: var(--color-bg-light);
+  --toastify-text-color-light: var(--color-text-primary);
 
   --color-badge-admin-bg: rgba(180, 83, 9, 0.2);
   --color-badge-admin-text: #fcd34d;

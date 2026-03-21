@@ -180,6 +180,7 @@ body, button {
         max-height: 45px;
         transition: all 0.3s;
         border: 1px solid transparent;
+        color: var(--color-text-primary);
         gap: 5px;
 
         &:hover {

@@ -9,6 +9,7 @@ import {SocketProvider} from "./context/SocketContext.jsx";
 import VerifyEmail from "@/Pages/VerifyPage/VerifyEmail.jsx";
 import ResetPassword from "@/Pages/VerifyPage/ResetPassword.jsx";
 import "@/assets/styles/_themes.scss";
+import {ToastContainer} from "react-toastify";
 
 function App() {
   return (
@@ -40,6 +41,18 @@ function App() {
             />
           </Routes>
         </Router>
+        <ToastContainer
+          position="top-right"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+        />
       </SocketProvider>
     </UserProvider>
   );

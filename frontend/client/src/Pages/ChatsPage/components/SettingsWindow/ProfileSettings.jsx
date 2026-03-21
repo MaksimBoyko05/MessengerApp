@@ -2,6 +2,7 @@ import styles from "./Settings.module.scss"
 import {Camera} from 'lucide-react';
 import {useEffect, useRef, useState} from "react";
 import {userService} from "@/api/userService.js";
+import {toast} from "react-toastify";
 
 function ProfileSettings({user}) {
   const [data, setData] = useState({
@@ -48,6 +49,7 @@ function ProfileSettings({user}) {
     }
     try {
       const res = await userService.updateUser(user.id, payload);
+      toast.success("Профіль оновлено!")
     } catch (err) {
       console.error("Error with update data", err)
     }
@@ -59,7 +61,7 @@ function ProfileSettings({user}) {
   const handleSendVerification = async () => {
     try {
       const res = await userService.changeEmail(user.id, newEmail)
-      console.log("Email send")
+      toast.success("Лист надіслано")
     } catch (err) {
       console.error("Error with sending", err)
     }

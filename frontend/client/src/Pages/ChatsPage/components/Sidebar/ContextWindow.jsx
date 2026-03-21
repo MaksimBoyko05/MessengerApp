@@ -4,6 +4,7 @@ import {chatsService} from "@/api/chatsService.js";
 import {useContext} from "react";
 import {ChatContext} from "@/context/ChatContext.jsx";
 import UserContext from "@/context/UserContext.jsx";
+import {toast} from "react-toastify";
 
 function ContextWindow({x, y, handleDelete, type, chatId, targetId, containerHeight, containerWidth, closeMenu}) {
   const menuHeight = 135;
@@ -36,6 +37,7 @@ function ContextWindow({x, y, handleDelete, type, chatId, targetId, containerHei
         })
       })
       await chatsService.promoteAdmin(chatId, targetId)
+      toast.success("Користувача назначено адміном!")
     } catch (err) {
       console.error("Error with promote to admin", err)
     }
@@ -52,6 +54,7 @@ function ContextWindow({x, y, handleDelete, type, chatId, targetId, containerHei
         })
       })
       await chatsService.promoteMember(chatId, targetId)
+      toast.info("Користувач більше не адмін!")
     } catch (err) {
       console.error("Error with promote to admin", err)
     }

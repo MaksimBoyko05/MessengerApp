@@ -4,6 +4,7 @@ import {chatsService} from "@/api/chatsService.js";
 import {ChevronLeft, X} from 'lucide-react';
 import Avvvatars from "avvvatars-react";
 import UserStatus from "@/Pages/ChatsPage/components/ChatWindow/UserStatus.jsx";
+import {toast} from "react-toastify";
 
 function CreateGroup({onClose, defaultUsers, setIsOpen, onChatCreated}) {
   const [query, setQuery] = useState("");
@@ -38,11 +39,12 @@ function CreateGroup({onClose, defaultUsers, setIsOpen, onChatCreated}) {
     const memberIds = selectedUsers.map(user => user.id);
     try {
       const res = await chatsService.createGroup(groupName, memberIds);
-      console.log("Групу успішно створено!", res);
+      toast.success("Групу створено!")
       onChatCreated(res.chat);
       setIsOpen(false);
     } catch (err) {
       console.error("Error:", err)
+      toast.error(err.response?.data?.message || "Помилка при створенні групи")
     }
   }
   const handleRemoveUser = (userIdToRemove) => {

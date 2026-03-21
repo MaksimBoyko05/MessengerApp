@@ -1,6 +1,7 @@
 import {useState} from "react";
 import {userService} from "@/api/userService.js";
 import styles from "./Settings.module.scss"
+import {toast} from "react-toastify";
 
 function SecuritySettings({user}) {
   const [newPassword, setNewPassword] = useState({
@@ -14,6 +15,7 @@ function SecuritySettings({user}) {
   const handleSubmit = async (e) => {
     try {
       const res = await userService.changePassword(user.id, newPassword.oldPassword, newPassword.newPassword)
+      toast.success("Пароль змінено!")
     } catch (err) {
       console.error("Error with change pass", err)
     }
