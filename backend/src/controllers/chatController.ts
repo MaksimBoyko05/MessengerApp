@@ -70,17 +70,34 @@ export const createGroupChat = async (req: Request, res: Response) => {
         const creatorId = (req as any).user?.id;
 
         if (!name || !memberIds || !Array.isArray(memberIds)) {
-            return res.status(400).json({message: "Назва групи та список учасників  обов'язкові"});
+            return res.status(400).json({message: "Назва групи та список учасників обов'язкові"});
         }
 
         if (memberIds.length === 0) {
             return res.status(400).json({message: "Група повинна мати хоча б одного учасника крім вас"});
         }
+
         const newChat = await chatRepo.createGroupChat(creatorId, name, memberIds);
+
+        const [creatorName] = await chatRepo.getUsernames([creatorId]);
+        const text = `Групу створено користувачем: ${creatorName || 'Адміністратор'}`;
+        const systemMessage = await messageRepo.createSystemMessage(newChat.id, creatorId, text);
+
+        const fullChatData = await chatRepo.getChatByIdForSidebar(newChat.id, creatorId);
+
+        const io = getIO();
+
+        io.to(`chat_${newChat.id}`).emit("receive_message", systemMessage);
+
+        const allMembers = [...memberIds, creatorId];
+
+        allMembers.forEach(memberId => {
+            io.to(`user_${memberId}`).emit("new_chat_created", fullChatData);
+        });
 
         res.status(201).json({
             message: "Групу успішно створено",
-            chat: newChat
+            chat: fullChatData
         });
 
     } catch (error) {

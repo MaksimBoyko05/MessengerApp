@@ -5,7 +5,7 @@ import {ChevronLeft, X} from 'lucide-react';
 import Avvvatars from "avvvatars-react";
 import UserStatus from "@/Pages/ChatsPage/components/ChatWindow/UserStatus.jsx";
 
-function CreateGroup({onClose, defaultUsers}) {
+function CreateGroup({onClose, defaultUsers, setIsOpen, onChatCreated}) {
   const [query, setQuery] = useState("");
   const [users, setUsers] = useState([]);
   const API_URL = "http://localhost:5000";
@@ -37,8 +37,10 @@ function CreateGroup({onClose, defaultUsers}) {
   const handleCreateGroup = async () => {
     const memberIds = selectedUsers.map(user => user.id);
     try {
-      const newGroup = await chatsService.createGroup(groupName, memberIds);
-      console.log("Групу успішно створено!", newGroup);
+      const res = await chatsService.createGroup(groupName, memberIds);
+      console.log("Групу успішно створено!", res);
+      onChatCreated(res.chat);
+      setIsOpen(false);
     } catch (err) {
       console.error("Error:", err)
     }

@@ -91,9 +91,7 @@ function ChatsList({onSelectedChat, selectedChatId, onFilterType, onSearchQuery}
 
   useEffect(() => {
     if (!socket) return;
-    console.log("--- СТВОРЕННЯ ПІДПИСОК НА СОКЕТ ---");
     const handleNewMessage = (rawMessage) => {
-      console.log(" SOCKET ОТРИМАВ ПОВІДОМЛЕННЯ:", rawMessage);
 
       const message = {
         ...rawMessage,
@@ -130,11 +128,21 @@ function ChatsList({onSelectedChat, selectedChatId, onFilterType, onSearchQuery}
         fetchMissingChat(message.chat_id);
       }
     };
+    const handleNewChat = (newChatData) => {
+      console.log("SOCKET ОТРИМАВ НОВИЙ ЧАТ:", newChatData);
+      setChats((prevChats) => {
+        if (prevChats.some(c => c.id === newChatData.id)) {
+          return prevChats;
+        }
+        return [newChatData, ...prevChats];
+      });
+
+      socket.emit("join_chat", newChatData.id);
+    };
     const handleStatusChange = (statusData) => {
       setChats(prevChats => {
         return prevChats.map(chat => {
           if (chat.partner_id === statusData.userId) {
-            console.log("✅ ЗНАЙДЕНО ЧАТ ДЛЯ ОНОВЛЕННЯ!", chat.id);
             return {
               ...chat,
               is_online: statusData.online,
@@ -156,11 +164,13 @@ function ChatsList({onSelectedChat, selectedChatId, onFilterType, onSearchQuery}
     };
 
     socket.on("receive_message", handleNewMessage);
+    socket.on("new_chat_created", handleNewChat);
     socket.on("message_read", handleMessageRead);
     socket.on("user_status_change", handleStatusChange);
 
     return () => {
       socket.off("receive_message", handleNewMessage);
+      socket.off("new_chat_created", handleNewChat);
       socket.off("message_read", handleMessageRead);
       socket.off("user_status_change", handleStatusChange);
     };

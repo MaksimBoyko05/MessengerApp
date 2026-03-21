@@ -78,6 +78,8 @@ function CreateChatModal({setIsOpen, onChatCreated}) {
           {isCreateGroup ? (
             <>
               <CreateGroup
+                setIsOpen={setIsOpen}
+                onChatCreated={onChatCreated}
                 defaultUsers={defaultUsers}
                 onClose={setIsCreateGroup}/>
             </>
