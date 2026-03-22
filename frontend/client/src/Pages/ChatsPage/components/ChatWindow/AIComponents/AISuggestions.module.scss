@@ -141,7 +141,7 @@ body {
     border-radius: 20px;
     background: var(--color-bg-modal-main);
     box-shadow: var(--shadow-modal-container);
-    margin-bottom: 20%;
+    margin-top: 30%;
     animation: slideInFromBottom 0.5s ease-out forwards;
     will-change: transform;
     backface-visibility: hidden;
@@ -235,6 +235,21 @@ body {
           right: 22%;
           animation-delay: 0.8s;
         }
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .askAipopupwrapper {
+    justify-content: center;
+
+    .popupcontent {
+      max-width: 75%;
+      margin-bottom: 30%;
+
+      .loadingelements {
+        max-width: 100%;
       }
     }
   }

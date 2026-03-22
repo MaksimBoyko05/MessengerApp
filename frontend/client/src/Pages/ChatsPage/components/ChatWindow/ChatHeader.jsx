@@ -3,15 +3,18 @@ import UserStatus from "./UserStatus.jsx"
 import Avvvatars from "avvvatars-react";
 import {useState} from "react";
 import GroupDetails from "@/Pages/ChatsPage/components/GroupFeatures/GroupDetails.jsx";
+import {ChevronLeft} from "lucide-react";
 
-function ChatHeader({chatDetails, companion}) {
+function ChatHeader({chatDetails, companion, onBack}) {
   const API_URL = "http://localhost:5000";
   const [isOpen, setIsOpen] = useState(false)
   return (
     <>
       <div
         onClick={() => chatDetails.is_group ? setIsOpen(true) : null}
-        className={styles.chatheaderwrapper}>
+        className={styles.chatheaderwrapper}
+      >
+        <ChevronLeft onClick={onBack}/>
         {chatDetails.is_group ? (
           <>
             <div className={styles.groupimage}><Avvvatars

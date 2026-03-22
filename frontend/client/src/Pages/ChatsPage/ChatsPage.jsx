@@ -12,7 +12,7 @@ function ChatsPage() {
   const [searchQuery, setSearchQuery] = useState("");
 
   return (
-    <div className={styles.wrapper}>
+    <div className={`${styles.wrapper} ${selectedChatId ? styles.chatActive : ''}`}>
       <div className={styles.sidebarwrapper}>
         <div className={styles.profile}>
           <Profile/>
@@ -35,7 +35,9 @@ function ChatsPage() {
             selectedChatId={selectedChatId}/>
         </div>
       </div>
-      <ChatWindow chatId={selectedChatId}/>
+      <ChatWindow
+        chatId={selectedChatId}
+        onBack={() => setSelectedChatId(null)}/>
     </div>
   );
 }

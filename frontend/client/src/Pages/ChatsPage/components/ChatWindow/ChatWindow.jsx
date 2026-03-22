@@ -12,7 +12,7 @@ import {ChatContext} from "@/context/ChatContext.jsx";
 import {ChatProvider} from "@/context/ChatContext.jsx";
 import ContextWindow from "@/Pages/ChatsPage/components/Sidebar/ContextWindow.jsx";
 
-function ChatWindow({chatId}) {
+function ChatWindow({chatId, onBack}) {
   const [messages, setMessages] = useState([]);
   const [chatDetails, setChatDetails] = useState([]);
   const [suggestions, setSuggestions] = useState([]);
@@ -319,7 +319,9 @@ function ChatWindow({chatId}) {
       <ChatContext.Provider value={{chatDetails, setChatDetails}}>
         <ChatHeader
           chatDetails={chatDetails}
-          companion={companion}/>
+          companion={companion}
+          onBack={onBack}
+        />
       </ChatContext.Provider>
       <div
         onScroll={handleScroll}

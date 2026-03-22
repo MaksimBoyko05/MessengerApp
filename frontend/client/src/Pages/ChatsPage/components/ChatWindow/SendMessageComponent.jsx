@@ -49,12 +49,23 @@ function SendMessageComponent({chatId, receiverId, suggestions, onSetSuggestions
         suggestions={suggestions}
         onSelect={handleSuggestionClick}/>
       <div className={styles.sendcomponent}>
-        <input
+        <textarea
           name="text"
           placeholder="Повідомлення..."
           value={messageData.text}
           onChange={handleChange}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+              e.preventDefault();
+              handleSendMessage();
+            }
+          }}
           className={styles.textfield}
+          rows={1}
+          onInput={(e) => {
+            e.target.style.height = 'auto';
+            e.target.style.height = e.target.scrollHeight + 'px';
+          }}
         />
         <button
           onClick={handleSendMessage}
