@@ -239,7 +239,7 @@ function AuthPage() {
                     {isLoading ? "Завантаження" : activeButton === "signin" ? "Увійти" : "Зареєструватися"}
                   </button>
                 </div>
-                {message && <p>{message}</p>}
+                {message && <p className={styles.error}>{message}</p>}
               </form>
             </>
           ) : (

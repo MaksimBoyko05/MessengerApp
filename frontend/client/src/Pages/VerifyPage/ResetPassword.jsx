@@ -21,7 +21,7 @@ function VerifyEmail() {
       } catch (err) {
         console.error(err.response?.data?.error)
         setStatus("error");
-        setErrorMessage(err.response?.data?.error || "Invalid token")
+        setErrorMessage(err.response?.data?.error || "Помилка токену")
       }
     }
     verifyToken();
@@ -37,29 +37,29 @@ function VerifyEmail() {
       }, 3000);
     } catch (err) {
       setStatus("error");
-      setErrorMessage(err.response?.data?.error || "Error with changing password");
+      setErrorMessage(err.response?.data?.error || "Помилка при зміні паролю");
     }
   }
   return (
     <div className={styles.emailcontainer}>
       {status === "loading" && (
         <div className={styles.loadingblock}>
-          <h4>Token verification... ⏳</h4>
+          <h4>Перевірка токену... ⏳</h4>
         </div>
       )}
       {status === "error" && (
         <div className={styles.errorblock}>
-          <h4>Error</h4>
+          <h4>Помилка</h4>
           <p>{errorMessage}</p>
         </div>
       )}
       {status === "waiting" && (
         <div className={styles.newpassblock}>
-          <h4>Set new password</h4>
+          <h4>Зміна паролю</h4>
           <input
             type={"password"}
             value={newPassword}
-            placeholder={"New password"}
+            placeholder={"Новий пароль"}
             className={passwordError ? styles.inputerror : ""}
             onChange={(e) => setNewPassword(e.target.value)}
             onBlur={() => {
@@ -79,8 +79,8 @@ function VerifyEmail() {
       )}
       {status === "success" && (
         <div className={styles.successblock}>
-          <h4>Password has changed!</h4>
-          <p>Redirecting...</p>
+          <h4>Пароль змінено!</h4>
+          <p>Повернення...</p>
         </div>
       )}
     </div>

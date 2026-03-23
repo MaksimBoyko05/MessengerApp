@@ -15,7 +15,7 @@ function VerifyEmail() {
   useEffect(() => {
     if (!token) {
       setStatus("error")
-      setErrorMessage("Link is not valid")
+      setErrorMessage("Посилання не дійсне")
       return;
     }
     const verifyEmail = async () => {
@@ -27,7 +27,7 @@ function VerifyEmail() {
         }, 3000);
       } catch (err) {
         setStatus("error");
-        setErrorMessage(err.response?.data?.error || "Error with email verification");
+        setErrorMessage(err.response?.data?.error || "Помилка підтверження пошти");
       }
     }
     verifyEmail();
@@ -36,19 +36,19 @@ function VerifyEmail() {
     <div className={styles.emailcontainer}>
       {status === "loading" && (
         <div className={styles.loadingblock}>
-          <h4>Token verification... ⏳</h4>
+          <h4>Перевірка токену... ⏳</h4>
         </div>
       )}
       {status === "error" && (
         <div className={styles.errorblock}>
-          <h4>Error</h4>
+          <h4>Помилка</h4>
           <p>{errorMessage}</p>
         </div>
       )}
       {status === "success" && (
         <div className={styles.successblock}>
-          <h4>Email has changed!</h4>
-          <p>Redirecting...</p>
+          <h4>Пошту змінено!</h4>
+          <p>Повернення...</p>
         </div>
       )}
     </div>

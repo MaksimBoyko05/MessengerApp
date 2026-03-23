@@ -89,10 +89,10 @@ export const login = async (req: Request<{}, {}, LoginUserBody>, res: Response) 
     try {
         const user = await UserRepository.findByEmail(email);
         if (!user)
-            return res.status(401).json({error: "User not found"});
+            return res.status(401).json({error: "Користувача не знайдено"});
         const isValid = await bcrypt.compare(password, user.password_hash);
         if (!isValid)
-            return res.status(401).json({error: "Invalid email or password"});
+            return res.status(401).json({error: "Неправильний пароль або пошта"});
         const token = jwt.sign({id: user.id, email: user.email}, process.env.JWT_SECRET as string, {expiresIn: "1h"});
         res.json({message: "Login successful", token});
     } catch (err) {
@@ -103,7 +103,7 @@ export const login = async (req: Request<{}, {}, LoginUserBody>, res: Response) 
 export const getMe = async (req: Request, res: Response) => {
     const user = await UserRepository.findById(Number(req.user.id));
     if (!user)
-        return res.status(401).json({error: "User not found"});
+        return res.status(401).json({error: "Користувача не знайдено"});
     const {password_hash, ...userData} = user;
     res.json(userData);
 
@@ -116,7 +116,7 @@ export const updateUser = async (req: Request, res: Response) => {
 
         const currentUserId = (req as any).user?.id;
         if (currentUserId !== userId) {
-            return res.status(403).json({error: "Access denied: you can only update your own profile"});
+            return res.status(403).json({error: "Доступ заборонено"});
         }
 
         const updateData: any = {};
@@ -129,13 +129,13 @@ export const updateUser = async (req: Request, res: Response) => {
         }
 
         if (Object.keys(updateData).length === 0) {
-            return res.status(400).json({error: "No fields to update"});
+            return res.status(400).json({error: "Немає даних для оновлення"});
         }
 
         const updatedUser = await UserRepository.update(userId, updateData);
 
         if (!updatedUser) {
-            return res.status(404).json({error: "User not found"});
+            return res.status(404).json({error: "Користувача не знайдено"});
         }
 
         res.json(updatedUser);
@@ -201,16 +201,16 @@ export const requestEmailChange = async (req: Request, res: Response) => {
 
         const currentUserId = (req as any).user?.id;
         if (currentUserId !== userId) {
-            return res.status(403).json({error: "Access denied"});
+            return res.status(403).json({error: "Доступ заборонено"});
         }
 
         if (!newEmail) {
-            return res.status(400).json({error: "New email is required"});
+            return res.status(400).json({error: "Нова пошта обов'язкова"});
         }
 
         const existingUser = await UserRepository.findByEmail(newEmail);
         if (existingUser) {
-            return res.status(400).json({error: "This email is already in use"});
+            return res.status(400).json({error: "Ця пошта вже використовується"});
         }
 
         await TokenRepository.deleteUserTokensByType(userId, 'EMAIL_UPDATE');
@@ -237,17 +237,17 @@ export const requestEmailChange = async (req: Request, res: Response) => {
 export const verifyEmailChange = async (req: Request, res: Response) => {
     try {
         const {token} = req.body;
-        if (!token) return res.status(400).json({error: "Token is required"});
+        if (!token) return res.status(400).json({error: "Токен обов'язково"});
         const validToken = await TokenRepository.findValidToken(token, 'EMAIL_UPDATE');
         if (!validToken) {
-            return res.status(400).json({error: "Invalid or expired token"});
+            return res.status(400).json({error: "Помилка токену"});
         }
 
         const {user_id, payload: newEmail} = validToken;
 
         await UserRepository.updateEmailAndClearTokens(user_id, newEmail, 'EMAIL_UPDATE');
 
-        res.json({message: "Email successfully updated"});
+        res.json({message: "Пошту змінено"});
     } catch (err) {
         console.error("Error verifying email:", err);
         res.status(500).json({error: "Server error"});
@@ -259,7 +259,7 @@ export const forgotPassword = async (req: Request, res: Response) => {
         const {email} = req.body;
 
         if (!email) {
-            return res.status(400).json({error: "Email is required"});
+            return res.status(400).json({error: "Пошта обов'язкова"});
         }
 
         const user = await UserRepository.findByEmail(email);
@@ -295,13 +295,13 @@ export const resetPassword = async (req: Request, res: Response) => {
         const {token, newPassword} = req.body;
 
         if (!token || !newPassword) {
-            return res.status(400).json({error: "Token and new password are required"});
+            return res.status(400).json({error: "Пошта та пароль обов'язкові"});
         }
 
         const validToken = await TokenRepository.findValidToken(token, 'PASSWORD_RESET');
 
         if (!validToken) {
-            return res.status(400).json({error: "Invalid or expired token"});
+            return res.status(400).json({error: "Помилка токену"});
         }
 
         const userId = validToken.user_id;
@@ -313,7 +313,7 @@ export const resetPassword = async (req: Request, res: Response) => {
 
         await TokenRepository.deleteUserTokensByType(userId, 'PASSWORD_RESET');
 
-        res.json({message: "Password has been successfully reset"});
+        res.json({message: "Пароль успішно змінено!"});
     } catch (err) {
         console.error("Error in resetPassword:", err);
         res.status(500).json({error: "Server error"});
@@ -331,7 +331,7 @@ export const verifyResetToken = async (req: Request, res: Response) => {
         const validToken = await TokenRepository.findValidToken(token, 'PASSWORD_RESET');
 
         if (!validToken) {
-            return res.status(400).json({error: "Invalid or expired token"});
+            return res.status(400).json({error: "Неправильний токен"});
         }
         res.status(200).json({valid: true});
     } catch (err) {
@@ -347,11 +347,11 @@ export const changePassword = async (req: Request, res: Response) => {
 
         const currentUserId = (req as any).user?.id;
         if (currentUserId !== userId) {
-            return res.status(403).json({error: "Access denied: you can only update your own password"});
+            return res.status(403).json({error: "Ви можете змінити тільки свій пароль"});
         }
 
         if (!oldPassword || !newPassword) {
-            return res.status(400).json({error: "Old and new passwords are required"});
+            return res.status(400).json({error: "Старий і новий пароль обов'язкові"});
         }
 
         const userResult = await pool.query(
@@ -361,24 +361,24 @@ export const changePassword = async (req: Request, res: Response) => {
 
         const user = userResult.rows[0];
         if (!user) {
-            return res.status(404).json({error: "User not found"});
+            return res.status(404).json({error: "Користувача не знайдено"});
         }
 
         const isMatch = await bcrypt.compare(oldPassword, user.password_hash);
         if (!isMatch) {
-            return res.status(401).json({error: "Invalid current password"});
+            return res.status(401).json({error: "Помилка з поточним паролем"});
         }
 
         const isSamePassword = await bcrypt.compare(newPassword, user.password_hash);
         if (isSamePassword) {
-            return res.status(400).json({error: "New password must be different from the old one"});
+            return res.status(400).json({error: "Помилка нового паролю"});
         }
 
         const hashedNewPassword = await bcrypt.hash(newPassword, 10);
 
         await UserRepository.update(userId, {password_hash: hashedNewPassword});
 
-        res.json({message: "Password updated successfully"});
+        res.json({message: "Пароль оновлено!"});
     } catch (err) {
         console.error("Error changing password:", err);
         res.status(500).json({error: "Server error"});

@@ -18,6 +18,7 @@ function SecuritySettings({user}) {
       toast.success("Пароль змінено!")
     } catch (err) {
       console.error("Error with change pass", err)
+      toast.error(err.response?.data.error)
     }
   }
   return (
@@ -52,7 +53,7 @@ function SecuritySettings({user}) {
                 if (newPassword.newPassword.length < 8) {
                   setNewPasswordError("Пароль має бути від 8 символів");
                 } else if (newPassword.newPassword === newPassword.oldPassword) {
-                  setNewPasswordError("New password can't be like old password");
+                  setNewPasswordError("Новий пароль не може співпадати зі старим");
                 } else {
                   setNewPasswordError("")
                 }
@@ -62,7 +63,8 @@ function SecuritySettings({user}) {
             <button
               className={styles.sbmbtn}
               disabled={newPasswordError || newPassword.newPassword.length < 1}
-              onClick={handleSubmit}>Sumbit
+              onClick={handleSubmit}>
+              Зберегти
             </button>
           </div>
         )}</div>
