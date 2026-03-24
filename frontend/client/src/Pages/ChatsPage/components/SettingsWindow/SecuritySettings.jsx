@@ -16,6 +16,11 @@ function SecuritySettings({user}) {
     try {
       const res = await userService.changePassword(user.id, newPassword.oldPassword, newPassword.newPassword)
       toast.success("Пароль змінено!")
+      setNewPassword({
+        oldPassword: "",
+        newPassword: ""
+      })
+      setIsChangingPassword(false);
     } catch (err) {
       console.error("Error with change pass", err)
       toast.error(err.response?.data.error)

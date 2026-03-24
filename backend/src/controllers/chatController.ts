@@ -125,7 +125,7 @@ export const addMembersToGroup = async (req: Request, res: Response) => {
         const addedIds = await chatRepo.addMembersToGroupChat(chatId, currentUserId, memberIds);
         if (addedIds.length > 0) {
             const addedUsernames = await chatRepo.getUsernames(addedIds);
-            const text = `Added to group: ${addedUsernames.join(', ')}`;
+            const text = `Додано до групи: ${addedUsernames.join(', ')}`;
             const systemMessage = await messageRepo.createSystemMessage(chatId, currentUserId, text);
             const io = getIO();
             io.to(`chat_${chatId}`).emit("receive_message", systemMessage);

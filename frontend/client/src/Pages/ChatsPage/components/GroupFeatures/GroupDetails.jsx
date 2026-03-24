@@ -101,9 +101,15 @@ function GroupDetails({setIsOpen}) {
               ) : (
                 <>
                   <div className={styles.groupinfo}>
-                    <img
-                      alt={"groupimg"}
-                      src={`${API_URL}${chatDetails.avatar_url}`}/>
+                    {chatDetails.avatar_url ? (
+                      <img
+                        alt={"groupimg"}
+                        src={`${API_URL}${chatDetails.avatar_url}`}/>
+                    ) : (
+                      <Avvvatars
+                        size={42}
+                        value={chatDetails.name}/>
+                    )}
                     <p>{chatDetails.name}</p>
                     <p>{members.length} учасники</p>
                     <div className={styles.buttonblock}>

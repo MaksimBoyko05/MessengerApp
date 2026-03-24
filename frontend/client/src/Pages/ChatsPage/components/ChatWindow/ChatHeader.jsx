@@ -17,9 +17,17 @@ function ChatHeader({chatDetails, companion, onBack}) {
         <ChevronLeft onClick={onBack}/>
         {chatDetails.is_group ? (
           <>
-            <div className={styles.groupimage}><Avvvatars
-              size={40}
-              value={chatDetails.name}/></div>
+            <div className={styles.groupimage}>
+              {chatDetails.avatar_url ? (
+                <img
+                  alt={"groupimg"}
+                  src={`${API_URL}${chatDetails.avatar_url}`}/>
+              ) : (
+                <Avvvatars
+                  size={42}
+                  value={chatDetails.name}/>
+              )}
+            </div>
             <div className={styles.headertext}>
               <p>{chatDetails.name}</p>
               <p className={styles.groupmembers}>Учасники: {chatDetails.members.length}, {chatDetails.members?.filter(members => members.is_online).length} в

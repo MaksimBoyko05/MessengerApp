@@ -73,7 +73,7 @@ function VerifyEmail() {
           <p className={styles.error}>{passwordError}</p>
           <button
             disabled={passwordError || newPassword.length < 1}
-            onClick={handleSavePassword}>Save
+            onClick={handleSavePassword}>Зберегти
           </button>
         </div>
       )}

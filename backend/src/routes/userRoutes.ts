@@ -24,9 +24,8 @@ router.get('/recent', protect, getRecentUsers);
 router.get("/:id", protect, getUserById);
 
 //POST /api/users
-router.post("/:id/request-email-change", protect, requestEmailChange);
 router.post("/verify-email", verifyEmailChange);
-
+router.post("/:id/request-email-change", protect, requestEmailChange);
 //PATCH /api/users
 router.patch('/privacy', protect, toggleSearchPrivacy);
 

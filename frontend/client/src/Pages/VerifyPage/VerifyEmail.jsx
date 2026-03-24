@@ -27,7 +27,7 @@ function VerifyEmail() {
         }, 3000);
       } catch (err) {
         setStatus("error");
-        setErrorMessage(err.response?.data?.error || "Помилка підтверження пошти");
+        setErrorMessage(err.response?.data?.error || "Помилка підтвердження пошти");
       }
     }
     verifyEmail();

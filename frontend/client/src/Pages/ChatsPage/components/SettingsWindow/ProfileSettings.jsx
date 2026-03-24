@@ -64,6 +64,7 @@ function ProfileSettings({user}) {
       toast.success("Лист надіслано")
     } catch (err) {
       console.error("Error with sending", err)
+      toast.error(err?.response?.data.error)
     }
   }
   return (

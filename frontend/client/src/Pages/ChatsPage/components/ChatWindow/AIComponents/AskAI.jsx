@@ -32,11 +32,16 @@ function AskAI({chatId, showPopup}) {
           <button
             className={styles.closebutton}
             onClick={onClose}><X size={14}/></button>
-          <input
+          <textarea
             type={"text"}
             placeholder={"Чим вам допомогти?"}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
+            rows={1}
+            onInput={(e) => {
+              e.target.style.height = 'auto';
+              e.target.style.height = e.target.scrollHeight + 'px';
+            }}
           />
           <button
             className={styles.sendbutton}

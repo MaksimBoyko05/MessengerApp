@@ -6,6 +6,7 @@ import {userService} from "@/api/userService.js";
 import SettingsModal from "@/Pages/ChatsPage/components/SettingsWindow/SettingsModal.jsx";
 import {UserContext} from "@/context/UserContext.jsx"
 import {useNavigate} from "react-router";
+import Avvvatars from "avvvatars-react";
 
 function Profile() {
   const [userId, setUserId] = useState("");
@@ -48,10 +49,14 @@ function Profile() {
   return (
     <>
       <div className={styles.profileblock}>
-        <img
-          className={styles.avatarImg}
-          src={`${API_URL}${userimg}`}
-          alt="avatar"/>
+        {userimg ? (
+          <img
+            className={styles.avatarImg}
+            src={`${API_URL}${userimg}`}
+            alt="avatar"/>
+        ) : (
+          <Avvvatars value={username}/>
+        )}
         <div className={styles.profiletitles}>
           <p className={styles.usertitle}>{username}</p>
           <p className={styles.userstatus}>в мережі</p>

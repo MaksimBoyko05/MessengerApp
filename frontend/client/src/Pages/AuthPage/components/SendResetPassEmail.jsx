@@ -2,6 +2,7 @@ import {useState} from "react";
 import {userService} from "@/api/userService.js";
 import {ChevronLeft} from 'lucide-react';
 import styles from "../Authpage.module.scss"
+import {toast} from "react-toastify";
 
 function SendResetPassEmail({setStatus}) {
   const [email, setEmail] = useState("")
@@ -9,9 +10,9 @@ function SendResetPassEmail({setStatus}) {
   const handleSendEmail = async () => {
     try {
       await userService.forgotPassword(email)
-      console.log("Email was send")
+      toast.success("Лист надіслано")
     } catch (err) {
-      setEmailError(err.response?.data?.error || "Error")
+      toast.error(err.response?.data?.error || "Error")
     }
   }
   const handleCLose = () => {

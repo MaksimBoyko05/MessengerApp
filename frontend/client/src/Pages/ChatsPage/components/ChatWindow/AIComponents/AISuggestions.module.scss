@@ -10,6 +10,12 @@ $modal-search-radius: 12px;
   align-items: center;
 }
 
+@mixin hide-scrollbar {
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 @mixin input-style {
   height: 138px;
   padding: 5px 5px 1px 15px;
@@ -171,9 +177,16 @@ body {
       }
     }
 
-    input {
+    textarea {
       @include input-style;
+      min-height: 100px;
+      max-height: 138px;
+      padding: 10px 12px;
       margin-top: 30px;
+      resize: none;
+      overflow-y: auto;
+      line-height: 1.45;
+      @include hide-scrollbar;
     }
 
     .sendbutton {
