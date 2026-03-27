@@ -25,7 +25,9 @@ function ChatBlock({chat, onClick, isActive}) {
               src={`${API_URL}${chat.avatar_url}`}/>
           </>
         ) : (
-          <Avvvatars value={chat.name}/>
+          <Avvvatars
+            size={50}
+            value={chat.name}/>
         )}
         {chat.is_online && (
           <div className={styles.online}/>

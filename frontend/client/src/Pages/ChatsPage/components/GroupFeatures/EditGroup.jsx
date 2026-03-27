@@ -40,6 +40,7 @@ function EditGroup({chatId, setIsEditing}) {
     if (newName !== data.name) {
       try {
         await chatsService.updateGroupName(chatId, newName)
+        setIsEditing(false)
       } catch (err) {
         console.error("Error with changing name", err)
       }
@@ -49,6 +50,7 @@ function EditGroup({chatId, setIsEditing}) {
       payload.append("avatar", data.avatar_url);
       try {
         await chatsService.uploadGroupImage(chatId, payload)
+        setIsEditing(false)
       } catch (err) {
         console.error("Error with update data", err)
       }

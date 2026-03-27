@@ -43,7 +43,7 @@ function Profile() {
       }
     };
     fetchProfile();
-  }, []);
+  }, [open]);
 
 
   return (
