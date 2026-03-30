@@ -4,33 +4,29 @@ import {fileURLToPath} from 'url';
 import dotenv from "dotenv";
 import cors from "cors";
 import {createServer} from "http";
+import rateLimit from "express-rate-limit";
 
 dotenv.config({path: ".env"});
-console.log("EMAIL_USER:", process.env.EMAIL_USER);
-console.log("EMAIL_PASS:", process.env.EMAIL_PASS ? " Loaded" : " Missing");
 
 import {initSocket} from "./socket.js";
-import pool from "./db.js";
 import authRoutes from "./routes/auth.js";
-import {emailQueue} from "./queues/emailQueue.js";
 import userRoutes from "./routes/userRoutes.js";
 import chatRoutes from './routes/chatsRoutes.js';
 import messageRoutes from "./routes/messageRoutes.js";
-import aiRoutes from "./routes/aiRoutes.js"
-import rateLimit from "express-rate-limit";
-
+import aiRoutes from "./routes/aiRoutes.js";
 
 import "./cron.js";
 import "./workers/emailWorker.js";
 
-
 const app = express();
+
 app.use(
     cors({
-        origin: "http://localhost:5173",
+        origin: process.env.CLIENT_URL,
         credentials: true,
     })
 );
+
 app.use(express.json());
 
 const httpServer = createServer(app);
@@ -40,7 +36,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 app.use('/avatars', express.static(path.join(__dirname, '../public/avatars')));
 
-const limiter = rateLimit({
+const apiLimiter = rateLimit({
     windowMs: 15 * 60 * 1000,
     max: 500,
     message: "Занадто багато запитів з вашої IP-адреси. Спробуйте пізніше.",
@@ -48,28 +44,22 @@ const limiter = rateLimit({
     legacyHeaders: false,
 });
 
-app.use("/api", limiter);
-
-
-app.get("/", (req, res) => {
-    res.send("Backend is working ");
+const authLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 20,
+    message: "Занадто багато спроб авторизації. Спробуйте пізніше.",
+    standardHeaders: true,
+    legacyHeaders: false,
 });
+
+app.use("/api", apiLimiter);
+app.use("/api/auth", authLimiter);
+
+app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/messages", messageRoutes);
 app.use('/api/chats', chatRoutes);
 app.use('/api/ai', aiRoutes);
-
-app.get("/test-email", async (req, res) => {
-    await emailQueue.add("sendTestEmail", {
-        email: "vvangog52@gmail.com",
-        subject: "Тестова розсилка від месенджера",
-        text: "Це тест перевірки BullMQ ",
-    });
-    res.send(" Задача надіслана у чергу");
-});
-
-app.use("/api/auth", authRoutes);
-
 
 const PORT = process.env.PORT || 5000;
 httpServer.listen(PORT, () => {
