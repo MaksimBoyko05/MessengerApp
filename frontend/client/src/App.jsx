@@ -10,6 +10,7 @@ import VerifyEmail from "@/Pages/VerifyPage/VerifyEmail.jsx";
 import ResetPassword from "@/Pages/VerifyPage/ResetPassword.jsx";
 import "@/assets/styles/_themes.scss";
 import {ToastContainer} from "react-toastify";
+import NotFound from "@/Pages/NotFound/NotFound.jsx";
 
 function App() {
   return (
@@ -20,6 +21,9 @@ function App() {
             <Route
               path="/"
               element={<HomePage/>}/>
+            <Route
+              path="*"
+              element={<NotFound/>}/>
             <Route
               path="/authorization"
               element={<AuthPage/>}/>
