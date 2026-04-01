@@ -4,6 +4,7 @@ import {CheckCheck, Check} from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import styles from "@/Pages/ChatsPage/Chats.module.scss";
 import {ChatContext} from "@/context/ChatContext.jsx";
+import Avvvatars from "avvvatars-react";
 
 const formatter = new Intl.DateTimeFormat('uk-UA', {
   hour: 'numeric',
@@ -40,9 +41,13 @@ function ChatMessages({isGroup, msg, onContextMenu}) {
       {!isMine && (
         !isSystem && !isAi && (
           <div className={styles.senderimg}>
-            <img
-              alt="memberimg"
-              src={`${API_URL}${msg.sender_avatar}`}/>
+            {msg.sender_avatar ? (
+              <img
+                alt="memberimg"
+                src={`${API_URL}${msg.sender_avatar}`}/>
+            ) : (
+              <Avvvatars value={msg.sender_name}/>
+            )}
           </div>
         )
       )}

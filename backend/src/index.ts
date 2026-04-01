@@ -40,7 +40,7 @@ app.use('/avatars', express.static(path.join(__dirname, '../public/avatars')));
 
 const apiLimiter = rateLimit({
     windowMs: 15 * 60 * 1000,
-    max: 500,
+    max: 2000,
     message: "Занадто багато запитів з вашої IP-адреси. Спробуйте пізніше.",
     standardHeaders: true,
     legacyHeaders: false,

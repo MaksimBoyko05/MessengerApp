@@ -7,6 +7,7 @@ import AuthTabs from "./components/AuthTabs.jsx";
 import styles from "./Authpage.module.scss";
 import UserContext from "../../context/UserContext";
 import SendResetPassEmail from "@/Pages/AuthPage/components/SendResetPassEmail.jsx";
+import {toast} from "react-toastify";
 
 function AuthPage() {
   const {checkAuth} = useContext(UserContext);
@@ -59,7 +60,7 @@ function AuthPage() {
             email,
             password,
           });
-          setMessage(res.data.message || "Реєстрація успішна! Тепер ви можете увійти.");
+          toast.success(res.data.message || "Реєстрація успішна! Тепер ви можете увійти.")
           setActiveButton("signin");
         } else {
           const res = await axios.post("http://localhost:5000/api/auth/login", {

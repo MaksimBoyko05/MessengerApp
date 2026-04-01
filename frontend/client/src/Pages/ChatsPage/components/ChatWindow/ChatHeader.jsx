@@ -36,9 +36,14 @@ function ChatHeader({chatDetails, companion, onBack}) {
           </>
         ) : (
           <>
-            <img
-              alt={"profile_img"}
-              src={`${API_URL}${companion?.avatar_url}`}/>
+            {chatDetails.companion?.avatar_url ? (
+              <img
+                alt={"profile_img"}
+                src={`${API_URL}${companion?.avatar_url}`}/>) : (
+              <Avvvatars
+                size={42}
+                value={chatDetails.companion?.username}/>
+            )}
             <div className={styles.headertext}>
               <p>{companion?.username}</p>
               <UserStatus
