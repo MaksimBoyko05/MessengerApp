@@ -3,11 +3,21 @@ import {aiService} from "@/api/aiService.js";
 import {X} from 'lucide-react';
 
 function AISuggestions({suggestions, onSetSuggestions, onSelect}) {
+
+  const allSuggestionIds = suggestions.map(item => item.id)
+
   const handleSend = async (suggestionId) => {
     try {
-      await aiService.sendAnalytics(suggestionId)
+      await aiService.sendAnalyticsUsage(suggestionId, allSuggestionIds)
     } catch (err) {
-      console.error("Error with sending suggestion to DB", err)
+      console.error("Error with sending suggestion analytics", err)
+    }
+  }
+  const handleSendIgnored = async () => {
+    try {
+      await aiService.sendAnalyticsIgnored(allSuggestionIds)
+    } catch (err) {
+      console.error("Error with sending suggestion ignored analytics", err)
     }
   }
   return (
@@ -26,7 +36,12 @@ function AISuggestions({suggestions, onSetSuggestions, onSelect}) {
               {sug.text}
             </button>
           ))}
-          <X onClick={() => onSetSuggestions([])}/>
+          <X
+            onClick={() => {
+              handleSendIgnored();
+              onSetSuggestions([]);
+            }
+            }/>
         </div>
       )}
     </>

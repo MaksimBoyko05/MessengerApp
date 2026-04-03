@@ -55,10 +55,31 @@ export class AIRepository {
         return result.rows;
     }
 
+    async recordSuggestionsView(suggestionIds: number[], userId: number): Promise<void> {
+        if (!suggestionIds || suggestionIds.length === 0) return;
+        const values = [];
+        const flatParams = [];
+        let paramIndex = 1;
+
+        for (const id of suggestionIds) {
+            values.push(`($${paramIndex++}, $${paramIndex++}, false)`);
+            flatParams.push(id, userId);
+        }
+
+        const query = `
+            INSERT INTO ai_analytics (suggestion_id, user_id, useful)
+            VALUES ${values.join(", ")} ON CONFLICT (suggestion_id, user_id) DO NOTHING;
+        `;
+
+        await pool.query(query, flatParams);
+    }
+
     async saveAnalytics(suggestionId: number, userId: number): Promise<void> {
         await pool.query(
-            `INSERT INTO ai_analytics (suggestion_id, user_id, useful)
-             VALUES ($1, $2, true)`,
+            `UPDATE ai_analytics
+             SET useful = true
+             WHERE suggestion_id = $1
+               AND user_id = $2`,
             [suggestionId, userId]
         );
     }

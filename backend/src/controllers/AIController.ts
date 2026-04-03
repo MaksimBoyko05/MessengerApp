@@ -7,7 +7,7 @@ import redisClient from "../redisClient.js";
 import {getIO} from "../socket.js";
 
 const chatRepo = new ChatRepository();
-const MODEL_NAME = "gemini-2.5-flash";
+const MODEL_NAME = "gemini-3.1-flash-lite-preview";
 const CONTEXT_LIMIT = 15;
 const SUGGESTIONS_LIMIT = 3;
 const MAX_MESSAGE_LENGTH = 500;
@@ -213,19 +213,47 @@ export const generateSmartReplies = async (req: Request, res: Response): Promise
 };
 
 // ==== Analytics Click on Suggestion ====
-export const trackSuggestionUsage = async (req: Request, res: Response) => {
+export const trackSuggestionUsage = async (req: Request, res: Response): Promise<void> => {
     try {
-        const {suggestionId} = req.body;
+        const {suggestionId, allSuggestionIds} = req.body;
         const userId = (req as any).user?.id;
 
-        await aiRepo.saveAnalytics(Number(suggestionId), userId);
+        if (!userId) {
+            res.status(401).json({message: "Unauthorized"});
+            return;
+        }
+        if (allSuggestionIds && Array.isArray(allSuggestionIds)) {
+            await aiRepo.recordSuggestionsView(allSuggestionIds, userId);
+        }
+        if (suggestionId) {
+            await aiRepo.saveAnalytics(Number(suggestionId), userId);
+        }
+
         res.json({message: "Success"});
     } catch (error) {
-        res.status(500).json({message: "Error"});
-        return;
+        console.error("Analytics Error:", error);
+        res.status(500).json({message: "Error tracking usage"});
     }
 };
+export const trackSuggestionsIgnored = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const {suggestionIds} = req.body;
+        const userId = (req as any).user?.id;
 
+        if (!userId) {
+            res.status(401).json({message: "Unauthorized"});
+            return;
+        }
+        if (suggestionIds && Array.isArray(suggestionIds)) {
+            await aiRepo.recordSuggestionsView(suggestionIds, userId);
+        }
+
+        res.json({message: "Ignored recorded"});
+    } catch (error) {
+        console.error("Analytics Ignore Error:", error);
+        res.status(500).json({message: "Error tracking ignore"});
+    }
+};
 // ==== AI method for Groups ====
 export const askAiInChat = async (req: Request, res: Response): Promise<void> => {
     try {

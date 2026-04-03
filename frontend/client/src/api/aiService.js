@@ -1,9 +1,16 @@
 import api from './axiosInstance';
 
 export const aiService = {
-  sendAnalytics: async (suggestionId) => {
-    const response = await api.post('/ai/analytics', {
-      suggestionId
+  sendAnalyticsUsage: async (suggestionId, allSuggestionIds) => {
+    const response = await api.post('/ai/smart-reply/usage', {
+      suggestionId,
+      allSuggestionIds
+    });
+    return response.data;
+  },
+  sendAnalyticsIgnored: async (suggestionIds) => {
+    const response = await api.post('/ai/smart-reply/ignore', {
+      suggestionIds,
     });
     return response.data;
   },
