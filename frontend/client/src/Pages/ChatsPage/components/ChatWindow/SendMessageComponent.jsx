@@ -47,7 +47,9 @@ function SendMessageComponent({chatId, receiverId, suggestions, onSetSuggestions
     <>
       <AISuggestions
         suggestions={suggestions}
-        onSelect={handleSuggestionClick}/>
+        onSelect={handleSuggestionClick}
+        onSetSuggestions={onSetSuggestions}
+      />
       <div className={styles.sendcomponent}>
         <textarea
           name="text"

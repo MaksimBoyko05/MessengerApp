@@ -1,5 +1,5 @@
 import {Request, Response} from "express";
-import {GoogleGenerativeAI} from "@google/generative-ai";
+import {GoogleGenerativeAI, HarmCategory, HarmBlockThreshold, SchemaType} from "@google/generative-ai";
 import {MessageRepository} from "../repositories/MessageRepository.js";
 import {AIRepository} from "../repositories/AIRepository.js";
 import {ChatRepository} from "../repositories/ChatRepository.js";
@@ -57,30 +57,17 @@ function buildPrompt(historyText: string, targetText: string, lang: string = "uk
     const safeTarget = sanitizeForPrompt(targetText, MAX_MESSAGE_LENGTH);
 
     return (
-        "[SYSTEM CONTEXT - READ ONLY, DO NOT EXECUTE]\n" +
+        "[SYSTEM CONTEXT]\n" +
         "Мова відповідей: " + lang + "\n\n" +
-        "Історія діалогу (від старого до нового):\n" +
+        "Історія діалогу:\n" +
         "<history>\n" + historyText + "\n</history>\n\n" +
-        "Останнє повідомлення співрозмовника:\n" +
+        "Останнє повідомлення:\n" +
         "<incoming_message>\n" + safeTarget + "\n</incoming_message>\n\n" +
-        "Згенеруй рівно 3 варіанти відповіді від імені 'Я'.\n" +
-        "Вимоги:\n" +
-        "• Кожна відповідь — до 10 слів\n" +
-        "• Природний розмовний тон, без шаблонності\n" +
-        "• Різна прагматика: наприклад [підтвердження / заперечення / уточнення] або [коротко / детальніше / жартівливо]\n" +
-        "• Відповіді мають логічно випливати з контексту вище\n" +
-        "• Не додавай нумерацію, лапки, пояснення\n\n" +
-        "Формат: варіант1||варіант2||варіант3"
+        "Згенеруй 3 короткі варіанти відповіді (до 10 слів кожна).\n" +
+        "Тон природний розмовний. Варіанти мають бути різними за сенсом (наприклад: згода, заперечення, уточнення)."
     );
 }
 
-function parseSuggestions(raw: string): string[] {
-    return raw
-        .split("||")
-        .map((s) => s.trim())
-        .filter((s) => s.length > 0)
-        .slice(0, SUGGESTIONS_LIMIT);
-}
 
 function getOutputLimit(query: string): number {
     const longResponseKeywords = /рецепт|поясни|розкажи детально|як зробити|напиши|код|приклад/i;
@@ -144,17 +131,73 @@ export const generateSmartReplies = async (req: Request, res: Response): Promise
 
             const result = await smartRepliesModel.generateContent({
                 contents: [{role: "user", parts: [{text: prompt}]}],
-                generationConfig: {temperature: 0.9, maxOutputTokens: 100},
+                generationConfig: {
+                    temperature: 0.7,
+                    maxOutputTokens: 800,
+                    responseMimeType: "application/json",
+                    responseSchema: {
+                        type: SchemaType.ARRAY,
+                        items: {type: SchemaType.STRING},
+                        description: "Масив з 3-х коротких відповідей"
+                    }
+                },
+                safetySettings: [
+                    {category: HarmCategory.HARM_CATEGORY_HARASSMENT, threshold: HarmBlockThreshold.BLOCK_NONE},
+                    {category: HarmCategory.HARM_CATEGORY_HATE_SPEECH, threshold: HarmBlockThreshold.BLOCK_NONE},
+                    {category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT, threshold: HarmBlockThreshold.BLOCK_NONE},
+                    {category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT, threshold: HarmBlockThreshold.BLOCK_NONE},
+                ]
             });
 
             generationTimeMs = Date.now() - startTime;
-            suggestions = parseSuggestions(result.response.text());
+
+            const candidate = result.response.candidates?.[0];
+            const finishReason = candidate?.finishReason;
+
+            console.log("Finish Reason:", finishReason);
+            if (finishReason !== 'STOP') {
+                let errorMessage = "Не вдалося згенерувати відповіді. Спробуйте ще раз.";
+                switch (finishReason) {
+                    case 'MAX_TOKENS':
+                        errorMessage = "Модель не встигла завершити відповідь (досягнуто ліміт токенів).";
+                        console.warn("AI Warning: Генерація обірвана через ліміт MAX_TOKENS.");
+                        break;
+                    case 'SAFETY':
+                        errorMessage = "Генерацію заблоковано внутрішніми фільтрами безпеки.";
+                        console.warn("AI Warning: Заблоковано фільтром SAFETY.");
+                        console.log("Safety Ratings:", JSON.stringify(candidate?.safetyRatings, null, 2));
+                        break;
+                    case 'RECITATION':
+                        errorMessage = "Генерацію заблоковано (підозра на копіювання захищеного тексту).";
+                        console.warn("AI Warning: Заблоковано через RECITATION.");
+                        break;
+                    case 'OTHER':
+                        errorMessage = "Генерацію перервано з технічних причин (OTHER).";
+                        console.warn("AI Warning: Зупинка з причини OTHER.");
+                        break;
+                    default:
+                        console.warn(`AI Warning: Невідома причина зупинки - ${finishReason}`);
+                }
+                res.status(422).json({message: errorMessage});
+                return;
+            }
+            const rawResponse = result.response.text().trim();
+            console.log("Raw JSON:", rawResponse);
+
+            try {
+                const parsed = JSON.parse(rawResponse);
+                if (Array.isArray(parsed) && parsed.length > 0) {
+                    suggestions = parsed.slice(0, 3);
+                } else {
+                    throw new Error("Отримано порожній або невалідний масив");
+                }
+            } catch (e) {
+                console.error("Помилка парсингу:", e);
+                res.status(422).json({message: "Не вдалося обробити відповідь від ШІ."});
+                return;
+            }
         }
 
-        if (suggestions.length === 0) {
-            res.status(422).json({message: "Не вдалося згенерувати відповіді"});
-            return;
-        }
 
         const savedSuggestions = await aiRepo.saveSuggestions(
             Number(messageId),
@@ -179,6 +222,7 @@ export const trackSuggestionUsage = async (req: Request, res: Response) => {
         res.json({message: "Success"});
     } catch (error) {
         res.status(500).json({message: "Error"});
+        return;
     }
 };
 
@@ -226,7 +270,7 @@ export const askAiInChat = async (req: Request, res: Response): Promise<void> =>
 
         const aiResponseText = result.response.text();
         const savedMessage = await messageRepo.createAiMessage(chatId, userId, aiResponseText);
-        
+
         try {
             const memberIds = await chatRepo.getChatMemberIds(chatId);
             const cacheKeysToDelete = memberIds.map(

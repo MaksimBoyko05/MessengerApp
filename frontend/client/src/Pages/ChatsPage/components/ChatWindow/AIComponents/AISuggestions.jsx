@@ -1,7 +1,8 @@
 import styles from "./AISuggestions.module.scss"
 import {aiService} from "@/api/aiService.js";
+import {X} from 'lucide-react';
 
-function AISuggestions({suggestions, onSelect}) {
+function AISuggestions({suggestions, onSetSuggestions, onSelect}) {
   const handleSend = async (suggestionId) => {
     try {
       await aiService.sendAnalytics(suggestionId)
@@ -25,6 +26,7 @@ function AISuggestions({suggestions, onSelect}) {
               {sug.text}
             </button>
           ))}
+          <X onClick={() => onSetSuggestions([])}/>
         </div>
       )}
     </>
