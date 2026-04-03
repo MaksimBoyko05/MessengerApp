@@ -191,7 +191,6 @@ async function seed() {
                        ($1, $3)
             `, [chatId, max.id, users[i].id]);
 
-            // Беремо шаблон діалогу (по колу)
             const template = dialogTemplates[(i - 1) % dialogTemplates.length];
             let lastMessageId = null;
 

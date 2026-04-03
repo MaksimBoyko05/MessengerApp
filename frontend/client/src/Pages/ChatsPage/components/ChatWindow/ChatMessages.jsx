@@ -56,7 +56,7 @@ function ChatMessages({isGroup, msg, onContextMenu}) {
         className={getMessagesClass(msg)}
         onContextMenu={onContextMenu}>
         {msg.user_id !== user.id && (
-          isGroup && !isSystem ? (
+          isGroup && !isSystem && !isAi ? (
             <p
               className={styles.sendername}
               style={{color: getSenderColor(msg.sender_name)}}>{msg.sender_name}</p>
@@ -67,7 +67,9 @@ function ChatMessages({isGroup, msg, onContextMenu}) {
         {isAi && (
           <p
             className={styles.sendername}
-            style={{color: getSenderColor(msg.sender_name)}}>{msg.sender_name}</p>
+            style={{color: getSenderColor(msg.sender_name)}}>
+            {msg.sender_name.split(' ')[0]}
+          </p>
         )}
         <div className={styles.markdownContent}>
           <ReactMarkdown children={msg.text}/>

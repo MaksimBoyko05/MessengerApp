@@ -36,12 +36,13 @@ function AISuggestions({suggestions, onSetSuggestions, onSelect}) {
               {sug.text}
             </button>
           ))}
-          <X
+          <div className={styles.closesuggestions}><X
+            size={16}
             onClick={() => {
               handleSendIgnored();
               onSetSuggestions([]);
             }
-            }/>
+            }/></div>
         </div>
       )}
     </>

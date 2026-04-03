@@ -231,10 +231,11 @@
   --shadow-card-inset: 0 2px 8px rgba(0, 0, 0, 0.4);
 
   /* AI Colors */
-  --ai-gradient-start: #232040;
-  --ai-gradient-end: #1a1830;
-  --ai-border-color: #5b46a5;
-  --ai-glow-color: rgba(162, 136, 255, 0.05);
+  --ai-gradient-start: #1a1a1a;
+  --ai-gradient-end: #1e1e1e;
+  --ai-border-color: rgba(255, 255, 255, 0.15);
+  --ai-glow-inner: inset 0 1px 1px rgba(255, 255, 255, 0.15);
+  --ai-glow-outer: 0 0 15px rgba(255, 255, 255, 0.08), 0 0 30px rgba(255, 255, 255, 0.03);
   --ai-code-bg: rgba(255, 255, 255, 0.05);
   --shadow-btn-primary: 0 2px 8px rgba(0, 0, 0, 0.5);
   --shadow-chip: 0 4px 6px rgba(0, 0, 0, 0.4);

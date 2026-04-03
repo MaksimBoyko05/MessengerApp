@@ -71,6 +71,8 @@ $glass-border: rgba(255, 255, 255, 0.4);
 }
 
 @mixin hide-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
   &::-webkit-scrollbar {
     display: none;
   }

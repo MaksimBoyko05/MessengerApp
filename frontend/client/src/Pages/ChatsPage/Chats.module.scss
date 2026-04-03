@@ -33,6 +33,8 @@ $transition-fast: all 0.2s ease;
 }
 
 @mixin hide-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
   &::-webkit-scrollbar {
     display: none;
   }
@@ -513,7 +515,7 @@ body {
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       border: 1px solid var(--ai-border-color);
-      box-shadow: 0 8px 24px var(--ai-glow-color), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+      box-shadow: var(--ai-glow-inner), var(--ai-glow-outer);
       color: var(--color-text-primary);
 
       .sendername {
@@ -521,7 +523,6 @@ body {
       }
 
       &::before {
-        content: '✨';
         position: absolute;
         top: -10px;
         left: -10px;
