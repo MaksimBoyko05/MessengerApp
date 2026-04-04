@@ -12,7 +12,7 @@ function SendResetPassEmail({setStatus}) {
       await userService.forgotPassword(email)
       toast.success("Лист надіслано")
     } catch (err) {
-      toast.error(err.response?.data?.error || "Error")
+      toast.error(err.response?.data?.error || "Помилка надсилання листа")
     }
   }
   const handleCLose = () => {

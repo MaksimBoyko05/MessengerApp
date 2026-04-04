@@ -10,6 +10,7 @@ import EditGroup from "@/Pages/ChatsPage/components/GroupFeatures/EditGroup.jsx"
 import {chatsService} from "@/api/chatsService.js";
 import UserStatus from "@/Pages/ChatsPage/components/ChatWindow/UserStatus.jsx";
 import Avvvatars from "avvvatars-react";
+import UserContext from "@/context/UserContext.jsx";
 
 function GroupDetails({setIsOpen}) {
   const [isAddingMembers, setIsAddingMembers] = useState(false)
@@ -23,9 +24,15 @@ function GroupDetails({setIsOpen}) {
     targetId: null,
   })
   const [isEditing, setIsEditing] = useState(false);
+
   const {chatDetails, setChatDetails} = useContext(ChatContext)
+  const {user} = useContext(UserContext) || {};
+
   const members = chatDetails.members;
   const API_URL = "http://localhost:5000";
+
+  const currentUser = chatDetails?.members?.find(member => Number(member.id) === Number(user?.id));
+
 
   const chatWindowRef = useRef(null);
 
@@ -111,9 +118,11 @@ function GroupDetails({setIsOpen}) {
                         value={chatDetails.name}/>
                     )}
                     <p>{chatDetails.name}</p>
-                    <p>{members.length} учасники</p>
+                    <p>{members.length} учасників</p>
                     <div className={styles.buttonblock}>
-                      <div onClick={() => setIsEditing(true)}><Pencil size={16}/></div>
+                      {currentUser?.role === "admin" && (
+                        <div onClick={() => setIsEditing(true)}><Pencil size={16}/></div>
+                      )}
                       <div onClick={handleLeave}><LogOut size={16}/></div>
                     </div>
                   </div>

@@ -5,6 +5,7 @@ import styles from "./GroupDetails.module.scss"
 import {chatsService} from "@/api/chatsService.js";
 import Avvvatars from 'avvvatars-react'
 import {userService} from "@/api/userService.js";
+import {toast} from "react-toastify";
 
 function EditGroup({chatId, setIsEditing}) {
   const {chatDetails, setChatDetails} = useContext(ChatContext) || {};
@@ -43,6 +44,7 @@ function EditGroup({chatId, setIsEditing}) {
         setIsEditing(false)
       } catch (err) {
         console.error("Error with changing name", err)
+        toast.error(err.response?.data?.error || "Помилка оновлення")
       }
     }
     if (data.avatar_url) {
@@ -53,6 +55,7 @@ function EditGroup({chatId, setIsEditing}) {
         setIsEditing(false)
       } catch (err) {
         console.error("Error with update data", err)
+        toast.error(err.response?.data?.error || "Помилка оновлення")
       }
     }
   }
