@@ -295,7 +295,7 @@ export const updateGroupName = async (req: Request, res: Response) => {
 
         await chatRepo.updateGroupName(chatId, currentUserId, newName);
 
-        const text = `Name of group changed to: "${newName}"`;
+        const text = `Змінено назву групи на: "${newName}"`;
         const systemMessage = await messageRepo.createSystemMessage(chatId, currentUserId, text);
 
         const io = getIO();

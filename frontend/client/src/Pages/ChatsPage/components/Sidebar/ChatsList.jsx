@@ -162,17 +162,41 @@ function ChatsList({onSelectedChat, selectedChatId, onFilterType, onSearchQuery}
         )
       );
     };
+    const handleGroupUpdate = async (payload) => {
+      console.log("Catched group update in Sidebar", payload);
+
+      setChats(prevChats => {
+        return prevChats.map(chat => {
+          if (chat.id !== payload.chatId) {
+            return chat;
+          }
+          switch (payload.action) {
+            case "update_name":
+              return {...chat, name: payload.newName};
+            case "update_avatar":
+              return {...chat, avatar_url: payload.newAvatarUrl};
+            case "remove_member":
+              return chat;
+            default:
+              return chat;
+          }
+        });
+      });
+    };
+
 
     socket.on("receive_message", handleNewMessage);
     socket.on("new_chat_created", handleNewChat);
     socket.on("message_read", handleMessageRead);
     socket.on("user_status_change", handleStatusChange);
+    socket.on("group_updated", handleGroupUpdate);
 
     return () => {
       socket.off("receive_message", handleNewMessage);
       socket.off("new_chat_created", handleNewChat);
       socket.off("message_read", handleMessageRead);
       socket.off("user_status_change", handleStatusChange);
+      socket.off("group_updated", handleGroupUpdate);
     };
   }, [socket]);
   const fetchMissingChat = async (chatId) => {
