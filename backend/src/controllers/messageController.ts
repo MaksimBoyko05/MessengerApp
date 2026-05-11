@@ -30,11 +30,29 @@ export const sendMessage = async (req: Request, res: Response) => {
         const newMessage = await messageRepo.create(finalChatId, senderId, text, type);
 
         const io = getIO();
+
+
+        const isFirstMessage = await messageRepo.isFirstMessageInChat(finalChatId);
+
+        if (isFirstMessage) {
+            const memberIds = await chatRepo.getChatMemberIds(finalChatId);
+            const receivers = memberIds.filter(id => id !== senderId);
+
+            for (const recId of receivers) {
+                const targetChatData = await chatRepo.getChatByIdForSidebar(finalChatId, recId);
+
+                io.to(`user_${recId}`).emit("new_chat_created", targetChatData);
+
+                io.in(`user_${recId}`).socketsJoin(`chat_${finalChatId}`);
+            }
+
+            io.in(`user_${senderId}`).socketsJoin(`chat_${finalChatId}`);
+        }
+
         io.to(`chat_${finalChatId}`).emit("receive_message", newMessage);
 
         try {
             const memberIds = await chatRepo.getChatMemberIds(finalChatId);
-
             const cacheKeysToDelete = memberIds.map(
                 (id) => `chat:${finalChatId}:user:${id}:messages`
             );

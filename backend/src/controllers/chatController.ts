@@ -55,9 +55,9 @@ export const createOrOpenChat = async (req: Request, res: Response) => {
         if (!chat) {
             chat = await chatRepo.createPrivateChat(myId, targetUserId);
         }
-        const fullChatData = await chatRepo.getChatByIdForSidebar(chat.id, myId);
 
-        res.json(fullChatData);
+        const fullChatDataForMe = await chatRepo.getChatByIdForSidebar(chat.id, myId);
+        res.json(fullChatDataForMe);
 
     } catch (error) {
         console.error('Помилка в createOrOpenChat:', error);

@@ -19,6 +19,13 @@ export class MessageRepository {
         return result.rows[0];
     }
 
+    async isFirstMessageInChat(chatId: number): Promise<boolean> {
+        const query = 'SELECT id FROM messages WHERE chat_id = $1 LIMIT 2';
+        const result = await pool.query(query, [chatId]);
+        
+        return (result.rowCount ?? 0) === 1;
+    }
+
     async findByChat(chatId: number, userId: number, limit: number = 30, cursor?: string): Promise<any[]> {
         let query = `
             SELECT m.*,
