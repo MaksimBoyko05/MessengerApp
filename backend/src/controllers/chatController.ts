@@ -409,8 +409,15 @@ export const deleteChat = async (req: Request, res: Response) => {
         if (!chatId || isNaN(chatId)) {
             return res.status(400).json({message: "Некоректний ID чату"});
         }
-
+        const memberIds = await chatRepo.getChatMemberIds(chatId);
         await chatRepo.deleteChat(chatId, userId, !!forEveryone);
+
+        if (forEveryone) {
+            const io = getIO();
+            memberIds.forEach(id => {
+                io.to(`user_${id}`).emit("chat_deleted", {chatId});
+            });
+        }
 
         res.json({message: "Чат успішно видалено"});
 

@@ -5,7 +5,7 @@ import {useState} from "react";
 import GroupDetails from "@/Pages/ChatsPage/components/GroupFeatures/GroupDetails.jsx";
 import {ChevronLeft} from "lucide-react";
 
-function ChatHeader({chatDetails, companion, onBack}) {
+function ChatHeader({chatDetails, companion, onBack, on}) {
   const API_URL = "http://localhost:5000";
   const [isOpen, setIsOpen] = useState(false)
   return (
@@ -54,6 +54,7 @@ function ChatHeader({chatDetails, companion, onBack}) {
         )}
         {isOpen && (
           <GroupDetails
+            onCloseChat={onBack}
             setIsOpen={setIsOpen}
             details={chatDetails}/>
         )}

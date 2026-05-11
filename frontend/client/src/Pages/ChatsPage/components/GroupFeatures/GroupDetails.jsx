@@ -12,7 +12,7 @@ import UserStatus from "@/Pages/ChatsPage/components/ChatWindow/UserStatus.jsx";
 import Avvvatars from "avvvatars-react";
 import UserContext from "@/context/UserContext.jsx";
 
-function GroupDetails({setIsOpen}) {
+function GroupDetails({setIsOpen, onCloseChat}) {
   const [isAddingMembers, setIsAddingMembers] = useState(false)
   const [contextMenu, setContextMenu] = useState({
     id: null,
@@ -85,6 +85,7 @@ function GroupDetails({setIsOpen}) {
   const handleLeave = async () => {
     try {
       await chatsService.leaveGroup(chatDetails.id)
+      onCloseChat(0);
     } catch (err) {
       console.error("Error with leave a group", err)
     }

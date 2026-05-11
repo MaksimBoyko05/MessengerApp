@@ -11,12 +11,14 @@ import UserContext from "@/context/UserContext.jsx";
 import {ChatContext} from "@/context/ChatContext.jsx";
 import {ChatProvider} from "@/context/ChatContext.jsx";
 import ContextWindow from "@/Pages/ChatsPage/components/Sidebar/ContextWindow.jsx";
+import {toast} from "react-toastify";
 
 function ChatWindow({chatId, onBack}) {
   const [messages, setMessages] = useState([]);
   const [chatDetails, setChatDetails] = useState([]);
   const [suggestions, setSuggestions] = useState([]);
   const [companion, setCompanion] = useState(null);
+  const [isDeleted, setIsDeleted] = useState(false)
   const [loading, setLoading] = useState(false);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [hasMore, setHasMore] = useState(true);
@@ -41,6 +43,18 @@ function ChatWindow({chatId, onBack}) {
 
   useEffect(() => {
     lastMessageIdRef.current = null;
+  }, [chatId]);
+
+  useEffect(() => {
+    setIsDeleted(false);
+    const handleChatDeleted = (e) => {
+      if (Number(e.detail.chatId) === Number(chatId)) {
+        setIsDeleted(true);
+        onBack(0);
+      }
+    }
+    window.addEventListener('chatDeletedByPartner', handleChatDeleted);
+    return () => window.removeEventListener('chatDeletedByPartner', handleChatDeleted);
   }, [chatId]);
 
   useEffect(() => {
@@ -86,6 +100,8 @@ function ChatWindow({chatId, onBack}) {
         }
       }
     };
+
+
     const handleMessageDeleted = ({messageId, chatId: deletedChatId}) => {
       if (Number(deletedChatId) === Number(chatId)) {
         setMessages((prev) => prev.map((msg) => msg.id === messageId ? {...msg, is_deleted: true} : msg))
@@ -310,7 +326,11 @@ function ChatWindow({chatId, onBack}) {
     return <NoChatSelected/>;
   }
   if (loading) return <div className={styles.loading}></div>;
-
+  if (isDeleted) {
+    return (
+      toast.info("Співбусідник видалив чат")
+    );
+  }
 
   return (
     <div

@@ -183,13 +183,22 @@ function ChatsList({onSelectedChat, selectedChatId, onFilterType, onSearchQuery}
         });
       });
     };
+    const handleChatDeleted = ({chatId}) => {
+      setChats((prevChats) => prevChats.filter(chat => Number(chat.id) !== Number(chatId)));
 
+      if (Number(selectedChatIdRef.current) === Number(chatId)) {
+        window.dispatchEvent(new CustomEvent('chatDeletedByPartner', {
+          detail: {chatId}
+        }));
+      }
+    };
 
     socket.on("receive_message", handleNewMessage);
     socket.on("new_chat_created", handleNewChat);
     socket.on("message_read", handleMessageRead);
     socket.on("user_status_change", handleStatusChange);
     socket.on("group_updated", handleGroupUpdate);
+    socket.on("chat_deleted", handleChatDeleted);
 
     return () => {
       socket.off("receive_message", handleNewMessage);
@@ -197,6 +206,7 @@ function ChatsList({onSelectedChat, selectedChatId, onFilterType, onSearchQuery}
       socket.off("message_read", handleMessageRead);
       socket.off("user_status_change", handleStatusChange);
       socket.off("group_updated", handleGroupUpdate);
+      socket.off("chat_deleted", handleChatDeleted);
     };
   }, [socket]);
   const fetchMissingChat = async (chatId) => {
