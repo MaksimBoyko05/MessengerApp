@@ -11,6 +11,6 @@ function createChatButton({setIsOpen}) {
       </button>
     </>
   );
-};
+}
 
 export default createChatButton;

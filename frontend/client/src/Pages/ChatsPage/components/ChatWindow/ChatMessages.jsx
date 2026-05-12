@@ -1,9 +1,8 @@
 import {UserContext} from "@/context/UserContext.jsx";
 import {useContext} from "react";
-import {CheckCheck, Check} from 'lucide-react';
+import {Check, CheckCheck} from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import styles from "@/Pages/ChatsPage/Chats.module.scss";
-import {ChatContext} from "@/context/ChatContext.jsx";
 import Avvvatars from "avvvatars-react";
 
 const formatter = new Intl.DateTimeFormat('uk-UA', {

@@ -1,4 +1,4 @@
-import {useSearchParams, useNavigate} from 'react-router-dom';
+import {useNavigate, useSearchParams} from 'react-router-dom';
 import {useEffect, useState} from "react";
 import {userService} from "@/api/userService.js";
 import styles from "./Verify.module.scss"

@@ -1,6 +1,6 @@
 import React from 'react';
 import {useNavigate} from 'react-router-dom';
-import {MoveLeft, Ghost} from 'lucide-react';
+import {Ghost, MoveLeft} from 'lucide-react';
 import styles from './NotFound.module.scss';
 
 const NotFound = () => {

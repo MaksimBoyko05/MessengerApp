@@ -3,7 +3,7 @@ import {chatsService} from "@/api/chatsService.js";
 import styles from "./GroupDetails.module.scss"
 import Avvvatars from "avvvatars-react";
 import UserStatus from "@/Pages/ChatsPage/components/ChatWindow/UserStatus.jsx";
-import {ChevronLeft, X, LoaderCircle} from "lucide-react";
+import {ChevronLeft, X} from "lucide-react";
 
 function AddMembers({chatId, setIsAddingMembers, setIsOpen}) {
   const [defaultUsers, setDefaultUsers] = useState([]);

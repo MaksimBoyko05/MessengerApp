@@ -1,4 +1,3 @@
-import styles from "@/Pages/ChatsPage/Chats.module.scss"
 import {useState} from "react";
 
 function Filter({onSetFilterType}) {

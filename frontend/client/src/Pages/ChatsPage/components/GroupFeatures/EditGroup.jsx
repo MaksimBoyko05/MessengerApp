@@ -1,14 +1,13 @@
 import {useContext, useEffect, useRef, useState} from "react";
 import {ChatContext} from "@/context/ChatContext.jsx";
-import {SwitchCamera, Check, ChevronLeft} from 'lucide-react';
+import {Check, ChevronLeft, SwitchCamera} from 'lucide-react';
 import styles from "./GroupDetails.module.scss"
 import {chatsService} from "@/api/chatsService.js";
 import Avvvatars from 'avvvatars-react'
-import {userService} from "@/api/userService.js";
 import {toast} from "react-toastify";
 
 function EditGroup({chatId, setIsEditing}) {
-  const {chatDetails, setChatDetails} = useContext(ChatContext) || {};
+  const {chatDetails} = useContext(ChatContext) || {};
   const [data, setData] = useState({
     avatar_url: null,
     newName: ""

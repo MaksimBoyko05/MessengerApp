@@ -1,4 +1,4 @@
-import {useState, useEffect, useContext} from "react";
+import {useContext, useState} from "react";
 import {chatsService} from "@/api/chatsService.js";
 import {Sparkles} from 'lucide-react';
 import {UserContext} from "@/context/UserContext.jsx";

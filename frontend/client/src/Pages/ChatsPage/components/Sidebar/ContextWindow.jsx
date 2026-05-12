@@ -1,5 +1,5 @@
 import styles from "@/Pages/ChatsPage/Chats.module.scss";
-import {Trash, UserStar, StarOff} from 'lucide-react';
+import {StarOff, Trash, UserStar} from 'lucide-react';
 import {chatsService} from "@/api/chatsService.js";
 import {useContext} from "react";
 import {ChatContext} from "@/context/ChatContext.jsx";

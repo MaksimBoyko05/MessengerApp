@@ -1,5 +1,5 @@
 import styles from "./Settings.module.scss"
-import {useContext, useState} from "react";
+import {useContext} from "react";
 import {userService} from "@/api/userService.js";
 import UserContext from "@/context/UserContext.jsx";
 import {toast} from "react-toastify";

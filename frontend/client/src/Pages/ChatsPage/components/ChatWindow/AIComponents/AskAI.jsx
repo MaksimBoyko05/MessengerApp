@@ -1,8 +1,7 @@
 import {useState} from "react";
 import {aiService} from "@/api/aiService.js";
-import {X} from 'lucide-react';
+import {Sparkles, X} from 'lucide-react';
 import styles from "./AISuggestions.module.scss"
-import {Sparkles} from 'lucide-react';
 
 function AskAI({chatId, showPopup}) {
   const [query, setQuery] = useState("")

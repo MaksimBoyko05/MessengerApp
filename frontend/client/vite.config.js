@@ -5,6 +5,9 @@ import path from 'path'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
+  esbuild: {
+    pure: ['console.log', 'console.info'],
+  },
   resolve: {
     alias: {
       '@': path.resolve(process.cwd(), './src'),

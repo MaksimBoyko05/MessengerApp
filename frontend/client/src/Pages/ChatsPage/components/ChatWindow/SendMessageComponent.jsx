@@ -1,8 +1,7 @@
 import {useState} from "react";
 import {chatsService} from '@/api/chatsService.js';
 import styles from "@/Pages/ChatsPage/Chats.module.scss";
-import {Send} from 'lucide-react';
-import {Sparkles} from 'lucide-react';
+import {Send, Sparkles} from 'lucide-react';
 import AISuggestions from "@/Pages/ChatsPage/components/ChatWindow/AIComponents/AISuggestions.jsx";
 import AskAI from "@/Pages/ChatsPage/components/ChatWindow/AIComponents/AskAI.jsx";
 
@@ -34,7 +33,7 @@ function SendMessageComponent({chatId, receiverId, suggestions, onSetSuggestions
     }
     console.log(payload)
     try {
-      const data = await chatsService.sendMessage(payload);
+      await chatsService.sendMessage(payload);
       setMessageData({
         ...messageData,
         text: "",

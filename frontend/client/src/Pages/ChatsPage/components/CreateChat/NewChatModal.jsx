@@ -1,4 +1,4 @@
-import {useState, useEffect} from "react";
+import {useEffect, useState} from "react";
 import Avvvatars from 'avvvatars-react'
 import {chatsService} from "@/api/chatsService.js";
 import {X} from 'lucide-react';

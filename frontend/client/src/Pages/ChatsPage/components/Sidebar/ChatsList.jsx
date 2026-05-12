@@ -251,7 +251,7 @@ function ChatsList({onSelectedChat, selectedChatId, onFilterType, onSearchQuery}
   const handleDeleteChat = async (forEveryone) => {
     const id = contextMenu.id
     try {
-      const res = await chatsService.deleteChat(id, forEveryone);
+      await chatsService.deleteChat(id, forEveryone);
       setChats(prevChats => prevChats.filter(chat => chat.id !== id))
       onSelectedChat(0);
     } catch (err) {

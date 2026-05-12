@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext} from 'react';
 import styles from './Settings.module.scss';
 import {userService} from "@/api/userService.js";
 import UserContext from "@/context/UserContext.jsx";

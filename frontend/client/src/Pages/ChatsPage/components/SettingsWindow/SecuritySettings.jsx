@@ -12,9 +12,9 @@ function SecuritySettings({user}) {
   const [passwordError, setPasswordError] = useState("");
   const [newPasswordError, setNewPasswordError] = useState("");
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async () => {
     try {
-      const res = await userService.changePassword(user.id, newPassword.oldPassword, newPassword.newPassword)
+      await userService.changePassword(user.id, newPassword.oldPassword, newPassword.newPassword)
       toast.success("Пароль змінено!")
       setNewPassword({
         oldPassword: "",

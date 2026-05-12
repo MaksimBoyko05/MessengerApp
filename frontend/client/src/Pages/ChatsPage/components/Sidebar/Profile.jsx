@@ -1,7 +1,6 @@
-import {useState, useEffect, useContext} from "react";
+import {useContext, useEffect, useState} from "react";
 import styles from "@/Pages/ChatsPage/Chats.module.scss";
-import {Settings} from 'lucide-react';
-import {LogOut} from 'lucide-react';
+import {LogOut, Settings} from 'lucide-react';
 import {userService} from "@/api/userService.js";
 import SettingsModal from "@/Pages/ChatsPage/components/SettingsWindow/SettingsModal.jsx";
 import {UserContext} from "@/context/UserContext.jsx"
@@ -9,7 +8,7 @@ import {useNavigate} from "react-router";
 import Avvvatars from "avvvatars-react";
 
 function Profile() {
-  const [userId, setUserId] = useState("");
+  const [setUserId] = useState("");
   const [username, setUsername] = useState("");
   const [userimg, setUserimg] = useState("");
   const [open, setIsOpen] = useState(false);

@@ -1,11 +1,9 @@
 import styles from "./GroupDetails.module.scss"
-import {UserRoundPlus, X} from 'lucide-react';
-import {ChevronLeft} from 'lucide-react';
-import {useEffect, useState, useContext, useRef} from "react";
+import {LogOut, Pencil, UserRoundPlus, X} from 'lucide-react';
+import {useContext, useEffect, useRef, useState} from "react";
 import AddMembers from "@/Pages/ChatsPage/components/GroupFeatures/AddMembers.jsx";
 import ContextWindow from "@/Pages/ChatsPage/components/Sidebar/ContextWindow.jsx";
 import {ChatContext} from "@/context/ChatContext.jsx";
-import {Pencil, LogOut} from 'lucide-react';
 import EditGroup from "@/Pages/ChatsPage/components/GroupFeatures/EditGroup.jsx";
 import {chatsService} from "@/api/chatsService.js";
 import UserStatus from "@/Pages/ChatsPage/components/ChatWindow/UserStatus.jsx";
@@ -25,7 +23,7 @@ function GroupDetails({setIsOpen, onCloseChat}) {
   })
   const [isEditing, setIsEditing] = useState(false);
 
-  const {chatDetails, setChatDetails} = useContext(ChatContext)
+  const {chatDetails} = useContext(ChatContext)
   const {user} = useContext(UserContext) || {};
 
   const members = chatDetails.members;

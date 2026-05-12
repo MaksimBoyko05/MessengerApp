@@ -1,6 +1,3 @@
-import {useState} from "react";
-import styles from "../Authpage.module.scss";
-
 function AuthTabs({activeButton, setActiveButton}) {
   return (
     <>

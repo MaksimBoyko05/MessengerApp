@@ -1,6 +1,6 @@
 import Header from "./components/Header.jsx";
 import styles from "./Home.module.scss";
-import {Sparkles, Users, Zap, MessageSquare, Bot, ArrowRight, CheckCircle2} from "lucide-react";
+import {ArrowRight, Bot, CheckCircle2, MessageSquare, Sparkles, Users, Zap} from "lucide-react";
 import {Link} from "react-router-dom";
 
 function HomePage() {

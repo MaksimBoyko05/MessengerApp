@@ -1,6 +1,5 @@
-import {BrowserRouter as Router, Link, Route, Routes} from "react-router-dom";
+import {BrowserRouter as Router, Route, Routes} from "react-router-dom";
 import HomePage from "./Pages/HomePage/HomePage";
-import Header from "./Pages/HomePage/components/Header.jsx"
 import AuthPage from "./Pages/AuthPage/AuthPage.jsx";
 import ChatsPage from "./Pages/ChatsPage/ChatsPage.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";

@@ -1,4 +1,4 @@
-import {useContext, useEffect, useState, useRef} from "react";
+import {useContext, useEffect, useRef, useState} from "react";
 import {chatsService} from '@/api/chatsService.js';
 import styles from "@/Pages/ChatsPage/Chats.module.scss";
 import ChatMessages from "./ChatMessages.jsx";
@@ -9,7 +9,6 @@ import NoChatSelected from "./NoChatSelected.jsx";
 import AIGenerateSuggestions from "@/Pages/ChatsPage/components/ChatWindow/AIComponents/AIGenerateSuggestions.jsx";
 import UserContext from "@/context/UserContext.jsx";
 import {ChatContext} from "@/context/ChatContext.jsx";
-import {ChatProvider} from "@/context/ChatContext.jsx";
 import ContextWindow from "@/Pages/ChatsPage/components/Sidebar/ContextWindow.jsx";
 import {toast} from "react-toastify";
 
@@ -107,7 +106,7 @@ function ChatWindow({chatId, onBack}) {
         setMessages((prev) => prev.map((msg) => msg.id === messageId ? {...msg, is_deleted: true} : msg))
       }
     }
-    const handleMessageRead = ({chat_id, user_id}) => {
+    const handleMessageRead = ({chat_id}) => {
       if (Number(chat_id) === Number(chatId)) {
         setMessages(prev =>
           prev.map((msg) =>
