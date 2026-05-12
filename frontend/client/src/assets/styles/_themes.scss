@@ -1,0 +1,251 @@
+/* Glass Theme */
+:root, [data-theme="glass"] {
+  --color-primary: #2B7FFF;
+  --color-primary-blue: #1f5aee;
+  --color-primary-hover: #2471e7;
+  --color-gradient-start: #2B7FFF;
+  --color-gradient-end: #7E57FF;
+
+
+  --color-text-primary: #1a1a1a;
+  --color-text-secondary: #666666;
+  --color-text-tertiary: #999999;
+  --color-text-muted: #6b7280;
+  --color-text-inverse: #ffffff;
+  --color-icon-hover: #333232;
+  --color-icon-logout: #7d7d7d;
+
+  --color-status-online: #22c55e;
+  --color-status-offline: #dcdcdc;
+  --color-danger: #f61e1e;
+  --color-unread-bg: #5B81E2;
+  --color-unread-text: #ffffff;
+
+  --color-bg-overlay: rgba(238, 238, 238, 0.4);
+  --color-bg-white: #ffffff;
+  --color-bg-light: rgba(250, 250, 250, 0.53);
+  --color-bg-lighter: rgba(255, 255, 255, 0.68);
+  --color-bg-active: rgba(255, 255, 255, 0.78);
+  --color-bg-chat-window: rgba(248, 248, 248, 0.77);
+  --color-bg-header: #FAFAFA;
+  --color-bg-system-msg: rgba(0, 0, 0, 0.6);
+  --color-bg-filter: rgba(253, 253, 253, 0.3);
+  --color-bg-filter-hover: rgba(253, 253, 253, 0.5);
+  --color-bg-filter-active: rgb(253, 253, 253);
+  --color-bg-context-menu: rgba(255, 255, 255, 0.9);
+  --color-bg-menu-hover: rgba(150, 138, 138, 0.09);
+  --color-bg-modal-main: #f5f5f6;
+  --color-bg-input: #FAFAFA;
+  --color-bg-input-focus: #f2f2f2;
+  --color-bg-btn-secondary: #e7e7e7;
+  --color-bg-hover: #fafafa;
+  --color-primary-disabled: #69a4f8;
+
+  --color-badge-admin-bg: #fef3c7;
+  --color-badge-admin-text: #b45309;
+  --color-badge-member-bg: #ede9fe;
+  --color-badge-member-text: #7c3aed;
+
+
+  --color-border-main: rgba(0, 0, 0, 0.05);
+  --color-border-light: rgba(147, 145, 145, 0.29);
+  --color-border-divider: #e4e4e4;
+  --color-border-chat: rgba(255, 255, 255, 0.2);
+  --color-border-input: rgba(112, 111, 111, 0.07);
+  --color-border-search: rgb(253, 253, 253);
+  --color-border-avatar: #ffffff;
+
+  --shadow-chat-window: 0 8px 32px rgba(0, 0, 0, 0.1);
+  --shadow-msg-mymsg: 0 4px 12px rgba(43, 127, 255, 0.25);
+  --shadow-msg-bubble: 0 2px 5px rgba(0, 0, 0, 0.08);
+  --shadow-focus-ring: 0 0 0 3px rgba(31, 90, 238, 0.08);
+  --shadow-filter: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --shadow-modal-container: 0 8px 32px rgba(0, 0, 0, 0.05);
+  --shadow-card-inset: 0 1px 3px rgba(0, 0, 0, 0.06), 0 4px 12px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 1);
+
+  --ai-gradient-start: rgba(240, 244, 255, 0.85);
+  --ai-gradient-end: rgba(246, 240, 255, 0.85);
+  --ai-border-color: rgba(162, 136, 255, 0.4);
+  --ai-glow-color: rgba(162, 136, 255, 0.15);
+  --ai-code-bg: rgba(0, 0, 0, 0.05);
+  --ai-primary: #6366f1;
+  --ai-secondary: #8b5cf6;
+  --ai-glow: #a78bfa;
+  --ai-accent: #06b6d4;
+  --shadow-btn-primary: 0 2px 8px rgba(43, 127, 255, 0.35);
+  --shadow-chip: 0 4px 6px rgba(58, 91, 196, 0.2);
+  --shadow-ai-spark-svg: drop-shadow(0px 4px 8px rgba(54, 79, 199, 0.5));
+
+  --ai-spark-color: #5C7CFA;
+  --ai-spark-hover: #9b59b6;
+  --ai-loading-bg: linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(59, 130, 246, 0.2) 50%, rgba(236, 72, 153, 0.15) 100%);
+}
+
+
+/* =========================================
+   Light Theme
+   ========================================= */
+[data-theme="light"] {
+  --color-primary: #2B7FFF;
+  --color-primary-blue: #1f5aee;
+  --color-primary-hover: #2471e7;
+  --color-gradient-start: #2B7FFF;
+  --color-gradient-end: #7E57FF;
+
+  --color-text-primary: #111111;
+  --color-text-secondary: #4a4a4a;
+  --color-text-tertiary: #777777;
+  --color-text-muted: #8d94a0;
+  --color-text-inverse: #ffffff;
+  --color-icon-hover: #1a1a1a;
+  --color-icon-logout: #5a5a5a;
+
+  --color-status-online: #22c55e;
+  --color-status-offline: #d1d1d1;
+  --color-danger: #f61e1e;
+  --color-unread-bg: #5B81E2;
+  --color-unread-text: #ffffff;
+
+  --color-bg-overlay: #f0f0f0;
+  --color-bg-white: #ffffff;
+  --color-bg-light: #f7f7f7;
+  --color-bg-lighter: #fafafa;
+  --color-bg-active: #ffffff;
+  --color-bg-chat-window: #f4f4f5;
+  --color-bg-header: #ffffff;
+  --color-bg-system-msg: rgba(0, 0, 0, 0.55);
+  --color-bg-filter: #efefef;
+  --color-bg-filter-hover: #e8e8e8;
+  --color-bg-filter-active: #ffffff;
+  --color-bg-context-menu: #ffffff;
+  --color-bg-menu-hover: rgba(0, 0, 0, 0.05);
+  --color-bg-modal-main: #f5f5f5;
+  --color-bg-input: #f1f1f1;
+  --color-bg-input-focus: #eaeaea;
+  --color-bg-btn-secondary: #e2e2e2;
+  --color-bg-hover: #f5f5f5;
+  --color-primary-disabled: #93bcfa;
+
+  --toastify-color-light: var(--color-bg-white);
+  --toastify-text-color-light: var(--color-text-primary);
+
+  --color-badge-admin-bg: #fef3c7;
+  --color-badge-admin-text: #b45309;
+  --color-badge-member-bg: #ede9fe;
+  --color-badge-member-text: #7c3aed;
+
+  --color-border-main: rgba(0, 0, 0, 0.08);
+  --color-border-light: rgba(0, 0, 0, 0.1);
+  --color-border-divider: #e0e0e0;
+  --color-border-chat: rgba(0, 0, 0, 0.07);
+  --color-border-input: rgba(0, 0, 0, 0.08);
+  --color-border-search: #e8e8e8;
+  --color-border-avatar: #ffffff;
+
+  --shadow-chat-window: 0 4px 24px rgba(0, 0, 0, 0.08);
+  --shadow-msg-mymsg: 0 4px 12px rgba(43, 127, 255, 0.2);
+  --shadow-msg-bubble: 0 1px 4px rgba(0, 0, 0, 0.07);
+  --shadow-focus-ring: 0 0 0 3px rgba(31, 90, 238, 0.1);
+  --shadow-filter: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --shadow-modal-container: 0 8px 32px rgba(0, 0, 0, 0.08);
+  --shadow-card-inset: 0 1px 3px rgba(0, 0, 0, 0.05), 0 4px 12px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+
+  /* AI Colors */
+  --ai-gradient-start: rgba(240, 244, 255, 0.9);
+  --ai-gradient-end: rgba(245, 240, 255, 0.9);
+  --ai-border-color: rgba(149, 120, 255, 0.35);
+  --ai-glow-color: rgba(149, 120, 255, 0.12);
+  --ai-code-bg: rgba(0, 0, 0, 0.04);
+  --ai-primary: #6366f1;
+  --ai-secondary: #8b5cf6;
+  --ai-glow: #a78bfa;
+  --ai-accent: #06b6d4;
+  --shadow-btn-primary: 0 2px 8px rgba(43, 127, 255, 0.3);
+  --shadow-chip: 0 4px 6px rgba(58, 91, 196, 0.15);
+  --shadow-ai-spark-svg: drop-shadow(0px 4px 8px rgba(54, 79, 199, 0.4));
+
+  --ai-spark-color: #5C7CFA;
+  --ai-spark-hover: #9b59b6;
+  --ai-loading-bg: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(59, 130, 246, 0.15) 50%, rgba(236, 72, 153, 0.1) 100%);
+}
+
+[data-theme="light"] .wrapper::before {
+  opacity: 0.06;
+}
+
+
+/* =========================================
+   Dark Theme
+   ========================================= */
+[data-theme="dark"] {
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #a0a0a0;
+  --color-text-tertiary: #888888;
+  --color-text-muted: #6b7280;
+  --color-text-inverse: #ffffff;
+  --color-icon-hover: #ffffff;
+  --color-icon-logout: #ff4d4f;
+
+  --color-bg-overlay: #121212;
+  --color-bg-white: #1e1e1e;
+  --color-bg-light: #242424;
+  --color-bg-lighter: #2a2a2a;
+  --color-bg-active: #333333;
+  --color-bg-chat-window: #1e1e1e;
+  --color-bg-header: #1a1a1a;
+  --color-bg-system-msg: #333333;
+  --color-bg-filter: #2a2a2a;
+  --color-bg-filter-hover: #333333;
+  --color-bg-filter-active: #404040;
+  --color-bg-context-menu: #2a2a2a;
+  --color-bg-menu-hover: #3a3a3a;
+  --color-bg-modal-main: #141414;
+  --color-bg-input: #2a2a2a;
+  --color-bg-input-focus: #333333;
+  --color-bg-btn-secondary: #333333;
+  --color-bg-hover: #2a2a2a;
+  --color-primary-disabled: #3a5b8c;
+
+  --toastify-color-light: var(--color-bg-light);
+  --toastify-text-color-light: var(--color-text-primary);
+
+  --color-badge-admin-bg: rgba(180, 83, 9, 0.2);
+  --color-badge-admin-text: #fcd34d;
+  --color-badge-member-bg: rgba(124, 58, 237, 0.2);
+  --color-badge-member-text: #c4b5fd;
+
+  --color-border-main: #333333;
+  --color-border-light: #404040;
+  --color-border-divider: #333333;
+  --color-border-chat: #333333;
+  --color-border-input: #404040;
+  --color-border-search: #404040;
+  --color-border-avatar: #1e1e1e;
+
+  --shadow-chat-window: 0 4px 24px rgba(0, 0, 0, 0.5);
+  --shadow-msg-mymsg: 0 4px 12px rgba(43, 127, 255, 0.15);
+  --shadow-msg-bubble: 0 2px 5px rgba(0, 0, 0, 0.4);
+  --shadow-focus-ring: 0 0 0 3px rgba(31, 90, 238, 0.2);
+  --shadow-filter: 0 2px 8px rgba(0, 0, 0, 0.4);
+  --shadow-modal-container: 0 8px 32px rgba(0, 0, 0, 0.6);
+  --shadow-card-inset: 0 2px 8px rgba(0, 0, 0, 0.4);
+
+  /* AI Colors */
+  --ai-gradient-start: #1a1a1a;
+  --ai-gradient-end: #1e1e1e;
+  --ai-border-color: rgba(255, 255, 255, 0.15);
+  --ai-glow-inner: inset 0 1px 1px rgba(255, 255, 255, 0.15);
+  --ai-glow-outer: 0 0 15px rgba(255, 255, 255, 0.08), 0 0 30px rgba(255, 255, 255, 0.03);
+  --ai-code-bg: rgba(255, 255, 255, 0.05);
+  --shadow-btn-primary: 0 2px 8px rgba(0, 0, 0, 0.5);
+  --shadow-chip: 0 4px 6px rgba(0, 0, 0, 0.4);
+  --shadow-ai-spark-svg: drop-shadow(0px 4px 8px rgba(0, 0, 0, 0.8));
+  --ai-spark-color: #8da4f7;
+  --ai-spark-hover: #b472d0;
+  --ai-loading-bg: linear-gradient(135deg, rgba(139, 92, 246, 0.25) 0%, rgba(59, 130, 246, 0.3) 50%, rgba(236, 72, 153, 0.25) 100%);
+
+}
+
+[data-theme="dark"] .wrapper::before {
+  opacity: 0.1;
+}

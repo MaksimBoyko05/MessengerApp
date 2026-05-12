@@ -1,0 +1,560 @@
+$primary-blue: #1f5aee;
+$primary-blue-hover: #1c50d3;
+$primary-blue-disabled: #a0c4ff;
+$gradient-start: #527ffc;
+$gradient-mid: #3f7df0;
+$gradient-end: #5d2cce;
+$color-bg: #ffffff;
+$color-border: #e5e7eb;
+$color-surface: rgba(255, 255, 255, 0.7);
+$white: #ffffff;
+$light-gray: #f8fafc;
+$border-gray: #dedede;
+$border-light: #ecf0f6;
+$border-input: #e7e8ea;
+$text-inactive: #888484;
+$text-hover: #6b7280;
+$text-label: #aaa;
+$text-dark: #333;
+$error-red: #ff0000;
+$color-primary: #2B7FFF;
+$color-primary-hover: #2471e7;
+$color-primary-disabled: #69a4f8;
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+@mixin flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@mixin button-style {
+  @include flex-center;
+  padding: 9px 14px;
+  border: none;
+  border-radius: 10px;
+  height: 38px;
+  width: 100px;
+  background: $color-primary;
+  color: white;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  cursor: pointer;
+
+  &:hover {
+    transform: translateY(-2px);
+    background: $color-primary-hover;
+  }
+  &:disabled {
+    background: $color-primary-disabled;
+    cursor: not-allowed;
+  }
+}
+
+
+body {
+  //background-image: url(../../../assets/images/back.png);
+  background-repeat: no-repeat;
+  background-size: 100%;
+  width: 100%;
+  height: 100%;
+}
+
+.parentcontainer {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: $color-bg;
+  font-family: 'Inter', sans-serif;
+  overflow: hidden;
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    width: 60%;
+    height: 60%;
+    border-radius: 50%;
+    z-index: 0;
+    pointer-events: none;
+    animation: pulseGlow 10s ease-in-out infinite alternate;
+  }
+
+  &::before {
+    top: -10%;
+    left: -10%;
+    background: radial-gradient(circle, rgba(31, 90, 238, 0.08) 0%, transparent 70%);
+  }
+
+  &::after {
+    bottom: -10%;
+    right: -10%;
+    background: radial-gradient(circle, rgba(245, 158, 11, 0.08) 0%, transparent 70%);
+    animation-delay: -5s;
+  }
+}
+
+
+.formBlock {
+  width: 507px;
+  height: 665px;
+  background: $white;
+  flex-direction: column;
+  border-radius: 24px;
+  box-shadow: 0 8px 32px rgba(31, 90, 238, 0.08),
+  0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.formContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+:global {
+  .chooseblock {
+    display: flex;
+    position: relative;
+    margin-top: 40px;
+    border-radius: 24px;
+    fill: $light-gray;
+    border: 1.3px solid $border-gray;
+    width: 350px;
+    height: fit-content;
+    background: $light-gray;
+    padding: 4px;
+    gap: 4px;
+
+    &::before {
+      content: "";
+      position: absolute;
+      width: 165px;
+      height: 40px;
+      background: $white;
+      border-radius: 14px;
+      border: 1.3px solid $border-light;
+      box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.25);
+      transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      left: 4px;
+      top: 4px;
+    }
+
+    &.signup-active::before {
+      left: calc(50% + 2px);
+    }
+  }
+
+  .choose-active,
+  .inactive {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-family: "SF Pro", sans-serif;
+    width: 165px;
+    height: 40px;
+    border-radius: 14px;
+    cursor: pointer;
+    position: relative;
+    z-index: 1;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background: transparent;
+
+    p {
+      margin: 0;
+    }
+  }
+
+  .choose-active {
+    color: $primary-blue;
+    font-weight: 600;
+  }
+
+  .inactive {
+    color: $text-inactive;
+    font-weight: 500;
+
+    &:hover {
+      color: $text-hover;
+    }
+  }
+}
+
+.logoDiv {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.logo {
+  display: flex;
+  width: 250px;
+  height: 120px;
+  object-fit: contain;
+}
+
+.LogoText {
+  display: block;
+  text-align: center;
+  font-size: 42px;
+  font-weight: 800;
+  background: linear-gradient(135deg, $gradient-start 0%, $gradient-mid 50%, $gradient-end 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-family: "Arial Black", Arial, sans-serif;
+  justify-content: center;
+  text-shadow: 0 4px 20px rgba(79, 127, 255, 0.3);
+  letter-spacing: -0.02em;
+}
+
+.error {
+  color: $error-red;
+}
+
+:global {
+  .formInput {
+    border-radius: 16px;
+    border: 1.5px solid $border-input;
+    width: 100%;
+    height: 45px;
+    padding: 8px 45px 8px 16px;
+
+    &:focus {
+      border: 1.5px solid $primary-blue;
+      box-shadow: 0 0 0 3px rgba(31, 90, 238, 0.1);
+      outline: none;
+    }
+
+    &.input-error {
+      border: 2px solid $error-red;
+      outline: none;
+    }
+  }
+}
+
+.disabledbtn {
+  background: $error-red;
+}
+
+.labelEmail,
+.labelPass,
+.labelConfirmPass {
+  display: block;
+}
+
+.forgotpass {
+  display: flex;
+  padding-top: 5px;
+  width: fit-content;
+  margin-left: auto;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #6b7280;
+
+  &:hover {
+    color: #54575e;
+    cursor: pointer;
+  }
+}
+
+.buttoncontainer {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  align-items: center;
+  margin-top: 2em;
+}
+
+.sbmbutton {
+  width: 350px;
+  height: 37px;
+  background: $primary-blue;
+  color: $white;
+  border-radius: 12px;
+  border: 0px solid #000;
+  box-shadow: 3px 1px 6px 0 rgba(31, 90, 238, 0.46);
+  font-size: 1rem;
+  font-weight: 600;
+
+  &:hover {
+    background: $primary-blue-hover;
+    box-shadow: 3px 1px 6px 0 rgba(31, 90, 238, 0.66);
+    cursor: pointer;
+    transform: translateY(-1px);
+    transition: all 0.2s;
+  }
+
+  &:disabled {
+    background: $primary-blue-disabled;
+    box-shadow: none;
+    cursor: not-allowed;
+  }
+}
+
+:global {
+  .input-group {
+    position: relative;
+    margin-bottom: 0px;
+    width: 350px;
+    font-size: 1rem;
+
+    label {
+      transform: translateY(30px);
+      margin-left: 20px;
+      color: $text-label;
+      transition: 0.3s;
+      white-space: nowrap;
+      background: transparent;
+      pointer-events: none;
+    }
+
+    &.active {
+      label {
+        transform: translateY(10px);
+        font-size: 16px;
+        color: $text-dark;
+        background: $white;
+        width: auto;
+        display: inline-block;
+      }
+
+      .labelPass {
+        transform: translateY(10px);
+        font-size: 16px;
+        color: $text-dark;
+        background: $white;
+        width: auto;
+        display: inline-block;
+      }
+
+      .labelConfirmPass {
+        width: auto;
+        display: inline-block;
+      }
+    }
+  }
+}
+
+.showPassBtn {
+  position: absolute;
+  right: 12px;
+  top: 68%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.2s;
+  z-index: 2;
+
+  &:hover {
+    opacity: 0.7;
+  }
+
+  svg {
+    width: 20px;
+    height: 20px;
+    display: block;
+  }
+
+  &:active svg {
+    transform: scale(0.9);
+  }
+}
+
+.showConfirmPassBtn {
+  position: absolute;
+  right: 12px;
+  top: 67%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.2s;
+  z-index: 2;
+}
+
+.backbntchevrone {
+  display: flex;
+  margin-right: 20rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: translateY(-1px);
+  }
+}
+
+.sendmailcontainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 10px;
+
+  label {
+    font-size: 0.95rem;
+    font-weight: 500;
+    margin-bottom: 4px;
+    color: #666
+  }
+
+  input {
+    flex: 1;
+    width: 250px;
+    height: 38px;
+    min-height: 38px;
+    padding: 5px 5px 1px 15px;
+    background: #FAFAFA;
+    border-radius: 12px;
+    border: 1px solid rgba(120, 122, 133, 0.07);
+    transition: border-color 0.3s ease;
+
+    &:focus {
+      border-color: #2B7FFF;
+      background-color: #f2f2f2;
+      outline: none;
+    }
+  }
+
+  .inputerror {
+    border: 1px solid #dc2626;
+  }
+
+  button {
+    @include button-style;
+  }
+}
+
+@media (max-width: 540px) {
+  .parentcontainer {
+    background-size: cover;
+    align-items: flex-start;
+    padding: 16px;
+  }
+
+  .formBlock {
+    width: 100%;
+    height: auto;
+    min-height: auto;
+    margin-top: 30%;
+    border-radius: 24px;
+    padding-bottom: 32px;
+  }
+
+  .logo {
+    width: 180px;
+    height: 90px;
+  }
+
+  .LogoText {
+    font-size: 32px;
+  }
+
+  :global {
+    .chooseblock {
+      width: 100%;
+      max-width: 320px;
+
+      &::before {
+        width: calc(50% - 6px);
+      }
+    }
+
+    .choose-active,
+    .inactive {
+      width: 50%;
+    }
+
+    .input-group {
+      width: 320px;
+      max-width: 320px;
+    }
+  }
+
+  .sbmbutton {
+    width: 100%;
+    max-width: 320px;
+  }
+
+  .backbntchevrone {
+    margin-right: 0;
+    align-self: flex-start;
+    padding-left: 4px;
+  }
+
+  .sendmailcontainer {
+    width: 100%;
+    padding: 0 16px;
+
+    input {
+      width: 100%;
+    }
+
+    button {
+      width: 100%;
+    }
+  }
+
+  .showPassBtn {
+    right: 8px;
+  }
+
+  .showConfirmPassBtn {
+    right: 8px;
+  }
+}
+
+@media (max-width: 360px) {
+  .formBlock {
+    border-radius: 16px;
+  }
+
+  .LogoText {
+    font-size: 26px;
+  }
+
+  :global {
+    .chooseblock {
+      max-width: 280px;
+    }
+
+    .input-group {
+      max-width: 280px;
+    }
+  }
+
+  .sbmbutton {
+    max-width: 280px;
+  }
+}
+
+@keyframes pulseGlow {
+  0% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+}
