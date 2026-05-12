@@ -45,15 +45,3 @@
 
 ---
 
-## 🚀 Локальний запуск (Getting Started)
-
-### Попередні вимоги
-Переконайтеся, що на вашому комп'ютері встановлені:
-* [Node.js](https://nodejs.org/) (v18+)
-* [Docker](https://www.docker.com/) та Docker Compose
-* [Git](https://git-scm.com/)
-
-### 1. Клонування репозиторію
-```bash
-git clone [https://github.com/maksimboyko05/messengerapp.git](https://github.com/maksimboyko05/messengerapp.git)
-cd messengerapp/backend
