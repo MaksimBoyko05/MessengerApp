@@ -49,12 +49,13 @@ function ChatWindow({chatId, onBack}) {
     const handleChatDeleted = (e) => {
       if (Number(e.detail.chatId) === Number(chatId)) {
         setIsDeleted(true);
+        toast.info("Співрозмовник видалив цей чат");
         onBack(0);
       }
     }
     window.addEventListener('chatDeletedByPartner', handleChatDeleted);
     return () => window.removeEventListener('chatDeletedByPartner', handleChatDeleted);
-  }, [chatId]);
+  }, [chatId, onBack]);
 
   useEffect(() => {
     if (!chatId || isNaN(chatId)) return;
@@ -326,9 +327,7 @@ function ChatWindow({chatId, onBack}) {
   }
   if (loading) return <div className={styles.loading}></div>;
   if (isDeleted) {
-    return (
-      toast.info("Співбусідник видалив чат")
-    );
+    return null;
   }
 
   return (

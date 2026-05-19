@@ -203,7 +203,7 @@ body {
     textarea {
       @include input-style;
       min-height: 100px;
-      max-height: 138px;
+      max-height: 100px;
       padding: 10px 12px;
       margin-top: 30px;
       resize: none;

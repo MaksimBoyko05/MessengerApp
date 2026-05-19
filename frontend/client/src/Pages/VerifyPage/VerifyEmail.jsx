@@ -7,20 +7,16 @@ function VerifyEmail() {
   const [searchParams] = useSearchParams();
   const token = searchParams.get('token');
   const navigate = useNavigate();
-
-
-  const [status, setStatus] = useState("loading")
-  const [errorMessage, setErrorMessage] = useState("")
+  
+  const [status, setStatus] = useState(token ? "loading" : "error");
+  const [errorMessage, setErrorMessage] = useState(token ? "" : "Посилання не дійсне");
 
   useEffect(() => {
-    if (!token) {
-      setStatus("error")
-      setErrorMessage("Посилання не дійсне")
-      return;
-    }
+    if (!token) return;
+
     const verifyEmail = async () => {
       try {
-        await userService.verifyEmail(token)
+        await userService.verifyEmail(token);
         setStatus("success");
         setTimeout(() => {
           navigate("/chats");
@@ -29,9 +25,11 @@ function VerifyEmail() {
         setStatus("error");
         setErrorMessage(err.response?.data?.error || "Помилка підтвердження пошти");
       }
-    }
+    };
+
     verifyEmail();
   }, [token, navigate]);
+
   return (
     <div className={styles.emailcontainer}>
       {status === "loading" && (
