@@ -8,7 +8,6 @@ import {useNavigate} from "react-router";
 import Avvvatars from "avvvatars-react";
 
 function Profile() {
-  const [setUserId] = useState("");
   const [username, setUsername] = useState("");
   const [userimg, setUserimg] = useState("");
   const [open, setIsOpen] = useState(false);
@@ -36,13 +35,12 @@ function Profile() {
         const data = await userService.getUserData();
         setUsername(data.username);
         setUserimg(data.avatar_url);
-        setUserId(data.id);
       } catch (err) {
         console.error(err);
       }
     };
     fetchProfile();
-  }, [open]);
+  }, []);
 
 
   return (

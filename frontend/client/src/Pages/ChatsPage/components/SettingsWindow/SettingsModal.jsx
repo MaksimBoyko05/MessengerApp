@@ -23,8 +23,12 @@ function SettingsModal({onClose}) {
   }, []);
 
   return (
-    <div className={styles.modalwrapper}>
-      <div className={styles.modalcontainer}>
+    <div
+      className={styles.modalwrapper}
+      onClick={onClose}>
+      <div
+        className={styles.modalcontainer}
+        onClick={(e) => e.stopPropagation()}>
         <div className={styles.modalheader}>
           <h2 className={styles.modaltitle}>Налаштування</h2>
           <X

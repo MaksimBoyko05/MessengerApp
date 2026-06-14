@@ -55,8 +55,12 @@ function CreateChatModal({setIsOpen, onChatCreated}) {
 
   return (
     <>
-      <div className={styles.modalcontainer}>
-        <div className={styles.modalcontent}>
+      <div
+        className={styles.modalcontainer}
+        onClick={() => setIsOpen(false)}>
+        <div
+          className={styles.modalcontent}
+          onClick={(e) => e.stopPropagation()}>
           <X
             className={styles.closebtn}
             size={24}
