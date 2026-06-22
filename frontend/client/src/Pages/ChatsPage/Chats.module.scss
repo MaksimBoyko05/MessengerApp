@@ -836,20 +836,6 @@ body {
       cursor: pointer;
     }
   }
-
-  .userstatus {
-    font-size: 0.85rem;
-    color: var(--color-status-online);
-
-    &:hover {
-      cursor: pointer;
-    }
-  }
-
-  .lastseen {
-    font-size: 0.85rem;
-    color: var(--color-text-muted);
-  }
 }
 
 .contextmenu {
@@ -942,6 +928,20 @@ body {
       }
     }
   }
+}
+
+.userstatus {
+  font-size: 0.85rem;
+  color: var(--color-status-online);
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.lastseen {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
 }
 
 @keyframes spin {
